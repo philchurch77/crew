@@ -1,0 +1,17 @@
+{
+  "name": "crew",
+  "owner": {
+    "name": "Phil Church"
+  },
+  "metadata": {
+    "description": "Phil's reusable Claude Code crew: Django-focused review agents and workflow commands.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "crew",
+      "source": "./plugins/crew",
+      "description": "Django review crew (Ada, Les, Tess, Theo, Stella, Vera, Victor, Juno) plus workflow commands: The Build, The Gauntlet, Wheels Up."
+    }
+  ]
+}

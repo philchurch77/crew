@@ -1,0 +1,9 @@
+{
+  "name": "crew",
+  "version": "1.0.0",
+  "description": "Django review crew and workflow commands. Agents for architecture, refactoring, tests, UI, QA and security; commands for feature build, pupil-data review and pre-deploy checks.",
+  "author": {
+    "name": "Phil Church"
+  },
+  "keywords": ["django", "code-review", "workflow", "security", "testing"]
+}
