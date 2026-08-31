@@ -47,10 +47,10 @@ walkthrough automatically — nobody has to remember to ask.
 
 ## Install
 
-Push this repo to GitHub, then in any project:
+In any project:
 
 ```
-/plugin marketplace add philchurch/crew
+/plugin marketplace add philchurch77/crew
 /plugin install crew@crew
 ```
 
@@ -67,7 +67,7 @@ To enable it automatically for a project, add to that project
 ```json
 {
   "extraKnownMarketplaces": {
-    "crew": { "source": { "source": "github", "repo": "philchurch/crew" } }
+    "crew": { "source": { "source": "github", "repo": "philchurch77/crew" } }
   },
   "enabledPlugins": { "crew@crew": true }
 }
