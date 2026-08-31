@@ -47,22 +47,53 @@ walkthrough automatically — nobody has to remember to ask.
 
 ## Install
 
-In any project:
+Which route you use depends on whether you have the Claude Code CLI. The VS Code
+extension on its own does **not** ship the plugin manager — `/plugin` reports
+that it is not available in this environment.
+
+### Without the CLI — junctions (Windows)
+
+Clone the repo somewhere stable, outside any synced folder, then point the
+user-level Claude Code directories at it. Junctions do not need admin rights.
+
+```powershell
+git clone https://github.com/philchurch77/crew.git "$env:USERPROFILE\dev\crew"
+
+$src = "$env:USERPROFILE\dev\crew\plugins\crew"
+foreach ($d in @("agents","commands","skills")) {
+  New-Item -ItemType Junction -Path "$env:USERPROFILE\.claude\$d" -Target "$src\$d"
+}
+```
+
+Claude Code reads `~/.claude/agents`, `~/.claude/commands` and `~/.claude/skills`
+in every project, so the crew is then available everywhere. Restart Claude Code
+once after creating the junctions.
+
+Updating is just:
+
+```powershell
+git -C "$env:USERPROFILE\dev\crew" pull
+```
+
+The change is live in every project immediately — nothing to copy.
+
+On macOS or Linux use symlinks instead:
+
+```sh
+git clone https://github.com/philchurch77/crew.git ~/dev/crew
+for d in agents commands skills; do
+  ln -s ~/dev/crew/plugins/crew/$d ~/.claude/$d
+done
+```
+
+### With the CLI — as a plugin
 
 ```
 /plugin marketplace add philchurch77/crew
 /plugin install crew@crew
 ```
 
-Or straight from disk, no GitHub needed:
-
-```
-/plugin marketplace add "c:/Users/philc/OneDrive/Desktop/VS Code/crew"
-/plugin install crew@crew
-```
-
-To enable it automatically for a project, add to that project
-`.claude/settings.json`:
+To pin it to a specific project, add to that project `.claude/settings.json`:
 
 ```json
 {
@@ -72,6 +103,9 @@ To enable it automatically for a project, add to that project
   "enabledPlugins": { "crew@crew": true }
 }
 ```
+
+Both routes serve the same files. The junction route ignores the plugin
+manifests; the plugin route uses them.
 
 ## Layout
 
