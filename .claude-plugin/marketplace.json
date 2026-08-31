@@ -4,14 +4,14 @@
     "name": "Phil Church"
   },
   "metadata": {
-    "description": "Phil's reusable Claude Code crew: Django-focused review agents and workflow commands.",
-    "version": "1.0.0"
+    "description": "A reusable Django crew for Claude Code: seven specialist agents, a dispatching Captain, and the standards they work to.",
+    "version": "2.0.0"
   },
   "plugins": [
     {
       "name": "crew",
       "source": "./plugins/crew",
-      "description": "Django review crew (Ada, Les, Tess, Theo, Stella, Vera, Victor, Juno) plus workflow commands: The Build, The Gauntlet, Wheels Up."
+      "description": "Hand the Captain a task and it plans the passage and dispatches the crew: Quartermaster, Carpenter, Gunner, Surgeon, Bosun, Lookout and Master-at-Arms."
     }
   ]
 }
