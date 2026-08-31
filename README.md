@@ -14,15 +14,15 @@ and reports one outcome:
 
 ## The crew
 
-| Agent | Called for | Was |
+| Agent | Called for
 |---|---|---|
-| **quartermaster** | Planning and architecture, before code exists | Theo + Ada |
-| **carpenter** | Complexity and duplication in code that exists | Les |
-| **gunner** | Tests — permissions, ownership, data isolation | Tess |
-| **surgeon** | Diagnosing a failure before anything is changed | new |
-| **bosun** | Templates, CSS, UI and UX | Stella |
-| **lookout** | End-to-end QA as a real user | Vera |
-| **master-at-arms** | Security, GDPR, pupil data, deploy safety | Victor |
+| **quartermaster** | Planning and architecture, before code exists
+| **carpenter** | Complexity and duplication in code that exists
+| **gunner** | Tests — permissions, ownership, data isolation
+| **surgeon** | Diagnosing a failure before anything is changed
+| **bosun** | Templates, CSS, UI and UX
+| **lookout** | End-to-end QA as a real user
+| **master-at-arms** | Security, GDPR, pupil data, deploy safety
 
 The split that matters: the **Quartermaster** designs what does not exist yet;
 the **Carpenter** repairs what does.
