@@ -53,6 +53,22 @@ test would have caught a given problem.
   result. If tests fail, say so with the output — never report a pass you have
   not seen.
 
+## Reverting a change
+
+You edit working files on purpose — breaking a line to prove a test catches it,
+then putting it back. The developer's uncommitted work is almost always sitting
+in the same tree as your mutation.
+
+- **Never run `git checkout`, `git restore`, `git stash` or `git reset` on
+  working files.** They cannot tell your mutation from the developer's
+  uncommitted fix. They destroy both, silently, with no undo.
+- Before you mutate a file, copy it: `cp app/views.py app/views.py.bak`. To
+  revert, copy the backup back over the original, then delete the backup.
+- Rebuilding a file from memory is not a revert. If the original is gone and you
+  have no backup, stop and say so plainly — do not reconstruct and carry on.
+- If you believe a git operation is genuinely needed, stop and report it. Do not
+  run it.
+
 ## Pupil-data priorities
 
 This platform holds Article 9 special category data about children in care.
