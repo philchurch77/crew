@@ -74,5 +74,5 @@ plugins/crew/
 - **Skill** — `skills/<name>/SKILL.md` plus any supporting files it references.
   Use a skill over a command when it needs bundled scripts or reference docs.
 
-Bump `version` in `plugins/crew/plugin.json` when you change things, then
+Bump `version` in `plugins/crew/.claude-plugin/plugin.json` when you change things, then
 `/plugin marketplace update crew` in a consuming project to pull it.
