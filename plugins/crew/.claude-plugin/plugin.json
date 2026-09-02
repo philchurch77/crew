@@ -1,7 +1,7 @@
 {
   "name": "crew",
-  "version": "2.0.1",
-  "description": "A Django crew and a Captain who dispatches them. Agents for planning, refactoring, tests, debugging, UI, QA and security; a /captain command that plans the passage and runs the crew; self-loading skills for Django house rules and pupil-data review.",
+  "version": "2.1.0",
+  "description": "A Django crew and a Captain who dispatches them. Agents for planning, refactoring, tests, debugging, UI, QA and security; a /captain command that plans the passage and runs each agent once; self-loading skills for Django house rules and sensitive-data review; a hook that stops the test-writer discarding your uncommitted work.",
   "author": {
     "name": "Phil Church"
   },

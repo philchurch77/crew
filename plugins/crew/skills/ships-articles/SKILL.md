@@ -4,9 +4,11 @@ description: >-
   The house rules for writing Django in this developer projects — the standards
   every change is held to. Load at the start of any Django work: writing or
   editing a view, model, form, queryset, template, migration or settings file,
-  reviewing Django code, or deciding how to structure an app. Covers permission
-  patterns, where business logic belongs, query hygiene, template conventions,
-  migration safety and deployment constraints for Django on Azure.
+  reviewing Django code, or deciding how to structure an app. Covers what data
+  counts as sensitive, permission patterns, where business logic belongs, query
+  hygiene, template conventions, migration safety, deployment constraints for
+  Django on Azure, how the crew works together, and which instruction wins when
+  two conflict.
 ---
 
 # The Ship's Articles
@@ -15,11 +17,33 @@ Every crew signs the articles. These are the standards this developer holds
 Django work to. Follow them without being asked; say so when a task requires
 breaking one.
 
+The crew's agents carry these articles preloaded. A rule written here is the
+rule; the agents do not restate it.
+
+## 0. What the data is
+
+Assume every project holds sensitive personal data until the project says
+otherwise. In this developer's projects that is usually Article 9 special
+category data about children in care: names, emotional states, observed
+behaviours, safeguarding context. A permissions defect here is a notifiable
+data breach and the end of the client relationship, not a bug report.
+
+The project `CLAUDE.md` declares what is sensitive with two lines:
+
+```
+Sensitive apps: tolerance, sdq, flashcards, evaluation
+Sensitive models: Observation, WeeklyMap, SDQResponse
+```
+
+If the project declares nothing, those values are the defaults. Any model that
+links to a declared model is in scope too. If you are not sure whether
+something is in scope, it is.
+
 ## 1. Permissions are filtered, not hidden
 
 The single most important rule.
 
-- Every queryset returning user-owned or pupil-linked data filters by the
+- Every queryset returning user-owned or sensitive data filters by the
   logged-in user or their school. Not the template. Not a hidden button.
 - `Model.objects.all()` in a view is wrong until proven otherwise.
 - `get_object_or_404(Model, pk=pk)` without an ownership filter is a defect.
@@ -29,6 +53,10 @@ The single most important rule.
   the record. Design for that, and test for it.
 - Every sensitive object carries a link to its school or organisation, and every
   access path goes through that link.
+- Permissions are enforced in views, querysets and forms. A check that lives
+  only in a template is an architectural failure, not a detail.
+- No sensitive data in URLs, logs, error messages, redirects, admin list
+  displays, or any payload sent to an external API.
 
 ## 2. Boring Django beats clever Django
 
@@ -37,7 +65,8 @@ Prefer the built-in. `LoginRequiredMixin` over manual session handling.
 views where they are clearer — do not force class-based views for symmetry.
 
 Do not introduce a third-party package where the Django built-in is adequate.
-Do not introduce an abstraction until the third repetition.
+Do not introduce an abstraction until the third repetition. Do not turn a small
+app into enterprise architecture.
 
 ## 3. Logic has one home
 
@@ -69,7 +98,8 @@ database. Prefer several clear models over one generic one with a `type` field.
 Add `created_at` and `updated_at` by default. Give every model a useful
 `__str__`. Index the fields that are actually filtered on. Use `choices` rather
 than free text where the set is known. Avoid nullable fields unless null
-genuinely means something different from empty.
+genuinely means something different from empty. Every new field on a sensitive
+model has a stated, minimal purpose; collection without one is a GDPR finding.
 
 ## 6. Migrations are one-way
 
@@ -93,7 +123,10 @@ Consistent naming and page structure across apps.
 Test what can actually go wrong: ownership, permissions, cross-user isolation,
 form validation, the core workflow, and any model method with real logic. Do not
 test field labels, page titles or CSS classes. Name the test after the failure
-it catches. Use Django `TestCase` and the real database.
+it catches: `test_user_cannot_access_another_users_observation`, not
+`test_403`. Use Django `TestCase`, `self.client` for views, and the real
+database. No pytest or external frameworks unless the project already uses
+them.
 
 ## 9. Deployment: Django on Azure
 
@@ -101,8 +134,10 @@ it catches. Use Django `TestCase` and the real database.
 - `DEBUG` defaults to `False` when the env var is absent.
 - `ALLOWED_HOSTS` handles `WEBSITE_HOSTNAME` and is never a wildcard in
   production.
+- `CSRF_TRUSTED_ORIGINS` set; secure cookie and HSTS settings on.
 - WhiteNoise in `INSTALLED_APPS` and `MIDDLEWARE` for static files.
 - Postgres in production, not SQLite.
+- Password validators on, sensible session expiry, no custom crypto.
 - **No Windows-only packages in `requirements.txt`** — `pywin32`, `winreg` and
   friends will break the Linux build. Development is on Windows; deployment is
   not.
@@ -111,4 +146,31 @@ it catches. Use Django `TestCase` and the real database.
 
 Run the tests. Report the real result. If something fails, say so with the
 output. If a step was skipped, say which and why. Never describe work as
-verified when it was only read.
+verified when it was only read. Reading code and running a flow are different
+claims; label which one you made.
+
+## 11. How the crew works
+
+- The Captain dispatches and the Captain implements. Agents plan, review,
+  diagnose and test; the main session writes the code. The Gunner is the one
+  agent that writes files, and it writes only tests.
+- Agents do not spawn agents.
+- Each agent is dispatched once per set of files per passage. It gets the file
+  paths and every question it needs in that one dispatch, including the
+  Gauntlet's questions when the change is in scope under article 0. It is not
+  sent back for a second look at the same files.
+- Any change in scope under article 0 runs the Gauntlet before it is called
+  done. That is automatic, not requested.
+
+## 12. Precedence
+
+When instructions conflict, later wins over earlier:
+
+1. These articles and the agent definitions.
+2. The project `CLAUDE.md` of the app the crew is working in.
+3. The developer's instructions in the current session.
+
+Two things are not overridable by convenience: the Gauntlet on sensitive data
+(article 0) and honest reporting (article 10). If the developer asks to skip
+the Gauntlet, say plainly that it is a data-protection gate, then do as they
+decide, and record in the report that it was skipped at their instruction.
