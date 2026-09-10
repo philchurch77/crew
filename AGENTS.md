@@ -27,6 +27,11 @@ to explain it.
    says how a project declares it; article 11 says it is automatic.
 4. **Report honestly.** Article 10.
 5. **The Captain dispatches; the Captain implements.** Article 11.
+6. **Nothing a user enters is ever lost.** Text is never truncated, overwritten
+   or dropped by a field change, a migration, a form, a view or a deploy. Any
+   change that can lose data goes past the Purser before it is called done,
+   whether or not the data is sensitive. Article 6 is the rule; article 11
+   says it is automatic; article 12 says it is not overridable by convenience.
 
 ---
 
@@ -41,12 +46,16 @@ to explain it.
 | **bosun** | Templates, CSS, UI and UX | No | sonnet |
 | **lookout** | End-to-end QA as a real user, via the test client | No | inherit |
 | **master-at-arms** | Security, GDPR, sensitive data, deploy safety | No | inherit |
+| **purser** | Data loss — migrations, field changes, forms, deploys | No | inherit |
 
-The split that matters: **Quartermaster designs what does not exist yet;
-Carpenter repairs what does.** If both seem to apply, the work is two passages,
-not one.
+Two splits matter. **Quartermaster designs what does not exist yet; Carpenter
+repairs what does.** If both seem to apply, the work is two passages, not one.
+**Master-at-Arms keeps data from getting out; Purser keeps data from getting
+lost.** Same record, opposite risks, different triggers: the Purser fires on
+any migration, field change, text-handling form or deploy script, sensitive or
+not.
 
-Quartermaster, Carpenter, Gunner, Lookout and Master-at-Arms preload the
+Quartermaster, Carpenter, Gunner, Lookout, Master-at-Arms and Purser preload the
 `ships-articles` skill through the `skills` frontmatter field. Subagents do not
 inherit the main session's skills, so this is the only way they see the
 standard. Do not restate an article inside an agent; reference it by number.
@@ -64,7 +73,9 @@ plugin route reads `hooks/hooks.json`, and the junction route reads the
 `/captain <task>` is the entry point. The Captain reads the project, reads what
 the project `CLAUDE.md` declares sensitive, classifies the task into one
 passage — **Build**, **Fix**, **Tidy**, **Look** or **Ship** — dispatches the
-crew that passage needs, and reports one outcome.
+crew that passage needs, and reports one outcome. The Captain speaks in
+nautical and piratical phrases by design; `commands/captain.md` carries the
+phrase book and the two rules that keep the colour from hiding the facts.
 
 Efficiency rules the Captain holds to:
 
@@ -87,7 +98,7 @@ Commands are typed. That is the whole distinction.
 | Skill | Loads when |
 |---|---|
 | **ships-articles** | Any Django work begins — the house rules, the crew rules, and precedence |
-| **gauntlet** | A change touches sensitive data, before it is called done |
+| **gauntlet** | A change touches sensitive data, before it is called done — with a Purser stage when the change can lose it |
 
 A skill description is a trigger condition, not a summary. Write it as the
 situation it fires in.
@@ -122,5 +133,5 @@ Quartermaster's one-question rule already cover them, and they were not Django.
 - Test a hook change with sample input before committing:
   `echo '{"agent_type":"gunner","tool_name":"Bash","tool_input":{"command":"git stash"}}' | python3 plugins/crew/hooks/guard-git.py`
   should exit 2.
-- Keep the roster small. Seven agents that are each obviously the right call
+- Keep the roster small. Eight agents that are each obviously the right call
   beat fifteen that overlap.

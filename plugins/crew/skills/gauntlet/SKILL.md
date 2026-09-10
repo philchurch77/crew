@@ -32,8 +32,8 @@ If you are not sure whether something is in scope, it is in scope.
 
 ## Each stage runs once
 
-The Gauntlet is three sets of questions for three agents, not three extra
-dispatches. If the passage you are running already dispatches one of these
+The Gauntlet is three sets of questions for three agents, plus a fourth when
+the change can lose data, not extra dispatches. If the passage you are running already dispatches one of these
 agents on the changed files, put that stage's questions into that dispatch and
 the stage is satisfied by its answer. Cite the result; do not send the agent
 back for a second look at the same files. Dispatch separately only the stages
@@ -76,10 +76,29 @@ is not, the **gunner** writes it and runs it. When the passage already
 dispatches the Gunner, this is the first test it writes. A permission that is
 correct today with no test protecting it is a permission that will regress.
 
+## Stage 4 — Purser, when the change can lose data
+
+This stage applies only when the change adds or alters a migration, changes a
+field on a sensitive model, or edits a form or template that handles stored
+sensitive text. A child's record that is lost is as much a breach as one that
+is exposed. Dispatch the **purser** on those files, in parallel with Stages 1
+and 2, and ask it to confirm:
+
+1. No migration removes, renames, retypes or shrinks a column without a data
+   migration that preserves the contents, and no `RunPython` body shortens or
+   replaces existing text.
+2. Every edit form renders the full stored value and re-renders bound on a
+   validation error. Save, reload, re-save is byte-for-byte identical.
+3. No cascade from a pupil, school or user silently deletes a child's history.
+
+If the Purser says a migration is destructive, the task is not complete until
+the data migration and backup it asks for exist.
+
 ## Report
 
 - What Master-at-Arms flagged, and how each item was resolved.
 - What Lookout found, and whether it ran the flow or read it.
+- What the Purser flagged, if Stage 4 applied, and how each item was resolved.
 - The access-control test, and its real run output.
 - Verdict: **safe to ship** or **not safe to ship**.
 

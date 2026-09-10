@@ -4,13 +4,13 @@
     "name": "Phil Church"
   },
   "metadata": {
-    "description": "A reusable Django crew for Claude Code: seven specialist agents, a dispatching Captain, and the standards they work to."
+    "description": "A reusable Django crew for Claude Code: eight specialist agents, a dispatching Captain, and the standards they work to."
   },
   "plugins": [
     {
       "name": "crew",
       "source": "./plugins/crew",
-      "description": "Hand the Captain a task and it plans the passage and dispatches the crew: Quartermaster, Carpenter, Gunner, Surgeon, Bosun, Lookout and Master-at-Arms."
+      "description": "Hand the Captain a task and it plans the passage and dispatches the crew: Quartermaster, Carpenter, Gunner, Surgeon, Bosun, Lookout, Master-at-Arms and Purser."
     }
   ]
 }

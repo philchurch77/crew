@@ -23,7 +23,32 @@ past an unresolved Critical or High finding.
 
 ---
 
-## Stage 2 — Deployment checklist
+## Stage 2 — Purser's count
+
+Nothing goes over the side. Dispatch the **purser** on every migration that has
+not yet been applied in production, every model field changed since the last
+deploy, every form or template handling stored text that changed, and the
+startup command or pipeline that runs `migrate`. Give it the file paths. Ask it
+to confirm, specifically:
+
+1. No migration removes, renames, retypes or shrinks a column without a data
+   migration that preserves the contents.
+2. No `RunPython` body slices, strips, re-encodes or defaults over existing
+   text.
+3. Every edit form renders the full stored value and re-renders bound on
+   validation error.
+4. No `flush`, `loaddata`, `--fake` or reset in the deploy path.
+
+If the Purser finds any migration destructive, the verdict below is **Fix
+before deploying** until a backup is confirmed and the Purser's pre-migrate
+checklist has been followed. A destructive migration with no backup does not
+deploy. That is not a judgement call.
+
+The Purser is independent of Stage 1. Dispatch all three in one message.
+
+---
+
+## Stage 3 — Deployment checklist
 
 Check each item and report a clear pass or fail. Do not infer a pass — read the
 file or run the command.
@@ -35,19 +60,23 @@ file or run the command.
 3. **DEBUG** — defaults to `False` when no env var is set.
 4. **Migrations** — `python manage.py migrate --check` reports nothing
    outstanding, and `python manage.py makemigrations --check --dry-run` reports
-   no unmade migrations.
-5. **Static files** — WhiteNoise present in both `INSTALLED_APPS` and
+   no unmade migrations. This proves the migrations exist and apply; it says
+   nothing about whether they lose data. That is Stage 2.
+5. **Backup** — if Stage 2 named a destructive migration, a production backup
+   taken after the last deploy exists and the developer has confirmed it. Not
+   inferred. Asked and answered.
+6. **Static files** — WhiteNoise present in both `INSTALLED_APPS` and
    `MIDDLEWARE`.
-6. **ALLOWED_HOSTS** — not empty, not a wildcard, and handles the
+7. **ALLOWED_HOSTS** — not empty, not a wildcard, and handles the
    `WEBSITE_HOSTNAME` environment variable.
-7. **Tests** — `python manage.py test` passes. Report the actual counts.
-8. **Open TODOs** — grep the project for `TODO`, `FIXME` and `HACK` and list
+8. **Tests** — `python manage.py test` passes. Report the actual counts.
+9. **Open TODOs** — grep the project for `TODO`, `FIXME` and `HACK` and list
    anything in the changed files.
-9. **Secrets** — no `.env`, key, token or password committed in this change.
+10. **Secrets** — no `.env`, key, token or password committed in this change.
 
 ---
 
-## Stage 3 — Commit message
+## Stage 4 — Commit message
 
 When the checklist passes, confirm the user wants to commit, then draft a commit
 message in the project style: present tense, concise, focused on why rather than

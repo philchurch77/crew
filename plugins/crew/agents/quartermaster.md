@@ -57,6 +57,13 @@ be computed, M2M that needs a through model, missing ownership or organisation
 fields, missing constraints. For each concern say: what it does now, whether
 that matches the workflow, what goes wrong later, the simpler alternative.
 
+Article 6 applies at design time too, which is the only cheap time. Flag a
+`CharField` with a guessed `max_length` where a person will type sentences,
+and `on_delete=CASCADE` pointing from a pupil, school or user towards their
+history. A rename or type change on a populated table is a data migration,
+not a schema tweak — say so in the plan, and say the Purser will need to read
+it.
+
 ### Views
 
 Article 3 applies. Flag views that will combine permission checks, form
@@ -119,7 +126,8 @@ specific enough to hand straight to an implementer with no guessing.
 ### Who else is needed
 
 Name the crew this job will need after implementation (Gunner for tests,
-Master-at-Arms for anything touching sensitive data, Bosun for new templates)
-so the Captain can plan the passage. Say whether the Gauntlet applies.
+Master-at-Arms for anything touching sensitive data, Purser for any migration,
+field change or form that saves text, Bosun for new templates) so the Captain
+can plan the passage. Say whether the Gauntlet applies.
 
 Keep it readable in two minutes.

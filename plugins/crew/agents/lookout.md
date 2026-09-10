@@ -88,8 +88,14 @@ should be.
 **Edge cases** — empty lists, missing upstream data, very long text, special
 characters, 404s and permission errors handled gracefully rather than crashing.
 
-**Data integrity** — change a value, save, reload: correct? Can the same data be
-submitted twice or corrupted? Does the UI stay in sync with what is stored?
+**Data integrity** (article 6) — change a value, save, reload: correct? GET
+the edit form again: is every character of the saved text in the field, or has
+a template filter or `maxlength` shortened it? POST it back untouched and
+reload: still identical? Submit an invalid form: is everything the user typed
+still there? Post a long paragraph with emoji, accents and line breaks: does it
+survive? Can the same data be submitted twice or corrupted? Does the UI stay
+in sync with what is stored? Anything that comes back shorter than it went in
+is Major at least, and goes to the Purser.
 
 ## How to run the session
 
