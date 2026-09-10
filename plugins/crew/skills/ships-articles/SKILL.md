@@ -5,10 +5,10 @@ description: >-
   every change is held to. Load at the start of any Django work: writing or
   editing a view, model, form, queryset, template, migration or settings file,
   reviewing Django code, or deciding how to structure an app. Covers what data
-  counts as sensitive, permission patterns, where business logic belongs, query
-  hygiene, template conventions, migration safety, deployment constraints for
-  Django on Azure, how the crew works together, and which instruction wins when
-  two conflict.
+  counts as sensitive, permission patterns, the rule that nothing a user
+  enters is ever lost, where business logic belongs, query hygiene, template
+  conventions, migration safety, deployment constraints for Django on Azure,
+  how the crew works together, and which instruction wins when two conflict.
 ---
 
 # The Ship's Articles
@@ -101,15 +101,48 @@ than free text where the set is known. Avoid nullable fields unless null
 genuinely means something different from empty. Every new field on a sensitive
 model has a stated, minimal purpose; collection without one is a GDPR finding.
 
-## 6. Migrations are one-way
+## 6. Nothing written is ever lost
+
+After article 1, the rule the users would name first. What a person types is
+evidence about a child. It cannot be re-written from memory. Losing it is a
+failure of the one promise the software makes.
+
+Migrations are one-way:
 
 - Never edit a migration that has been applied anywhere but this machine.
 - Review the generated migration before running it. A rename Django reads as a
-  drop-and-add will lose data.
+  drop-and-add will lose data. A migration that removes, renames, retypes or
+  shrinks a column is destructive until a data migration and a confirmed
+  backup say otherwise.
 - Run `python manage.py makemigrations --check --dry-run` before declaring work
   finished.
 - Data migrations are separate from schema migrations, and are reversible or
-  explicitly marked as not.
+  explicitly marked as not. A `RunPython` body never slices, strips or
+  defaults over existing text.
+
+Fields, forms and views keep what they are given:
+
+- Free text is a `TextField`. A `CharField` with a guessed `max_length` for
+  anything typed in sentences is a defect. SQLite in development ignores
+  `max_length`; Postgres on Azure enforces it, and the user loses what they
+  wrote.
+- An edit form renders the full stored value. Never `truncatechars`,
+  `truncatewords`, `striptags` or a `maxlength` attribute on a field the user
+  will save back. Save, reload, re-save: identical.
+- Views never assign `request.POST.get("field", "")` to a model, never
+  `update_or_create` over a row the user did not mean to replace, and never
+  `save()` an instance loaded with `.only()` or `.defer()`.
+- An invalid form re-renders bound, with everything the user typed still in
+  it. The session outlasts the longest form.
+- No `on_delete=CASCADE` from a pupil, school or user towards observations,
+  responses or notes without a stated retention decision. Deleting a parent
+  never silently deletes a child's history.
+- Emoji, accents, curly quotes and Windows line endings survive save and
+  display unchanged.
+
+Any change that adds or alters a migration, changes a model field, edits a
+form or template handling stored text, or touches a deploy script goes past
+the **purser** before it is called done. That is automatic, not requested.
 
 ## 7. Templates
 
@@ -161,6 +194,10 @@ claims; label which one you made.
   sent back for a second look at the same files.
 - Any change in scope under article 0 runs the Gauntlet before it is called
   done. That is automatic, not requested.
+- Any change that adds or alters a migration, changes a model field, edits a
+  form or template handling stored text, or touches a deploy script goes past
+  the Purser before it is called done, whether or not it is in scope under
+  article 0. Also automatic.
 
 ## 12. Precedence
 
@@ -170,7 +207,8 @@ When instructions conflict, later wins over earlier:
 2. The project `CLAUDE.md` of the app the crew is working in.
 3. The developer's instructions in the current session.
 
-Two things are not overridable by convenience: the Gauntlet on sensitive data
-(article 0) and honest reporting (article 10). If the developer asks to skip
-the Gauntlet, say plainly that it is a data-protection gate, then do as they
+Three things are not overridable by convenience: the Gauntlet on sensitive
+data (article 0), the Purser on anything that can lose data (article 6), and
+honest reporting (article 10). If the developer asks to skip the Gauntlet or
+the Purser, say plainly that it is a data-protection gate, then do as they
 decide, and record in the report that it was skipped at their instruction.

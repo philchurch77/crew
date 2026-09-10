@@ -1,6 +1,6 @@
 <img width="3200" height="2492" alt="crew" src="https://github.com/user-attachments/assets/8eee2868-c8cc-44fd-a503-5b5fdb97827a" />
 
-A Django crew for Claude Code: seven specialist agents, a Captain who dispatches
+A Django crew for Claude Code: eight specialist agents, a Captain who dispatches
 them, and the house rules they work to. It is built for this developer's
 education projects, where the data is about children and the deploy target is
 Azure. It will work in any Django project once you tell it what is sensitive.
@@ -86,6 +86,10 @@ Sensitive models: Observation, WeeklyMap, SDQResponse
 Those are also the defaults when a project declares nothing. Any change that
 touches a declared app or model, or anything linked to one, runs the Gauntlet
 before the Captain calls it done.
+
+Separately, any change that adds or alters a migration, changes a model field,
+edits a form or template that handles stored text, or touches a deploy script
+goes past the Purser, sensitive or not. Nothing a user enters is ever lost.
 
 ## Layout
 
