@@ -4,8 +4,7 @@
     "name": "Phil Church"
   },
   "metadata": {
-    "description": "A reusable Django crew for Claude Code: seven specialist agents, a dispatching Captain, and the standards they work to.",
-    "version": "2.0.0"
+    "description": "A reusable Django crew for Claude Code: seven specialist agents, a dispatching Captain, and the standards they work to."
   },
   "plugins": [
     {

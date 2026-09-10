@@ -1,45 +1,15 @@
 <img width="3200" height="2492" alt="crew" src="https://github.com/user-attachments/assets/8eee2868-c8cc-44fd-a503-5b5fdb97827a" />
 
+A Django crew for Claude Code: seven specialist agents, a Captain who dispatches
+them, and the house rules they work to. It is built for this developer's
+education projects, where the data is about children and the deploy target is
+Azure. It will work in any Django project once you tell it what is sensitive.
+
 ## Install
 
 Which route you use depends on whether you have the Claude Code CLI. The VS Code
 extension on its own does **not** ship the plugin manager — `/plugin` reports
 that it is not available in this environment.
-
-### Without the CLI — junctions (Windows)
-
-Clone the repo somewhere stable, outside any synced folder, then point the
-user-level Claude Code directories at it. Junctions do not need admin rights.
-
-```powershell
-git clone https://github.com/philchurch77/crew.git "$env:USERPROFILE\dev\crew"
-
-$src = "$env:USERPROFILE\dev\crew\plugins\crew"
-foreach ($d in @("agents","commands","skills")) {
-  New-Item -ItemType Junction -Path "$env:USERPROFILE\.claude\$d" -Target "$src\$d"
-}
-```
-
-Claude Code reads `~/.claude/agents`, `~/.claude/commands` and `~/.claude/skills`
-in every project, so the crew is then available everywhere. Restart Claude Code
-once after creating the junctions.
-
-Updating is just:
-
-```powershell
-git -C "$env:USERPROFILE\dev\crew" pull
-```
-
-The change is live in every project immediately — nothing to copy.
-
-On macOS or Linux use symlinks instead:
-
-```sh
-git clone https://github.com/philchurch77/crew.git ~/dev/crew
-for d in agents commands skills; do
-  ln -s ~/dev/crew/plugins/crew/$d ~/.claude/$d
-done
-```
 
 ### With the CLI — as a plugin
 
@@ -59,34 +29,92 @@ To pin it to a specific project, add to that project `.claude/settings.json`:
 }
 ```
 
+### Without the CLI — junctions (Windows)
+
+Clone the repo somewhere stable, outside any synced folder, then point the
+user-level Claude Code directories at it. Junctions do not need admin rights.
+
+> This replaces your user-level `agents`, `commands`, `skills` and `hooks`
+> directories. If any of them already exist with your own files, move those
+> files into the clone first, or the junction will fail to create.
+
+```powershell
+git clone https://github.com/philchurch77/crew.git "$env:USERPROFILE\dev\crew"
+
+$src = "$env:USERPROFILE\dev\crew\plugins\crew"
+foreach ($d in @("agents","commands","skills","hooks")) {
+  New-Item -ItemType Junction -Path "$env:USERPROFILE\.claude\$d" -Target "$src\$d"
+}
+```
+
+Claude Code reads `~/.claude/agents`, `~/.claude/commands` and `~/.claude/skills`
+in every project, so the crew is then available everywhere. The `hooks` junction
+lets the Gunner's git guard find its script. Restart Claude Code once after
+creating the junctions.
+
+Updating is just:
+
+```powershell
+git -C "$env:USERPROFILE\dev\crew" pull
+```
+
+The change is live in every project immediately — nothing to copy.
+
+On macOS or Linux use symlinks instead:
+
+```sh
+git clone https://github.com/philchurch77/crew.git ~/dev/crew
+for d in agents commands skills hooks; do
+  ln -s ~/dev/crew/plugins/crew/$d ~/.claude/$d
+done
+```
+
 Both routes serve the same files. The junction route ignores the plugin
-manifests; the plugin route uses them.
+manifests and `hooks/hooks.json`; the Gunner's guard still runs there through
+the `hooks` block in its own frontmatter.
+
+## Tell it what is sensitive
+
+The crew treats every project as holding sensitive personal data. Declare which
+apps and models in the project `CLAUDE.md`:
+
+```
+Sensitive apps: tolerance, sdq, flashcards, evaluation
+Sensitive models: Observation, WeeklyMap, SDQResponse
+```
+
+Those are also the defaults when a project declares nothing. Any change that
+touches a declared app or model, or anything linked to one, runs the Gauntlet
+before the Captain calls it done.
 
 ## Layout
 
 ```
-AGENTS.md                         the constitution — read this first
+AGENTS.md                         the maintainer's guide — not shipped
 CLAUDE.md                         one line, imports AGENTS.md
 .claude-plugin/marketplace.json   the catalogue Claude Code reads
 plugins/crew/
-  .claude-plugin/plugin.json      this plugin manifest
+  .claude-plugin/plugin.json      this plugin manifest, and the only version number
   agents/                         one .md per agent
   commands/                       one .md per slash command
-  skills/<name>/SKILL.md          self-loading procedures
+  skills/<name>/SKILL.md          self-loading procedures — the rules live here
+  hooks/                          hooks.json and the Gunner's git guard
 ```
 
 ## Adding to it
 
 - **Agent** — a `.md` in `agents/` with `name` and `description` frontmatter.
   The description is what Claude matches on: write it as trigger phrases and
-  situations, not a job title. Only add one if it has a job no existing agent
-  has.
+  situations, not a job title, and keep them distinct from the other agents.
+  Add `skills: [ships-articles]` if it reviews Django code. Only add one if it
+  has a job no existing agent has.
 - **Command** — a `.md` in `commands/`. Keep `disable-model-invocation: true`
-  so it fires only when typed.
+  so it fires only when typed. If it is not about Django, it does not belong.
 - **Skill** — `skills/<name>/SKILL.md`. Use a skill when the procedure should
   load itself; write the description as the trigger condition.
 
 Bump `version` in `plugins/crew/.claude-plugin/plugin.json` after any change,
 then `/plugin marketplace update crew` in consuming projects.
 
-Full detail on how the crew operates is in [AGENTS.md](AGENTS.md).
+How the crew operates, and why it is shaped this way, is in
+[AGENTS.md](AGENTS.md).
