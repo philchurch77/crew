@@ -67,6 +67,24 @@ spare port with `curl` is the fallback. Stop the server before you finish.
 highlighted, titles correct and consistent, links going where they claim,
 nothing visible that this role should not see.
 
+**Leaked template syntax** — anything meant for the developer that reaches
+the page. Run this on every response body you fetch, not only the pages you
+are worried about:
+
+```python
+body = re.sub(r"(?is)<(script|style)\b.*?</\1>", "", response.content.decode())
+leaks = re.findall(r"\{[#%{]", body)
+```
+
+Any hit is a template construct Django did not parse and sent to the browser
+as text: a `{# #}` split across lines, or an unclosed `{{` or `{%`. Script and
+style blocks are stripped first because JavaScript legitimately contains
+braces. Also note any developer comment written as `<!-- -->` in the response:
+invisible on screen, readable in view-source. A leak is **Major**: a teacher
+who sees developer commentary reads it as an error message and stops trusting
+that their work saved. The rule is article 7. The Bosun catches it in the
+source; you catch it in what actually shipped.
+
 **Authentication and access** — login and logout work; protected pages refuse
 anonymous users; lower-privilege roles see only what they should; no page lets a
 user reach or modify data that is not theirs.

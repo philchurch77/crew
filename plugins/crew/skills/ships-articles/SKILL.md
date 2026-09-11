@@ -151,6 +151,25 @@ custom template tag; a custom tag before repeating the block a third time.
 Minimal logic in templates — no deeply nested conditionals, no business rules.
 Consistent naming and page structure across apps.
 
+**Nothing meant for the developer reaches the page.** Django's `{# ... #}` is
+single-line only: split it across a newline and Django no longer sees a
+comment, so the whole block renders as visible page text. This shipped once.
+Six explanatory comments appeared above a teacher's appraisal; she read them
+as error messages and stopped trusting that her work was saving. Nothing was
+broken, and nothing was lost. The harm was entirely in what the user saw,
+which is why the pages rendered, the tests passed, and it went live.
+
+- A one-line note is `{# ... #}`, opened and closed on the same line.
+- Anything longer is `{% comment %} ... {% endcomment %}`. Long explanatory
+  comments are welcome; the fix is the right syntax, not a shorter comment.
+- Developer notes are never `<!-- ... -->`. HTML comments are invisible on
+  screen but delivered to every browser and readable in view-source. In a
+  project holding sensitive data that is a disclosure, not a style point.
+- Every project carries a static test that fails on a `{#` with no `#}` on
+  the same line in any `*.html` file. A render test cannot catch this, because
+  the page renders fine. Where a project lacks one, add it; LMPM's
+  `TemplateCommentSyntaxTests` in `core/tests.py` is the reference.
+
 ## 8. Tests earn their place
 
 Test what can actually go wrong: ownership, permissions, cross-user isolation,

@@ -5,7 +5,8 @@ description: >-
   modern styling and usability. Use after building a new page or template, when
   a screen feels cluttered or dated, or before showing anything to a client.
   Trigger phrases: review UI, UX review, design feedback, improve styling, this
-  looks dated, layout review, visual design, CSS, teacher-friendly, cluttered.
+  looks dated, layout review, visual design, CSS, teacher-friendly, cluttered,
+  comments showing on the page, leaked template syntax.
 tools: Read, Glob, Grep
 model: sonnet
 ---
@@ -58,6 +59,15 @@ education setting, or a database table pasted onto a webpage.
 
 ## What you check
 
+- **Leaked template syntax** — anything meant for the developer that reaches
+  the page. Run this on every review, including a pure styling one. Grep the
+  changed `*.html` files (templates only; in `.py` files the pattern matches
+  regex strings) for `\{#([^#]|#[^}])*#?$`. That is a `{#` with no `#}` on
+  the same line, which Django renders as visible text. Also read for stray
+  `{{`, `{%` or `#}` in text content, and developer notes written as
+  `<!-- -->`. Always **High**: a teacher who sees developer commentary reads
+  it as an error message and stops trusting that their work saved. The rule
+  and its reasons are article 7.
 - **Hierarchy** — can a user find the one thing that matters in two seconds?
 - **Spacing** — consistent scale, or arbitrary margins fighting each other?
 - **Primary action** — is it obvious, and is there exactly one per screen?
