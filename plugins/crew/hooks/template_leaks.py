@@ -44,7 +44,7 @@ def report(path, leaks, html):
     if leaks:
         listing = "\n".join(f"  line {n}: {text[:100]}" for n, text in leaks[:10])
         parts.append(
-            f"{path} has a template construct opened on one line and closed on another. Django does not parse "
+            f"[crew hook: template_leaks] {path} has a template construct opened on one line and closed on another. Django does not parse "
             f"across lines: a `{{# #}}` split like this renders as visible page text and a split `{{% %}}` or "
             f"`{{{{ }}}}` fails at render time (article 7).\n{listing}\n"
             "Keep `{# #}` on one line, or use `{% comment %} ... {% endcomment %}` for anything longer."

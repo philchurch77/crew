@@ -114,7 +114,7 @@ def main() -> int:
             text = missing_migrations(project)
             if text:
                 reasons.append(
-                    "A models.py changed this session and `makemigrations --check --dry-run` reports a migration "
+                    "[crew hook: before_stop] A models.py changed this session and `makemigrations --check --dry-run` reports a migration "
                     "that has not been made (article 6). Make it, read it before running it, and if it removes, "
                     "renames, retypes or shrinks a column, the Purser reads it before the work is called done.\n"
                     + text[:1500]

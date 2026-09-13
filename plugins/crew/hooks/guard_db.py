@@ -59,7 +59,7 @@ def main() -> int:
         return 0
 
     reason = (
-        f"Blocked: `{what}` changes the developer's database, and the "
+        f"[crew hook: guard_db] Blocked: `{what}` changes the developer's database, and the "
         f"{agent} audits and reports without changing anything. Read-only "
         "commands are fine: showmigrations, sqlmigrate, makemigrations "
         "--check --dry-run, migrate --check, migrate --plan. If the task "

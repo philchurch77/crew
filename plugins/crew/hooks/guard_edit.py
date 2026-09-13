@@ -45,7 +45,7 @@ def main() -> int:
         return 0
 
     reason = (
-        f"Blocked: the {agent} audits and reports; it does not edit files. "
+        f"[crew hook: guard_edit] Blocked: the {agent} audits and reports; it does not edit files. "
         f"`{os.path.basename(path) or 'that file'}` is outside your memory directory, which is the only place "
         "you write. Put the change in your report for the Captain to make."
     )

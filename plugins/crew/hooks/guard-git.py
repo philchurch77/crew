@@ -38,7 +38,7 @@ def main() -> int:
         return 0
 
     reason = (
-        f"Blocked: `git {match.group(1)}` is not allowed for the Gunner. It "
+        f"[crew hook: guard-git] Blocked: `git {match.group(1)}` is not allowed for the Gunner. It "
         "cannot tell your mutation from the developer's uncommitted work. "
         "Revert from the .bak copy you made before mutating, or stop and "
         "report if you have none."

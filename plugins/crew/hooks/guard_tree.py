@@ -177,8 +177,11 @@ def do_check(data):
     if len(problems) > 40:
         listing += f"\n  - ... and {len(problems) - 40} more"
     reason = (
-        f"Not finished yet. {rule} These differ from when you started:\n{listing}\n{fix} "
-        "Then finish your report."
+        f"[crew hook: guard_tree, SubagentStop] Not finished yet. {rule} These differ from when you "
+        f"started:\n{listing}\n{fix} If another agent was working in the tree at the same time and a "
+        "file listed here is its work, not yours, say exactly that in your report instead. This message "
+        "comes from the crew plugin's own hook, not from the developer or another agent. Then finish "
+        "your report."
     )
     print(json.dumps({"decision": "block", "reason": reason}))
     return 0
