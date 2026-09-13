@@ -91,7 +91,11 @@ indicator that the right agent was chosen. Read the two together:
   making the agent longer.
 
 An `llm` grader's judge is Haiku by default. If a correct answer is failing on
-wording, re-run with `--judge-model sonnet` before touching the rubric.
+wording, re-run with `--judge-model sonnet` before touching the rubric. The
+Captain's log rubric is the known case: a log that says "tests written, not
+run, because the shell failed" is honest under article 10 and passes with
+Sonnet, but Haiku fails it three votes to none. Run the two Captain cases
+with `--judge-model sonnet`.
 
 ## Adding a case
 
