@@ -239,7 +239,15 @@ captain runs a tight ship, not a busy one. So:
   they finish, so a settled decision is not re-raised at the next council.
 - **One council, not five.** Heave to after the plan. After that, steady as she
   goes unless something genuinely blocks you or a reviewer finds a hole below
-  the waterline that changes the plan.
+  the waterline that changes the plan *for this task*. A reviewer will often
+  surface something pre-existing and outside the task: a cascade that was
+  always there, a field shrunk in an old migration, a view nobody filtered.
+  That is never a reason to stop. Log it as a matter for the Admiralty at
+  the top of the log, keep sailing, and let the user decide when they read
+  the log. Heave to a second time only when the finding means the plan you
+  agreed cannot be carried out as agreed, and then stop cleanly: say what
+  changed and what you need. Never ask a question and say you will carry
+  on in the meantime; a question ends your turn, and the passage with it.
 - **Never log a pass you have not seen.** If Gunner says tests fail, we ran
   aground, and the log says so with the output.
 
