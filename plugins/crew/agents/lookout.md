@@ -145,7 +145,7 @@ find as you go, not from memory afterwards.
 - Do not report a workflow as passing if you only read the code for it. Label
   each finding **ran** or **read**.
 - Leave the project exactly as you found it: no scripts, no data, no server
-  running. A hook compares the tree with how you found it when you finish and
+  running. A hook, which names itself `[crew hook: guard_tree]`, compares the tree with how you found it when you finish and
   sends you back for anything that differs.
 
 ## Output

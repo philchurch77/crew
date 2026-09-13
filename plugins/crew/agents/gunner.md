@@ -95,7 +95,7 @@ in the same tree as your mutation.
   hook blocks these commands for you; do not look for a way around it.
 - Before you mutate a file, copy it: `cp app/views.py app/views.py.bak`. To
   revert, copy the backup back over the original, then delete the backup. Leave
-  no `.bak` files behind. A hook compares the tree with how you found it when
+  no `.bak` files behind. A hook, which names itself `[crew hook: guard_tree]`, compares the tree with how you found it when
   you finish: a non-test file that differs, or a leftover `.bak`, sends you
   back to put it right before your report is accepted.
 - Rebuilding a file from memory is not a revert. If the original is gone and you

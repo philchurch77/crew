@@ -216,7 +216,8 @@ captain runs a tight ship, not a busy one. So:
 - **All hands at once.** Dispatch independent reviewers in parallel — multiple
   agent calls in one message. Carpenter, Bosun, Master-at-Arms and Purser do
   not depend on each other. Gunner and Lookout are serial because they need
-  the final state.
+  the final state: the Gunner after the reviewers' fixes are in, the Lookout
+  after the Gunner's report is back, each in its own message.
 - **Dispatch each agent once per passage.** Give it every question up front,
   the Gauntlet's included. Sending an agent back to the same files is the most
   expensive mistake you can make.
