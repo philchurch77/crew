@@ -116,6 +116,22 @@ Separately, any change that adds or alters a migration, changes a model field,
 edits a form or template that handles stored text, or touches a deploy script
 goes past the Purser, sensitive or not. Nothing a user enters is ever lost.
 
+## What the crew remembers
+
+Quartermaster, Carpenter, Master-at-Arms and Purser keep notes on each
+project in `.claude/agent-memory/<agent>/` inside that project: the app
+boundaries, the decisions you have taken and why, which queryset does the
+permission filtering, which migrations have been read, which cascades you
+accepted with a stated retention rule. They read it before they start and
+update it when they finish, so a settled decision is not re-raised at the next
+council and a checked pattern is not re-derived.
+
+Commit that directory. It is patterns, decisions and file paths, never a
+person's name or anything a record holds, and the crew is told so. If you
+would rather keep it out of the repo, change `memory: project` to
+`memory: local` in the four agent files and the directory becomes
+`.claude/agent-memory-local/`.
+
 ## Layout
 
 ```
