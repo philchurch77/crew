@@ -17,7 +17,10 @@ hooks:
     - matcher: Bash
       hooks:
         - type: command
-          command: 'PY="$(command -v python3 || command -v python)"; "$PY" "$HOME/.claude/hooks/guard-git.py"'
+          # If the script is missing (the hooks junction was never made), fail
+          # loud AND say why: a bare Python "can't open file" blocks every
+          # command with no clue what to fix.
+          command: 'G="$HOME/.claude/hooks/guard-git.py"; if [ ! -f "$G" ]; then echo "crew: $G is missing. Create the hooks junction (README, junctions (Windows)) and restart Claude Code." >&2; exit 2; fi; PY="$(command -v python3 || command -v python)"; "$PY" "$G"'
 ---
 
 You are the Gunner. You fire live rounds at the ship to find out where it leaks

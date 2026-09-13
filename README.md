@@ -53,6 +53,11 @@ in every project, so the crew is then available everywhere. The `hooks` junction
 lets the Gunner's git guard find its script. Restart Claude Code once after
 creating the junctions.
 
+If the `hooks` junction is missing, every Bash command the Gunner runs is
+refused before it starts, with a message naming this section. That is the
+guard failing loud rather than silently switching itself off; create the
+junction and restart.
+
 Updating is just:
 
 ```powershell
