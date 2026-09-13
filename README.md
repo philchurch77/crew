@@ -119,7 +119,8 @@ goes past the Purser, sensitive or not. Nothing a user enters is ever lost.
 ## What the crew remembers
 
 Quartermaster, Carpenter, Master-at-Arms and Purser keep notes on each
-project in `.claude/agent-memory/<agent>/` inside that project: the app
+project in `.claude/agent-memory/crew-<agent>/` inside that project (the
+junction route drops the `crew-` prefix): the app
 boundaries, the decisions you have taken and why, which queryset does the
 permission filtering, which migrations have been read, which cascades you
 accepted with a stated retention rule. They read it before they start and

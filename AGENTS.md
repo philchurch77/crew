@@ -67,7 +67,8 @@ breaks that rule.
 
 The four agents that judge against history (Quartermaster, Carpenter,
 Master-at-Arms, Purser) carry `memory: project`: a directory under
-`.claude/agent-memory/<agent>/` in the consuming project, read before they
+`.claude/agent-memory/crew-<agent>/` in the consuming project (bare
+`<agent>` on the junction route, where agents carry no plugin prefix), read before they
 start and written when they finish, so a settled decision is not re-raised
 and a checked pattern is not re-derived. Memory switches on Write and Edit
 for the agent, which is why `guard_edit` confines those tools to the memory
