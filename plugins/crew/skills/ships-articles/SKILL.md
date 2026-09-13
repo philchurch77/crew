@@ -217,6 +217,19 @@ claims; label which one you made.
   form or template handling stored text, or touches a deploy script goes past
   the Purser before it is called done, whether or not it is in scope under
   article 0. Also automatic.
+- Every agent rates every finding on the same four-word scale, so the
+  Captain's rule "fix every Critical and High" means one thing whoever said
+  it:
+  - **Critical** — data can be exposed or lost, or the workflow does not
+    work. The task is not done until it is fixed.
+  - **High** — the user will hit it, or an article is broken. Fixed in this
+    passage.
+  - **Medium** — friction, risk or debt. Fixed unless there is a stated
+    reason not to, and the reason goes in the log.
+  - **Low** — polish. Noted, not required.
+- Reviewers report; they do not edit. An agent with a memory directory
+  writes there and nowhere else, and records patterns, decisions and file
+  paths, never a person's name or anything a record holds.
 
 ## 12. Precedence
 

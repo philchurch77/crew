@@ -37,16 +37,16 @@ to explain it.
 
 ## 2. The crew
 
-| Agent | Called for | Writes files | Model |
-|---|---|---|---|
-| **quartermaster** | Planning and architecture, before code exists | No | inherit |
-| **carpenter** | Complexity and duplication in code that exists | No | sonnet |
-| **gunner** | Tests — permissions, ownership, isolation | Tests only | inherit |
-| **surgeon** | Diagnosing a failure before anything is changed | No | inherit |
-| **bosun** | Templates, CSS, UI and UX | No | sonnet |
-| **lookout** | End-to-end QA as a real user, via the test client | No | inherit |
-| **master-at-arms** | Security, GDPR, sensitive data, deploy safety | No | inherit |
-| **purser** | Data loss — migrations, field changes, forms, deploys | No | inherit |
+| Agent | Called for | Writes files | Memory | Model |
+|---|---|---|---|---|
+| **quartermaster** | Planning and architecture, before code exists | No | project | inherit |
+| **carpenter** | Complexity and duplication in code that exists | No | project | sonnet |
+| **gunner** | Tests — permissions, ownership, isolation | Tests only | — | inherit |
+| **surgeon** | Diagnosing a failure before anything is changed | No | — | inherit |
+| **bosun** | Templates, CSS, UI and UX | No | — | sonnet |
+| **lookout** | End-to-end QA as a real user, via the test client | No | — | inherit |
+| **master-at-arms** | Security, GDPR, sensitive data, deploy safety | No | project | inherit |
+| **purser** | Data loss — migrations, field changes, forms, deploys | No | project | inherit |
 
 Two splits matter. **Quartermaster designs what does not exist yet; Carpenter
 repairs what does.** If both seem to apply, the work is two passages, not one.
@@ -55,10 +55,25 @@ lost.** Same record, opposite risks, different triggers: the Purser fires on
 any migration, field change, text-handling form or deploy script, sensitive or
 not.
 
-Quartermaster, Carpenter, Gunner, Lookout, Master-at-Arms and Purser preload the
-`ships-articles` skill through the `skills` frontmatter field. Subagents do not
-inherit the main session's skills, so this is the only way they see the
-standard. Do not restate an article inside an agent; reference it by number.
+Every agent preloads the `ships-articles` skill through the `skills`
+frontmatter field. Subagents do not inherit the main session's skills, so this
+is the only way they see the standard. Do not restate an article inside an
+agent; reference it by number.
+
+Every finding is rated on the one scale in article 11 (Critical, High,
+Medium, Low), so the Captain's "fix every Critical and High" means the same
+thing from every agent. An agent that invents its own words for severity
+breaks that rule.
+
+The four agents that judge against history (Quartermaster, Carpenter,
+Master-at-Arms, Purser) carry `memory: project`: a directory under
+`.claude/agent-memory/<agent>/` in the consuming project, read before they
+start and written when they finish, so a settled decision is not re-raised
+and a checked pattern is not re-derived. Memory switches on Write and Edit
+for the agent, which is why `guard_edit` confines those tools to the memory
+directory. The Gunner, Lookout, Surgeon and Bosun stay stateless on purpose:
+a walkthrough or a diagnosis should not be steered by what was true last
+time.
 
 The hooks in `plugins/crew/hooks/` enforce what the definitions say. Each is
 a small Python script fed the hook's JSON on stdin; `crew-hook.sh` finds the
@@ -68,6 +83,7 @@ interpreter and runs it.
 |---|---|---|---|
 | `guard-git.py` | PreToolUse Bash | gunner | Blocks `git checkout`, `restore`, `stash`, `reset`, `clean`, `switch`, which cannot tell the Gunner's mutation from the developer's uncommitted work |
 | `guard_db.py` | PreToolUse Bash | every agent but the Gunner | Blocks `migrate`, `flush`, `loaddata`, `dbshell`, `--fake` and deleting the database file. The read-only commands stay allowed |
+| `guard_edit.py` | PreToolUse Write, Edit | every agent but the Gunner | Refuses any edit outside `.claude/agent-memory/`. Memory switches those tools on; this keeps them pointed at memory |
 | `guard_tree.py` | SubagentStart, SubagentStop | gunner, lookout | Snapshots the tree when the agent starts and refuses to let it finish while the Lookout has changed anything or the Gunner has changed a non-test file or left a `.bak`. Gives up after two refusals so the agent can report instead |
 | `template_leaks.py` | PostToolUse Edit, Write | main session and agents | Reports a `{# #}`, `{{ }}` or `{% %}` opened on one line and closed on another the moment it is written. Article 7 |
 | `before_stop.py` | Stop | main session | Before the turn ends: a changed `models.py` has its migration, and no changed template leaks. Article 6 and 7. Allows when already continuing, so it can never trap the developer |

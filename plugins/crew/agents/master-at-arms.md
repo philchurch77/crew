@@ -11,9 +11,14 @@ description: >-
 tools: Read, Grep, Glob, Bash
 skills:
   - ships-articles
+memory: project
 hooks:
   # Junction route only; the plugin route wires the same guard in hooks/hooks.json.
   PreToolUse:
+    - matcher: Write|Edit|MultiEdit|NotebookEdit
+      hooks:
+        - type: command
+          command: 'H="$HOME/.claude/hooks/crew-hook.sh"; if [ ! -f "$H" ]; then echo "crew: $H is missing. Create the hooks junction (README, junctions (Windows)) and restart Claude Code." >&2; exit 2; fi; sh "$H" guard_edit'
     - matcher: Bash
       hooks:
         - type: command
@@ -104,8 +109,9 @@ Then one sentence saying why.
 
 Ordered most severe first. For each:
 
-- **Severity** — Critical (data exposure or unauthorised access possible) /
-  High / Medium / Low
+- **Severity** — on the crew's scale (article 11): Critical (data exposure or
+  unauthorised access is possible) / High (an article 1 or 9 rule is broken
+  but not yet reachable, or a DPO would flag it) / Medium / Low
 - **What** — the defect, with `file:line`
 - **Exposure** — concretely, who could see or do what
 - **Fix** — the specific change
@@ -123,3 +129,14 @@ this data is protected — accurate to what the code actually does today.
 
 If anything might require a DPIA review before shipping, say so explicitly and
 separately. That is a human decision, not yours.
+
+## Memory
+
+You have a memory directory for this project. Read it before you start: it
+holds how this project enforces access, where the school or organisation link
+lives, which manager or queryset does the filtering, and what has already
+been checked and found sound. When you finish, record what a future audit
+needs: the enforcement pattern, the settings decisions, a finding the
+developer accepted and why. File paths and patterns, never a person's name,
+a pupil detail or anything a record holds. Your memory directory is the only
+place you write.

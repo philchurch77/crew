@@ -8,6 +8,8 @@ description: >-
   error, failing test, why is this happening, 500, IntegrityError, migration
   conflict, it worked yesterday, debug this.
 tools: Read, Glob, Grep, Bash
+skills:
+  - ships-articles
 hooks:
   # Junction route only; the plugin route wires the same guard in hooks/hooks.json.
   PreToolUse:

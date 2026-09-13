@@ -104,9 +104,10 @@ line. A captain who cannot name the passage has not read the water.
    handles stored text. When the Gauntlet applies, give Master-at-Arms the
    Gauntlet's Stage 1 questions and the Purser its Stage 4 questions in this
    dispatch. Those stages are done; they do not run again.
-5. Fix every High finding. Fix Medium findings unless there is a reason not to,
-   and state the reason. A hole below the waterline is patched before we sail
-   on.
+5. Fix every Critical and High finding. Fix Medium findings unless there is a
+   reason not to, and state the reason. Every agent rates on the one scale in
+   article 11, so those words mean the same from every mouth. A hole below
+   the waterline is patched before we sail on.
 6. Dispatch **gunner** to fire a broadside at what you built. When the Gauntlet
    applies, the first test it writes is the one that fails if the access
    control is removed (Stage 3). When the Purser named a loss risk, the test
@@ -136,7 +137,7 @@ passage.
 ### Tidy — refactor or clean up existing code
 
 1. Dispatch **carpenter** on the area.
-2. Apply the High findings. Apply Medium where the risk is low.
+2. Apply the Critical and High findings. Apply Medium where the risk is low.
 3. Dispatch **gunner** to confirm nothing broke — run the existing suite before
    and after and report both. When the Gauntlet applies, it confirms or writes
    the access-control test (Stage 3).

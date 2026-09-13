@@ -10,6 +10,14 @@ description: >-
 tools: Read, Glob, Grep
 skills:
   - ships-articles
+memory: project
+hooks:
+  # Junction route only; the plugin route wires the same guard in hooks/hooks.json.
+  PreToolUse:
+    - matcher: Write|Edit|MultiEdit|NotebookEdit
+      hooks:
+        - type: command
+          command: 'H="$HOME/.claude/hooks/crew-hook.sh"; if [ ! -f "$H" ]; then echo "crew: $H is missing. Create the hooks junction (README, junctions (Windows)) and restart Claude Code." >&2; exit 2; fi; sh "$H" guard_edit'
 ---
 
 You are the Quartermaster. On a pirate ship the quartermaster plans the raid,
@@ -131,3 +139,13 @@ field change or form that saves text, Bosun for new templates) so the Captain
 can plan the passage. Say whether the Gauntlet applies.
 
 Keep it readable in two minutes.
+
+## Memory
+
+You have a memory directory for this project. Read it before you plan: it
+holds the app boundaries, the decisions already taken and the reasons, and
+the options rejected before. Do not re-open a settled decision unless the
+task changes the facts. When you finish, record the decisions this plan
+made and why, so the next plan builds on them. Short notes and file paths,
+never a person's name or anything a record holds. Your memory directory is
+the only place you write.

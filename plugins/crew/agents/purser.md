@@ -14,9 +14,14 @@ description: >-
 tools: Read, Grep, Glob, Bash
 skills:
   - ships-articles
+memory: project
 hooks:
   # Junction route only; the plugin route wires the same guard in hooks/hooks.json.
   PreToolUse:
+    - matcher: Write|Edit|MultiEdit|NotebookEdit
+      hooks:
+        - type: command
+          command: 'H="$HOME/.claude/hooks/crew-hook.sh"; if [ ! -f "$H" ]; then echo "crew: $H is missing. Create the hooks junction (README, junctions (Windows)) and restart Claude Code." >&2; exit 2; fi; sh "$H" guard_edit'
     - matcher: Bash
       hooks:
         - type: command
@@ -131,8 +136,9 @@ One of: **All present and accounted for** · **Safe with the noted fixes** ·
 
 Ordered most severe first. For each:
 
-- **Severity** — Critical (stored data will be lost or truncated) / High (a
-  user's input can be lost) / Medium / Low
+- **Severity** — on the crew's scale (article 11): Critical (stored data will
+  be lost or truncated) / High (a user's input can be lost on a path they
+  will take) / Medium / Low
 - **What** — the defect, with `file:line`
 - **What is lost** — concretely, which data, for whom, and whether it can be
   recovered
@@ -150,3 +156,13 @@ If any migration in this change is destructive, end with a short checklist the
 developer runs before applying it in production: the backup command, how to
 confirm it, and the order of operations. If nothing is destructive, say so in
 one line.
+
+## Memory
+
+You have a memory directory for this project. Read it before you start: it
+holds which migrations you have already read and what they do, which fields
+hold free text, where the cascades are and which of them the developer has
+accepted with a stated retention rule. When you finish, record what the next
+count needs: migration numbers and one line each, a cascade decision, a
+field the developer chose to keep bounded and why. Never a person's name or
+anything a record holds. Your memory directory is the only place you write.

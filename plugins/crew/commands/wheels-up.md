@@ -15,7 +15,8 @@ Stop and surface any failure before continuing.
 
 Dispatch the **carpenter** agent on the files changed since the last commit. Ask
 for anything obviously messy — oversized views, duplicated logic, or code that
-will be painful to debug in production. Fix every High finding before moving on.
+will be painful to debug in production. Fix every Critical and High finding
+before moving on.
 
 If the changes touch pupil data, permissions, auth, `settings.py` or an external
 API, dispatch **master-at-arms** in parallel with the Carpenter. Do not deploy

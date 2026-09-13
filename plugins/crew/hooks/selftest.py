@@ -82,6 +82,27 @@ check("guard_db ignores the gunner", code == 0)
 code, _ = run("guard_db.py", bash("", "python manage.py migrate"))
 check("guard_db ignores the main session", code == 0)
 
+# guard_edit -----------------------------------------------------------------
+def write(agent, path, tool="Write"):
+    return {"agent_type": agent, "tool_name": tool, "tool_input": {"file_path": path}}
+
+code, _ = run("guard_edit.py", write("crew:purser", "/proj/tolerance/views.py"))
+check("guard_edit blocks purser writing views.py", code == 2)
+code, _ = run("guard_edit.py", write("carpenter", "/proj/app/views.py", "Edit"))
+check("guard_edit blocks carpenter editing views.py", code == 2)
+code, _ = run("guard_edit.py", write("master-at-arms", "/proj/.claude/agent-memory/master-at-arms/MEMORY.md"))
+check("guard_edit allows writing to project memory", code == 0)
+code, _ = run("guard_edit.py", write("quartermaster", "C:\\Users\\me\\.claude\\agent-memory\\quartermaster\\notes.md", "Edit"))
+check("guard_edit allows user memory on Windows paths", code == 0)
+code, _ = run("guard_edit.py", write("purser", "/proj/.claude/agent-memory-local/purser/MEMORY.md"))
+check("guard_edit allows local memory", code == 0)
+code, _ = run("guard_edit.py", write("gunner", "/proj/tolerance/tests.py"))
+check("guard_edit ignores the gunner", code == 0)
+code, _ = run("guard_edit.py", write("", "/proj/tolerance/views.py"))
+check("guard_edit ignores the main session", code == 0)
+code, _ = run("guard_edit.py", {"agent_type": "purser", "tool_name": "Read", "tool_input": {"file_path": "/proj/x.py"}})
+check("guard_edit ignores Read", code == 0)
+
 # guard_tree -----------------------------------------------------------------
 tmp = tempfile.mkdtemp(prefix="crew-selftest-")
 try:

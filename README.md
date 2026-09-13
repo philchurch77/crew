@@ -138,6 +138,9 @@ The agents' rules are written in their definitions; the hooks make them so.
 - **The Gunner cannot discard your work.** `git checkout`, `restore`, `stash`,
   `reset`, `clean` and `switch` are refused inside the Gunner, which mutates
   files on purpose and cannot tell its mutation from your uncommitted fix.
+- **Reviewers cannot edit your code.** Every agent but the Gunner is refused
+  any Write or Edit outside its own memory directory. Their findings come back
+  in the report for the Captain to apply.
 - **Reviewers cannot write to the database.** `migrate`, `flush`, `loaddata`,
   `dbshell`, `--fake` and deleting the database file are refused inside every
   agent but the Gunner. `showmigrations`, `sqlmigrate` and `makemigrations

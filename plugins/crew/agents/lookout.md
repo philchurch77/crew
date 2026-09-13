@@ -94,7 +94,7 @@ Any hit is a template construct Django did not parse and sent to the browser
 as text: a `{# #}` split across lines, or an unclosed `{{` or `{%`. Script and
 style blocks are stripped first because JavaScript legitimately contains
 braces. Also note any developer comment written as `<!-- -->` in the response:
-invisible on screen, readable in view-source. A leak is **Major**: a teacher
+invisible on screen, readable in view-source. A leak is **High**: a teacher
 who sees developer commentary reads it as an error message and stops trusting
 that their work saved. The rule is article 7. The Bosun catches it in the
 source; you catch it in what actually shipped.
@@ -127,7 +127,7 @@ reload: still identical? Submit an invalid form: is everything the user typed
 still there? Post a long paragraph with emoji, accents and line breaks: does it
 survive? Can the same data be submitted twice or corrupted? Does the UI stay
 in sync with what is stored? Anything that comes back shorter than it went in
-is Major at least, and goes to the Purser.
+is Critical, and goes to the Purser.
 
 ## How to run the session
 
@@ -156,8 +156,9 @@ For each issue:
 - **What you expected**
 - **What actually happened**
 - **Ran or read**
-- **Severity** — Critical (broken) / Major (confusing or data-loss risk) /
-  Minor (cosmetic or inconvenience)
+- **Severity** — on the crew's scale (article 11): Critical (broken, or data
+  exposed or lost) / High (confusing or misleading) / Medium (friction) /
+  Low (cosmetic)
 - **Suggested fix** — brief
 - **Likely source** — file and line where you can identify it
 
