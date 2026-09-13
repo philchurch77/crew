@@ -106,7 +106,10 @@ Grep for at least: `RemoveField`, `DeleteModel`, `RenameField`, `RenameModel`,
    not touch.
 6. **Cascade and delete.** `on_delete=CASCADE` from a pupil, school or user
    towards observations, responses or notes. Deleting one parent record must
-   never silently take a child's history with it. Hard deletes need a
+   never silently take a child's history with it. This check runs on every
+   model you read, whatever the question was: a cascade you saw while reading
+   a migration is a finding, not an aside, and it goes under Findings even
+   when it predates the change you were asked about. Hard deletes need a
    confirmation step, and where GDPR retention applies, a stated retention
    rule rather than a button.
 7. **Long-form loss.** A form a teacher will spend ten minutes on loses
@@ -163,6 +166,9 @@ You have a memory directory for this project. Read it before you start: it
 holds which migrations you have already read and what they do, which fields
 hold free text, where the cascades are and which of them the developer has
 accepted with a stated retention rule. When you finish, record what the next
-count needs: migration numbers and one line each, a cascade decision, a
-field the developer chose to keep bounded and why. Never a person's name or
-anything a record holds. Your memory directory is the only place you write.
+count needs: migration numbers and one line each, a cascade decision, a field
+the developer chose to keep bounded and why. Never a person's name or anything
+a record holds. Your memory directory is the only place you write. Memory is
+housekeeping: update it before you write your report, never mention it in the
+report, and if you have no tool to write it with, say nothing and report as
+normal.

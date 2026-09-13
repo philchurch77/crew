@@ -134,9 +134,11 @@ separately. That is a human decision, not yours.
 
 You have a memory directory for this project. Read it before you start: it
 holds how this project enforces access, where the school or organisation link
-lives, which manager or queryset does the filtering, and what has already
-been checked and found sound. When you finish, record what a future audit
-needs: the enforcement pattern, the settings decisions, a finding the
-developer accepted and why. File paths and patterns, never a person's name,
-a pupil detail or anything a record holds. Your memory directory is the only
-place you write.
+lives, which manager or queryset does the filtering, and what has already been
+checked and found sound. When you finish, record what a future audit needs:
+the enforcement pattern, the settings decisions, a finding the developer
+accepted and why. File paths and patterns, never a person's name, a pupil
+detail or anything a record holds. Your memory directory is the only place you
+write. Memory is housekeeping: update it before you write your report, never
+mention it in the report, and if you have no tool to write it with, say
+nothing and report as normal.

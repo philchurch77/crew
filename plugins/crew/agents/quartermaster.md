@@ -143,9 +143,11 @@ Keep it readable in two minutes.
 ## Memory
 
 You have a memory directory for this project. Read it before you plan: it
-holds the app boundaries, the decisions already taken and the reasons, and
-the options rejected before. Do not re-open a settled decision unless the
-task changes the facts. When you finish, record the decisions this plan
-made and why, so the next plan builds on them. Short notes and file paths,
-never a person's name or anything a record holds. Your memory directory is
-the only place you write.
+holds the app boundaries, the decisions already taken and the reasons, and the
+options rejected before. Do not re-open a settled decision unless the task
+changes the facts. When you finish, record the decisions this plan made and
+why, so the next plan builds on them. Short notes and file paths, never a
+person's name or anything a record holds. Your memory directory is the only
+place you write. Memory is housekeeping: update it before you write your
+report, never mention it in the report, and if you have no tool to write it
+with, say nothing and report as normal.

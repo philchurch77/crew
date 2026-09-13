@@ -91,6 +91,23 @@ rules, dashboard maths and email is doing five jobs too many. The goal is not a
 
 Do not optimise beyond this speculatively. Fix obvious risk; leave the rest.
 
+The accuracy rules that sit beside query hygiene, because they break the same
+way, silently and later:
+
+- `timezone.now()`, never `datetime.now()`. `USE_TZ` is on and a naive
+  datetime is a bug waiting for October.
+- A service function that writes to more than one row runs inside
+  `transaction.atomic()`. Half a workflow saved is worse than none.
+- A counter or total is updated with an `F()` expression, not read, added
+  to and saved. Two teachers, one record, one lost increment.
+- `exists()` to ask whether; `count()` only when the number is shown.
+- `get()` on a queryset that can match twice is a 500 in production. Filter
+  on a unique constraint or use `first()` and handle `None`.
+- Uniqueness is a `UniqueConstraint` in `Meta.constraints`, not
+  `unique_together`, and every FK carries a `related_name`.
+- A model saved from anywhere but a `ModelForm` calls `full_clean()` first.
+  Validation that lives in `clean()` does not run on `save()`.
+
 ## 5. Models describe the real workflow
 
 Name models after what they are in the domain, not what they are in the

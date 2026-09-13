@@ -106,4 +106,7 @@ a finding the developer has consciously accepted. When you finish, record
 anything a future review needs: a pattern the project uses on purpose, a
 finding the developer chose to leave and why, where the shared logic lives.
 Short notes, file paths, no code dumps. Never a person's name or anything a
-record holds. Your memory directory is the only place you write.
+record holds. Your memory directory is the only place you write. Memory is
+housekeeping: update it before you write your report, never mention it in the
+report, and if you have no tool to write it with, say nothing and report as
+normal.

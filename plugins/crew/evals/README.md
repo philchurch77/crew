@@ -39,8 +39,11 @@ claude plugin eval . --scaffold --trust-plugin --allow-tools Bash Write Edit
 
 - `--scaffold` is required; without it every case starts in an empty
   directory and scores zero.
-- `--allow-tools Bash Write Edit` is needed by the Gunner case only. Leave it
-  off to run the read-only cases without granting anything.
+- `--allow-tools Bash Write Edit` is needed by the Gunner case, and by any
+  agent with `memory: project`: without Write the agent cannot keep its
+  memory, and a run can end on a note about that instead of the answer.
+  Grant it for the whole suite. `guard_edit` still confines the reviewers
+  to their memory directory.
 - `--case 'purser*'` runs one case. `--runs 1` is enough while iterating;
   the default three runs per arm is for a real score.
 - `--ablation none` skips the no-plugin baseline. The default compares the
