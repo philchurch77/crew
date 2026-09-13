@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Observations{% endblock %}
+{% block content %}
+<h1>Observations</h1>
+<p><a href="{% url 'observation_create' %}">New observation</a> · <a href="{% url 'dashboard' %}">Dashboard</a></p>
+{% if observations %}
+<table>
+  <thead><tr><th>Date</th><th>Pupil</th><th>Mood</th><th>Author</th></tr></thead>
+  <tbody>
+  {% for o in observations %}
+    <tr>
+      <td><a href="{% url 'observation_detail' o.pk %}">{{ o.observed_on }}</a></td>
+      <td>{{ o.pupil }}</td>
+      <td>{{ o.get_mood_display }}</td>
+      <td>{{ o.author.get_full_name|default:o.author.username }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>No observations yet. Record the first one with the link above.</p>
+{% endif %}
+{% endblock %}

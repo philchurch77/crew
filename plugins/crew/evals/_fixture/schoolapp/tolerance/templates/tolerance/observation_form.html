@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}{% if observation %}Edit observation{% else %}New observation{% endif %}{% endblock %}
+{% block content %}
+<h1>{% if observation %}Edit observation{% else %}New observation{% endif %}</h1>
+{# The mood field is deliberately a select rather than radio buttons because
+   the safeguarding lead asked for it to match the paper form; do not change
+   it without asking her first. #}
+<form method="post">
+  {% csrf_token %}
+  {{ form.non_field_errors }}
+  <p>{{ form.pupil.label_tag }} {{ form.pupil }} {{ form.pupil.errors }}</p>
+  <p>{{ form.observed_on.label_tag }} {{ form.observed_on }} {{ form.observed_on.errors }}</p>
+  <p>{{ form.mood.label_tag }} {{ form.mood }} {{ form.mood.errors }}</p>
+  <p>{{ form.body.label_tag }} {{ form.body }} {{ form.body.errors }}</p>
+  <button type="submit">Save</button>
+</form>
+{% endblock %}

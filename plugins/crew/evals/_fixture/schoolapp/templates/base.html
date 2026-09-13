@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>{% block title %}Schoolapp{% endblock %}</title>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="{% url 'observation_list' %}">Observations</a>
+      {% if user.is_authenticated %}
+        <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button>Log out</button></form>
+      {% endif %}
+    </nav>
+  </header>
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

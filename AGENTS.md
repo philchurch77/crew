@@ -120,7 +120,27 @@ Quartermaster's one-question rule already cover them, and they were not Django.
 
 ---
 
-## 6. Maintaining this file
+## 6. Evals
+
+`plugins/crew/evals/` is the crew's proving ground. It holds a small Django
+fixture (`_fixture/schoolapp/`) with one seeded defect per agent, and a case
+for each that grades whether the agent named the defect. The suite ships with
+the plugin so consuming projects can run it, but its purpose is here: run it
+after any change to an agent, a skill or the Articles, and read the delta
+against the no-plugin baseline before deciding the change helped.
+
+```
+cd plugins/crew
+claude plugin eval . --scaffold --trust-plugin --allow-tools Bash Write Edit
+```
+
+`evals/README.md` explains the fixture, the graders and how to add a case.
+The one rule: never write a case for a defect you have not reproduced by hand
+in the fixture first.
+
+---
+
+## 7. Maintaining this file
 
 - An agent is worth having only if it has a job no other agent has. When two
   agents overlap, merge them.
@@ -135,3 +155,6 @@ Quartermaster's one-question rule already cover them, and they were not Django.
   should exit 2.
 - Keep the roster small. Eight agents that are each obviously the right call
   beat fifteen that overlap.
+- Run the evals (section 6) after changing an agent, a skill or the Articles.
+  A change that lowers a case score is not an improvement, whatever it reads
+  like.

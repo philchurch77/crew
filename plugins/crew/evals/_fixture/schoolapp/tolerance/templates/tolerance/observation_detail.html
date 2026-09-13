@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block title %}{{ observation.pupil }} on {{ observation.observed_on }}{% endblock %}
+{% block content %}
+<h1>{{ observation.pupil }}</h1>
+<p><strong>{{ observation.observed_on }}</strong> · {{ observation.get_mood_display }} · recorded by {{ observation.author.get_full_name|default:observation.author.username }}</p>
+<div>{{ observation.body|linebreaks }}</div>
+<p><a href="{% url 'observation_edit' observation.pk %}">Edit</a> · <a href="{% url 'observation_list' %}">Back to list</a></p>
+{% endblock %}

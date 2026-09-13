@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h1>Dashboard</h1>
+<p>{{ total_pupils }} pupils, observations since {{ since }}.</p>
+{% if alerts %}
+<p><strong>Needs attention:</strong> {% for p in alerts %}{{ p }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+{% endif %}
+<table>
+  <thead><tr><th>Pupil</th><th>Total</th><th>Anxious</th><th>Withdrawn</th><th>Dysregulated</th><th>Concern</th><th>Level</th><th>Latest</th></tr></thead>
+  <tbody>
+  {% for r in rows %}
+    <tr>
+      <td>{{ r.pupil }}</td><td>{{ r.total }}</td><td>{{ r.anxious }}</td><td>{{ r.withdrawn }}</td>
+      <td>{{ r.dysregulated }}</td><td>{{ r.concern }}%</td><td>{{ r.level }}</td>
+      <td>{% if r.latest %}{{ r.latest.observed_on }} ({{ r.latest_author }}){% endif %}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
