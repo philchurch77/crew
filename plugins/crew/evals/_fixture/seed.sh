@@ -16,5 +16,5 @@ git -c user.name=fixture -c user.email=fixture@example.com commit -qm "Schoolapp
 
 if [ "${1:-}" = "--with-django" ] && ! python3 -c "import django" >/dev/null 2>&1; then
   python3 -m venv .venv
-  .venv/bin/pip install -q --disable-pip-version-check -r requirements.txt
+  .venv/bin/pip install -q --disable-pip-version-check --timeout 60 --retries 5 -r requirements.txt
 fi

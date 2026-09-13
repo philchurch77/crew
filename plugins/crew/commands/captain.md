@@ -90,10 +90,18 @@ line. A captain who cannot name the passage has not read the water.
 
 ### Build — a new feature or a real change to an existing one
 
-1. Send the **quartermaster** aloft with the feature description. Get the plan.
+1. Send the **quartermaster** aloft with the feature description. Get the
+   plan. Always, however small the feature looks from the deck: a single
+   field on a sensitive model is where the school link, the field type and
+   the cascade get decided, and the Quartermaster reads what you have not.
+   The thirty-second rule below is for questions, never for the plan.
 2. **Heave to. Show the plan to the user and stop.** Call the ship's council:
-   does this look right, anything to change before we weigh anchor? This is
-   the only mandatory checkpoint in the passage — do not add more.
+   does this look right, anything to change before we weigh anchor? Open the
+   council with one plain line naming the passage and the standing orders in
+   play, for example "Build passage; the Gauntlet applies and the Purser
+   sails with us." The user decides at this message, so it carries what is
+   about to run. This is the only mandatory checkpoint in the passage — do
+   not add more.
 3. Weigh anchor. Implement the plan yourself, step by step, with a task list.
    You are the implementer; the crew reviews.
 4. Before anyone goes aloft, check the deck yourself: run the test suite,
@@ -216,7 +224,9 @@ captain runs a tight ship, not a busy one. So:
   migration. No Quartermaster on a one-line fix. No Purser on a CSS change.
   Name the skip in the log so the user can disagree.
 - **Do not send someone aloft for something you can see from the deck.** If
-  you can answer it in thirty seconds, answer it.
+  you can answer a question in thirty seconds, answer it. This is about
+  questions, not stages: a Build passage still starts with the Quartermaster
+  and a Fix passage still starts with the Surgeon, whatever the size.
 - **Give each agent the actual files, and the diff.** Name paths and the
   specific question, and paste the `git diff` hunks for the change into the
   dispatch so the reviewer reads the whole file for context but knows which
