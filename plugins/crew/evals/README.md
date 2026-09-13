@@ -19,10 +19,23 @@ seeded defects, each the target of one case:
 | Migration 0002 shrinks `Observation.body` from `TextField` to `CharField(200)`; `Observation.pupil` cascades | `tolerance/migrations/0002_shorten_body.py`, `tolerance/models.py` | `purser-destructive-migration`, `trigger-text-came-back-shorter` |
 | Four queries per pupil in a loop, plus scoring rules and email in the view | `tolerance/views.py` `dashboard` | `carpenter-oversized-dashboard` |
 | Empty `tolerance/tests.py` | | `gunner-cross-school-test` |
+| A feature request: an "agreed action" field on Observation | the whole fixture | `captain-build-heaves-to`, `captain-build-weighs-anchor` |
 
 Everything else in the fixture follows the Articles, so a finding outside this
 table is either a real gap in the fixture or noise from the agent. Both are
 worth knowing.
+
+The two Captain cases test the passage rather than a finding. The first
+types `/crew:captain` with the feature and expects the Captain to read the
+water, name the passage, send the Quartermaster aloft, show the plan and
+stop, with no code written. The second resumes that exact conversation from
+`history.jsonl` (a transcript saved from a run of the first) with the user
+saying aye, and expects the rest of the passage: the change made, the four
+reviewers dispatched, the Gunner after them, the Lookout last, and a log
+whose Tests, Gauntlet and Purser lines report what really happened. If you
+change the Captain's checkpoint wording enough that the saved transcript no
+longer matches, re-record it: run the first case with `--keep-temp` and copy
+the session `.jsonl` from the kept directory's `config/projects/` tree.
 
 Each case's `scaffold.sh` copies the fixture into the run's empty workspace and
 commits it. The Gunner case also needs Django importable; its scaffold builds a
