@@ -1,5 +1,5 @@
 {
-  "description": "Stops the Gunner discarding the developer's uncommitted work with git checkout, restore, stash, reset, clean or switch. Acts only inside the gunner subagent.",
+  "description": "The crew's guards and checks. guard-git: the Gunner may not use git to discard the developer's uncommitted work. guard_db: the read-only agents may not write to the database. guard_tree: the Lookout leaves the tree as it found it and the Gunner changes only tests. template_leaks: a template construct split across lines is reported the moment it is written. before_stop: a model change has its migration and no changed template leaks, before the main session calls the turn done.",
   "hooks": {
     "PreToolUse": [
       {
@@ -7,8 +7,60 @@
         "hooks": [
           {
             "type": "command",
-            "command": "PY=\"$(command -v python3 || command -v python)\"; \"$PY\" \"${CLAUDE_PLUGIN_ROOT}/hooks/guard-git.py\"",
+            "command": "sh \"${CLAUDE_PLUGIN_ROOT}/hooks/crew-hook.sh\" guard-git",
             "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "sh \"${CLAUDE_PLUGIN_ROOT}/hooks/crew-hook.sh\" guard_db",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SubagentStart": [
+      {
+        "matcher": "^(crew:)?(gunner|lookout)$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh \"${CLAUDE_PLUGIN_ROOT}/hooks/crew-hook.sh\" guard_tree snapshot",
+            "timeout": 60
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "matcher": "^(crew:)?(gunner|lookout)$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh \"${CLAUDE_PLUGIN_ROOT}/hooks/crew-hook.sh\" guard_tree check",
+            "timeout": 60
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh \"${CLAUDE_PLUGIN_ROOT}/hooks/crew-hook.sh\" template_leaks",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh \"${CLAUDE_PLUGIN_ROOT}/hooks/crew-hook.sh\" before_stop",
+            "timeout": 150
           }
         ]
       }

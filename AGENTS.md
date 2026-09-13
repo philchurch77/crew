@@ -60,11 +60,26 @@ Quartermaster, Carpenter, Gunner, Lookout, Master-at-Arms and Purser preload the
 inherit the main session's skills, so this is the only way they see the
 standard. Do not restate an article inside an agent; reference it by number.
 
-The Gunner is the one agent with a hook. `hooks/guard-git.py` blocks `git
-checkout`, `restore`, `stash`, `reset`, `clean` and `switch` inside the gunner
-subagent only. It is wired twice because the two install routes differ: the
-plugin route reads `hooks/hooks.json`, and the junction route reads the
-`hooks` block in the Gunner's frontmatter (plugin installs ignore that block).
+The hooks in `plugins/crew/hooks/` enforce what the definitions say. Each is
+a small Python script fed the hook's JSON on stdin; `crew-hook.sh` finds the
+interpreter and runs it.
+
+| Hook | Event | Acts on | Does |
+|---|---|---|---|
+| `guard-git.py` | PreToolUse Bash | gunner | Blocks `git checkout`, `restore`, `stash`, `reset`, `clean`, `switch`, which cannot tell the Gunner's mutation from the developer's uncommitted work |
+| `guard_db.py` | PreToolUse Bash | every agent but the Gunner | Blocks `migrate`, `flush`, `loaddata`, `dbshell`, `--fake` and deleting the database file. The read-only commands stay allowed |
+| `guard_tree.py` | SubagentStart, SubagentStop | gunner, lookout | Snapshots the tree when the agent starts and refuses to let it finish while the Lookout has changed anything or the Gunner has changed a non-test file or left a `.bak`. Gives up after two refusals so the agent can report instead |
+| `template_leaks.py` | PostToolUse Edit, Write | main session and agents | Reports a `{# #}`, `{{ }}` or `{% %}` opened on one line and closed on another the moment it is written. Article 7 |
+| `before_stop.py` | Stop | main session | Before the turn ends: a changed `models.py` has its migration, and no changed template leaks. Article 6 and 7. Allows when already continuing, so it can never trap the developer |
+
+Guards fail closed: no Python, no tool call. Checks fail open: nothing the
+hook cannot establish ever blocks the main session from stopping.
+
+They are wired twice because the two install routes differ: the plugin route
+reads `hooks/hooks.json`, and the junction route reads the `hooks` block in
+each agent's frontmatter (plugin installs ignore that block). The junction
+route cannot run the two main-session hooks on its own; the README gives the
+`settings.json` lines for them.
 
 ---
 
@@ -150,9 +165,9 @@ in the fixture first.
 - Bump `version` in `plugins/crew/.claude-plugin/plugin.json` on any change,
   then run `/plugin marketplace update crew` in consuming projects. That is the
   only version number; the marketplace manifest does not carry one.
-- Test a hook change with sample input before committing:
-  `echo '{"agent_type":"gunner","tool_name":"Bash","tool_input":{"command":"git stash"}}' | python3 plugins/crew/hooks/guard-git.py`
-  should exit 2.
+- Test a hook change before committing: `python3 plugins/crew/hooks/selftest.py`
+  feeds every hook the inputs it must act on and the ones it must let through.
+  Run it with an interpreter that has Django to cover the migration check.
 - Keep the roster small. Eight agents that are each obviously the right call
   beat fifteen that overlap.
 - Run the evals (section 6) after changing an agent, a skill or the Articles.

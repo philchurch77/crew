@@ -50,13 +50,32 @@ foreach ($d in @("agents","commands","skills","hooks")) {
 
 Claude Code reads `~/.claude/agents`, `~/.claude/commands` and `~/.claude/skills`
 in every project, so the crew is then available everywhere. The `hooks` junction
-lets the Gunner's git guard find its script. Restart Claude Code once after
+lets the agents' guards find their scripts. Restart Claude Code once after
 creating the junctions.
 
-If the `hooks` junction is missing, every Bash command the Gunner runs is
-refused before it starts, with a message naming this section. That is the
+If the `hooks` junction is missing, every Bash command the guarded agents run
+is refused before it starts, with a message naming this section. That is a
 guard failing loud rather than silently switching itself off; create the
 junction and restart.
+
+Two hooks run in the main session rather than inside an agent, and the
+junction route cannot wire those from an agent file. To get them, add to
+`~/.claude/settings.json`:
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      { "matcher": "Edit|Write|MultiEdit", "hooks": [
+        { "type": "command", "command": "sh \"$HOME/.claude/hooks/crew-hook.sh\" template_leaks" } ] }
+    ],
+    "Stop": [
+      { "hooks": [
+        { "type": "command", "command": "sh \"$HOME/.claude/hooks/crew-hook.sh\" before_stop", "timeout": 150 } ] }
+    ]
+  }
+}
+```
 
 Updating is just:
 
@@ -76,8 +95,8 @@ done
 ```
 
 Both routes serve the same files. The junction route ignores the plugin
-manifests and `hooks/hooks.json`; the Gunner's guard still runs there through
-the `hooks` block in its own frontmatter.
+manifests and `hooks/hooks.json`; the agents' guards still run there through
+the `hooks` block in their own frontmatter.
 
 ## Tell it what is sensitive
 
@@ -108,8 +127,33 @@ plugins/crew/
   agents/                         one .md per agent
   commands/                       one .md per slash command
   skills/<name>/SKILL.md          self-loading procedures — the rules live here
-  hooks/                          hooks.json and the Gunner's git guard
+  hooks/                          hooks.json, the guards and checks, and their self-test
+  evals/                          the proving ground: a seeded fixture and one case per agent
 ```
+
+## What the hooks enforce
+
+The agents' rules are written in their definitions; the hooks make them so.
+
+- **The Gunner cannot discard your work.** `git checkout`, `restore`, `stash`,
+  `reset`, `clean` and `switch` are refused inside the Gunner, which mutates
+  files on purpose and cannot tell its mutation from your uncommitted fix.
+- **Reviewers cannot write to the database.** `migrate`, `flush`, `loaddata`,
+  `dbshell`, `--fake` and deleting the database file are refused inside every
+  agent but the Gunner. `showmigrations`, `sqlmigrate` and `makemigrations
+  --check --dry-run` still run.
+- **The Lookout leaves the tree as it found it, and the Gunner changes only
+  tests.** Each is refused permission to finish while the tree says otherwise,
+  and told which files to put back. After two refusals it may finish and say
+  so in its report instead.
+- **A leaked template comment is caught as it is written.** A `{# #}`,
+  `{{ }}` or `{% %}` split across lines is reported straight back after the
+  edit, and again before the turn ends if one arrived by another route.
+- **A model change has its migration before the turn ends.** If a `models.py`
+  changed and `makemigrations --check --dry-run` reports one unmade, the turn
+  does not end until it exists.
+
+`python3 plugins/crew/hooks/selftest.py` exercises all of them.
 
 ## Adding to it
 

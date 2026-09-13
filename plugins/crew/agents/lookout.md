@@ -10,6 +10,20 @@ description: >-
 tools: Read, Glob, Grep, Bash
 skills:
   - ships-articles
+hooks:
+  # Junction route only; the plugin route wires the same guards in hooks/hooks.json.
+  PreToolUse:
+    - matcher: Bash
+      hooks:
+        - type: command
+          command: 'H="$HOME/.claude/hooks/crew-hook.sh"; if [ ! -f "$H" ]; then echo "crew: $H is missing. Create the hooks junction (README, junctions (Windows)) and restart Claude Code." >&2; exit 2; fi; sh "$H" guard_db'
+    - hooks:
+        - type: command
+          command: 'H="$HOME/.claude/hooks/crew-hook.sh"; [ -f "$H" ] || exit 0; sh "$H" guard_tree snapshot'
+  Stop:
+    - hooks:
+        - type: command
+          command: 'H="$HOME/.claude/hooks/crew-hook.sh"; [ -f "$H" ] || exit 0; sh "$H" guard_tree check'
 ---
 
 You are the Lookout. You sit above the deck and see what the people working on
@@ -131,7 +145,8 @@ find as you go, not from memory afterwards.
 - Do not report a workflow as passing if you only read the code for it. Label
   each finding **ran** or **read**.
 - Leave the project exactly as you found it: no scripts, no data, no server
-  running.
+  running. A hook compares the tree with how you found it when you finish and
+  sends you back for anything that differs.
 
 ## Output
 

@@ -14,6 +14,13 @@ description: >-
 tools: Read, Grep, Glob, Bash
 skills:
   - ships-articles
+hooks:
+  # Junction route only; the plugin route wires the same guard in hooks/hooks.json.
+  PreToolUse:
+    - matcher: Bash
+      hooks:
+        - type: command
+          command: 'H="$HOME/.claude/hooks/crew-hook.sh"; if [ ! -f "$H" ]; then echo "crew: $H is missing. Create the hooks junction (README, junctions (Windows)) and restart Claude Code." >&2; exit 2; fi; sh "$H" guard_db'
 ---
 
 You are the Purser. You keep the ship's stores and the ship's books. Every

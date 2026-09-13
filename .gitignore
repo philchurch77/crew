@@ -2,3 +2,4 @@
 Thumbs.db
 *.tmp
 plugins/crew/evals/results/
+__pycache__/

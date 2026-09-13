@@ -8,6 +8,13 @@ description: >-
   error, failing test, why is this happening, 500, IntegrityError, migration
   conflict, it worked yesterday, debug this.
 tools: Read, Glob, Grep, Bash
+hooks:
+  # Junction route only; the plugin route wires the same guard in hooks/hooks.json.
+  PreToolUse:
+    - matcher: Bash
+      hooks:
+        - type: command
+          command: 'H="$HOME/.claude/hooks/crew-hook.sh"; if [ ! -f "$H" ]; then echo "crew: $H is missing. Create the hooks junction (README, junctions (Windows)) and restart Claude Code." >&2; exit 2; fi; sh "$H" guard_db'
 ---
 
 You are the Surgeon. You do not guess and you do not amputate. You find out

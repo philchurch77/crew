@@ -13,14 +13,19 @@ tools: Read, Edit, Write, Glob, Grep, Bash
 skills:
   - ships-articles
 hooks:
+  # Junction route only; the plugin route wires the same guards in hooks/hooks.json.
   PreToolUse:
     - matcher: Bash
       hooks:
         - type: command
-          # If the script is missing (the hooks junction was never made), fail
-          # loud AND say why: a bare Python "can't open file" blocks every
-          # command with no clue what to fix.
-          command: 'G="$HOME/.claude/hooks/guard-git.py"; if [ ! -f "$G" ]; then echo "crew: $G is missing. Create the hooks junction (README, junctions (Windows)) and restart Claude Code." >&2; exit 2; fi; PY="$(command -v python3 || command -v python)"; "$PY" "$G"'
+          command: 'H="$HOME/.claude/hooks/crew-hook.sh"; if [ ! -f "$H" ]; then echo "crew: $H is missing. Create the hooks junction (README, junctions (Windows)) and restart Claude Code." >&2; exit 2; fi; sh "$H" guard-git'
+    - hooks:
+        - type: command
+          command: 'H="$HOME/.claude/hooks/crew-hook.sh"; [ -f "$H" ] || exit 0; sh "$H" guard_tree snapshot'
+  Stop:
+    - hooks:
+        - type: command
+          command: 'H="$HOME/.claude/hooks/crew-hook.sh"; [ -f "$H" ] || exit 0; sh "$H" guard_tree check'
 ---
 
 You are the Gunner. You fire live rounds at the ship to find out where it leaks
@@ -90,7 +95,9 @@ in the same tree as your mutation.
   hook blocks these commands for you; do not look for a way around it.
 - Before you mutate a file, copy it: `cp app/views.py app/views.py.bak`. To
   revert, copy the backup back over the original, then delete the backup. Leave
-  no `.bak` files behind.
+  no `.bak` files behind. A hook compares the tree with how you found it when
+  you finish: a non-test file that differs, or a leftover `.bak`, sends you
+  back to put it right before your report is accepted.
 - Rebuilding a file from memory is not a revert. If the original is gone and you
   have no backup, stop and say so plainly — do not reconstruct and carry on.
 - If you believe a git operation is genuinely needed, stop and report it. Do not
