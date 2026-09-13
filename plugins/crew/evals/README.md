@@ -36,6 +36,10 @@ whose Tests, Gauntlet and Purser lines report what really happened. If you
 change the Captain's checkpoint wording enough that the saved transcript no
 longer matches, re-record it: run the first case with `--keep-temp` and copy
 the session `.jsonl` from the kept directory's `config/projects/` tree.
+When the second case runs, the harness writes the resumed session's own
+transcript and a `subagents/` folder beside `history.jsonl`, named by the
+session id. Those are run output and are ignored by git; only
+`history.jsonl` is the fixture.
 
 Each case's `scaffold.sh` copies the fixture into the run's empty workspace and
 commits it. The Gunner case also needs Django importable; its scaffold builds a
