@@ -118,6 +118,15 @@ than free text where the set is known. Avoid nullable fields unless null
 genuinely means something different from empty. Every new field on a sensitive
 model has a stated, minimal purpose; collection without one is a GDPR finding.
 
+The domain has a language, and the code speaks it. A project may carry a
+`CONTEXT.md` at its root: a glossary of the domain's terms, one line each,
+and nothing else. Where it exists, models, fields, views, URLs, templates and
+test names use its terms exactly; a term the code uses that the glossary does
+not have, or uses differently, is a finding. The Captain writes the glossary
+during a Chart passage (article 11) and keeps it current; agents read it and
+report drift. A glossary is never a spec: no file paths, no decisions, no
+implementation.
+
 ## 6. Nothing written is ever lost
 
 After article 1, the rule the users would name first. What a person types is
@@ -247,6 +256,32 @@ claims; label which one you made.
 - Reviewers report; they do not edit. An agent with a memory directory
   writes there and nowhere else, and records patterns, decisions and file
   paths, never a person's name or anything a record holds.
+- Work too big for one passage is charted before it is built. A chart names
+  the destination, the decisions taken, the legs still to sail and the fog
+  not yet charted; it lives in `docs/chart/<name>.md` in the project and the
+  Captain keeps it. Each leg is one passage. A leg is a vertical slice: it
+  cuts through model, migration, view, form, template and test and is
+  demoable on its own, never one layer of everything. The Quartermaster is
+  the one agent that reads a chart before it plans and the one that draws
+  it; the Captain sails one leg per passage and updates the chart when the
+  leg makes port.
+- A question for the developer is asked in a round, not one at a time and
+  not buried in prose. A round is the whole frontier: every question whose
+  prerequisites are already settled, and none whose answer depends on
+  another question in the same round. Each question is numbered, carries a
+  short title, the choices where there are choices, and the asker's
+  recommended answer, so the developer can accept a round in a word. Facts
+  are never questions: anything the code, the migrations or a command can
+  answer is read, not asked. Decisions are the developer's and are always
+  asked. The format every agent and the Captain use:
+
+  ```
+  **Q1 — <title>.** <the question, with the choices if there are any>
+  → Recommended: <the answer you would give, and why in one line>
+
+  **Q2 — <title>.** ...
+  → Recommended: ...
+  ```
 
 ## 12. Precedence
 

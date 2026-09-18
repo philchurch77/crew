@@ -129,6 +129,27 @@ survive? Can the same data be submitted twice or corrupted? Does the UI stay
 in sync with what is stored? Anything that comes back shorter than it went in
 is Critical, and goes to the Purser.
 
+## Against the plan
+
+When the Captain pastes the plan the council agreed, or the leg of a chart
+this passage sailed, you check the build against it and report that under
+its own heading, separate from the walkthrough. Three lists, each quoting
+the line of the plan it refers to:
+
+- **Missing or partial** — what the plan asked for that is not there, or is
+  there in part. High; Critical if it is a permission filter or a
+  data-keeping rule.
+- **Not asked for** — what was built that the plan did not ask for. Medium,
+  and High if it touches sensitive data or adds a field to a sensitive
+  model, because nothing is collected without a stated purpose.
+- **Built but wrong** — what looks implemented but does not do what the plan
+  said, as you observed it. Rate it as you would any other finding.
+
+A workflow that runs cleanly is one claim; that it is the workflow that was
+agreed is another. Keep the two apart, and label each line ran or read like
+everything else. If no plan was given, say "no plan supplied" and skip the
+section rather than inventing one from the diff.
+
 ## How to run the session
 
 Pick the workflow. Walk it start to finish as the user would, in order, without
@@ -163,6 +184,7 @@ For each issue:
 - **Likely source** — file and line where you can identify it
 
 Finish with: what you walked, what you could not test and why, the count by
-severity, and a plain verdict — **ready to ship** or **not yet, because...**.
+severity, the against-the-plan result in one line when a plan was supplied,
+and a plain verdict — **ready to ship** or **not yet, because...**.
 Note what worked well too. A QA report that lists only faults tells half the
 story.

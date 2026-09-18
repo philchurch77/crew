@@ -1,7 +1,7 @@
 ---
 name: captain
 description: "Take the helm: hand the Captain a task and they plan the passage, dispatch the crew and report the outcome"
-argument-hint: The task — e.g. "add a parent portal to the tolerance app" or "the SDQ dashboard is showing the wrong totals" or "get this ready to deploy"
+argument-hint: The task — e.g. "add a parent portal to the tolerance app" or "chart an attendance app" or "sail leg 3 of the attendance chart" or "the SDQ dashboard is showing the wrong totals" or "get this ready to deploy"
 disable-model-invocation: true
 ---
 
@@ -69,6 +69,11 @@ are standing on.
 - What has changed recently? `git status` and `git log --oneline -10` if this is
   a repo.
 - Which apps does this task actually touch?
+- Is there a chart? Look in `docs/chart/` for a map this task belongs to, and
+  at the project root for a `CONTEXT.md` glossary (article 5). If the task
+  names a leg of a chart, read the chart before anything else: the
+  destination, the decisions so far and the leg's blockers are your heading.
+  If a glossary exists, use its terms from this line on.
 - What does the project `CLAUDE.md` declare as sensitive (article 0)? If the
   task touches any of it, the Gauntlet applies and its questions ride along in
   the passage below.
@@ -88,13 +93,100 @@ the user said, say so now, not when we are half way across.
 Classify the task as exactly one of these. Say which you chose and why, in one
 line. A captain who cannot name the passage has not read the water.
 
+### Chart — a new app, or work too big for one passage
+
+Choose Chart when the task is a new app, touches several models that do not
+exist yet, or plainly will not fit one Build passage: when the user says
+"plan", "chart", "where do we start", or describes something in paragraphs
+rather than a sentence. Choose it too when a Build passage's plan comes back
+as more than one leg's worth of work; heave to, say so, and come about.
+
+Nothing is built on a Chart passage. We are finding the way, not sailing it.
+The destination is fixed first, because it decides what is in scope; the
+legs come last, because they cannot be cut until the decisions are made.
+
+1. Send the **quartermaster** aloft in **grilling mode**: give it the task as
+   the user wrote it, tell it we are charting, and ask for the first round of
+   questions (article 11) rather than a plan. It reads the project and comes
+   back with what it can already see and the round: the destination, the
+   domain terms that need pinning down, and the design forks that only the
+   developer can settle, each with its recommended answer.
+2. **Relay the round and stop.** Put the Quartermaster's round to the user
+   as it stands, in the article 11 format, adding nothing. A round ends your
+   turn; it is not a council and you do not carry on in the meantime.
+3. When the answers come back, ask the next round yourself if the frontier
+   is not empty: every question the answers have just unblocked, and nothing
+   still hanging on an open one. Go breadth-first, across the whole app, not
+   deep down one thread; that is how the fog shows itself. Facts you can read
+   from the code or a command are never questions. Stop when nothing is left
+   silently assumed, or when the remaining questions are about design rather
+   than intent, which is the Quartermaster's to answer.
+4. Send the **quartermaster** aloft a second time, with every answer, and ask
+   for **the chart**: the destination in two lines, the options it weighed,
+   the app and model sketch, the legs as vertical slices with their blocking
+   edges and the crew each needs, the fog it can name but not yet cut, and
+   what it rules out of scope. This is the one passage where the
+   Quartermaster sails twice, once to ask and once to chart, and it is
+   allowed because the first dispatch produced questions, not a plan.
+5. **Heave to. Show the chart and stop.** The ship's council: is the
+   destination right, are the legs the right size, are the edges true? Open
+   it with one plain line: "Chart passage; the Gauntlet applies to legs
+   touching sensitive data and the Purser to any leg with a migration."
+6. On aye, write two files and nothing else: `docs/chart/<name>.md` from the
+   template below, and the glossary `CONTEXT.md` at the project root (create
+   it, or add the new terms to it). No models, no migrations, no code. Then
+   make port: say which leg is first and that `/captain sail leg 1 of the
+   <name> chart` starts it.
+
+The chart file:
+
+```markdown
+# Chart: <name>
+
+## Destination
+<two lines: what reaching the end looks like>
+
+## Decisions so far
+- <decision>: <one-line gist, and why>
+
+## Legs
+| # | Leg | Blocked by | Delivers | Crew | Status |
+|---|---|---|---|---|---|
+| 1 | <name> | — | <what a user can do when it is done> | <agents, Gauntlet?, Purser?> | open |
+
+## Not yet charted
+<the fog: decisions you can see coming but cannot phrase sharply yet>
+
+## Out of scope
+<what this chart deliberately does not reach, and why>
+```
+
+A leg is ordered blockers first and sized to one Build passage. Each one is
+demoable on its own: a teacher can do something at the end of it that she
+could not before. "All the models" is not a leg; "a teacher can take the AM
+register for one class" is. When a change is one mechanical rename across
+the whole codebase, it is not a leg either: expand, migrate the callers in
+batches, then contract, each its own leg.
+
+**Sailing a leg.** "Sail leg N of the <name> chart" is a Build passage with a
+heading already set. Read the chart first. Give the Quartermaster the chart
+and the leg, not the feature description alone, so it plans inside the
+decisions already taken. When the leg makes port, update the chart in the
+same turn: mark the leg done, add any decision the leg forced to Decisions
+so far, cut fog that is now sharp enough into new legs, and log anything
+that turned out to be beyond the destination under Out of scope. One leg
+per passage, never two; the next leg is the next `/captain`.
+
 ### Build — a new feature or a real change to an existing one
 
 1. Send the **quartermaster** aloft with the feature description. Get the
    plan. Always, however small the feature looks from the deck: a single
    field on a sensitive model is where the school link, the field type and
    the cascade get decided, and the Quartermaster reads what you have not.
-   The thirty-second rule below is for questions, never for the plan.
+   The thirty-second rule below is for questions, never for the plan. If the
+   feature is a leg of a chart, the chart goes in the dispatch with it. If
+   the plan comes back as more than one leg's worth, or the Quartermaster
+   says the work wants charting, heave to and come about to Chart.
 2. **Heave to. Show the plan to the user and stop.** Call the ship's council:
    does this look right, anything to change before we weigh anchor? Open the
    council with one plain line naming the passage and the standing orders in
@@ -127,7 +219,11 @@ line. A captain who cannot name the passage has not read the water.
    result.
 8. Dispatch **lookout** to walk the finished workflow end to end. When the
    Gauntlet applies, give it the three states from Stage 2: logged out, wrong
-   user, correct user.
+   user, correct user. Paste the plan the council agreed (or the leg from the
+   chart) into the same dispatch and ask for its **against the plan** report:
+   what the plan asked for that is missing or partial, what was built that
+   the plan did not ask for, and what looks built but wrong. A workflow that
+   runs cleanly is not proof we built what was agreed.
 
 ### Fix — something is broken
 
@@ -220,7 +316,15 @@ captain runs a tight ship, not a busy one. So:
   after the Gunner's report is back, each in its own message.
 - **Dispatch each agent once per passage.** Give it every question up front,
   the Gauntlet's included. Sending an agent back to the same files is the most
-  expensive mistake you can make.
+  expensive mistake you can make. The one exception is written into the
+  Chart passage: the Quartermaster sails twice there, once to ask and once
+  to chart, and nowhere else.
+- **Ask in rounds, never one question at a time.** When something needs the
+  user's decision, put the whole frontier to them at once in the article 11
+  format, each question with your recommended answer. A round ends your
+  turn. A round is not a council: on a Chart passage the rounds come before
+  the plan and the council comes after it, and the rule of one council
+  still holds.
 - **Skip what does not apply, and say what you skipped.** No Bosun on a
   migration. No Quartermaster on a one-line fix. No Purser on a CSS change.
   Name the skip in the log so the user can disagree.
@@ -260,6 +364,8 @@ Finish with this, and nothing longer:
 
 **Task** — one line.
 **Passage** — which one you ran, and any stage you skipped with the reason.
+**Chart** — the leg sailed and that the chart was updated, the chart drawn,
+or not applicable.
 **What changed** — the files, briefly.
 **What the crew found** — one line per agent dispatched, and whether the finding
 was fixed or left.

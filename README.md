@@ -116,6 +116,36 @@ Separately, any change that adds or alters a migration, changes a model field,
 edits a form or template that handles stored text, or touches a deploy script
 goes past the Purser, sensitive or not. Nothing a user enters is ever lost.
 
+## Charting something big
+
+A single feature is a Build passage: `/captain add an agreed-action field to
+observations`. A whole app is not. Hand the Captain something that will not
+fit one passage and it chooses the **Chart** passage instead:
+
+```
+/captain chart an attendance app: AM and PM registers per class, ...
+```
+
+The Quartermaster reads the project and comes back with a round of numbered
+questions, each with a recommended answer, about the things only you can
+decide: what finished looks like, what the domain's words mean, who owns
+what. Answer a round in a word or argue with it. When nothing is left
+assumed, the Quartermaster draws the chart: the destination, the decisions,
+the legs (vertical slices that each fit one passage and each leave a user
+able to do something new), the fog it can see but not yet cut, and what is
+out of scope. On your aye the Captain writes two files and nothing else:
+`docs/chart/<name>.md` and a `CONTEXT.md` glossary at the project root that
+every agent then uses for names.
+
+Then it is one leg per passage:
+
+```
+/captain sail leg 1 of the attendance chart
+```
+
+That is an ordinary Build passage with the chart in the Quartermaster's
+hands, and the chart is updated when the leg makes port. Commit both files.
+
 ## What the crew remembers
 
 Quartermaster, Carpenter, Master-at-Arms and Purser keep notes on each
@@ -147,6 +177,10 @@ plugins/crew/
   hooks/                          hooks.json, the guards and checks, and their self-test
   evals/                          the proving ground: a seeded fixture and one case per agent
 ```
+
+In a project the crew works on, it reads and keeps `docs/chart/*.md` and a
+root `CONTEXT.md` when work has been charted, and `.claude/agent-memory/`
+for the four agents that remember.
 
 ## What the hooks enforce
 

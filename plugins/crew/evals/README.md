@@ -20,12 +20,17 @@ seeded defects, each the target of one case:
 | Four queries per pupil in a loop, plus scoring rules and email in the view | `tolerance/views.py` `dashboard` | `carpenter-oversized-dashboard` |
 | Empty `tolerance/tests.py` | | `gunner-cross-school-test` |
 | A feature request: an "agreed action" field on Observation | the whole fixture | `captain-build-heaves-to`, `captain-build-weighs-anchor` |
+| A whole new app: attendance registers, too big for one passage | the whole fixture | `captain-chart-heaves-to` |
 
 Everything else in the fixture follows the Articles, so a finding outside this
 table is either a real gap in the fixture or noise from the agent. Both are
 worth knowing.
 
-The two Captain cases test the passage rather than a finding. The first
+The Captain cases test the passage rather than a finding. `captain-chart-heaves-to`
+hands the Captain a whole attendance app and expects the Chart passage: the
+Quartermaster dispatched in grilling mode, a round of numbered questions with
+recommended answers as the final message, and no plan, chart file or code
+before the developer has answered. The two Build cases share one feature. The first
 types `/crew:captain` with the feature and expects the Captain to read the
 water, name the passage, send the Quartermaster aloft, show the plan and
 stop, with no code written. The second resumes that exact conversation from
@@ -94,7 +99,7 @@ An `llm` grader's judge is Haiku by default. If a correct answer is failing on
 wording, re-run with `--judge-model sonnet` before touching the rubric. The
 Captain's log rubric is the known case: a log that says "tests written, not
 run, because the shell failed" is honest under article 10 and passes with
-Sonnet, but Haiku fails it three votes to none. Run the two Captain cases
+Sonnet, but Haiku fails it three votes to none. Run the three Captain cases
 with `--judge-model sonnet`.
 
 ## Adding a case

@@ -32,6 +32,12 @@ to explain it.
    change that can lose data goes past the Purser before it is called done,
    whether or not the data is sensitive. Article 6 is the rule; article 11
    says it is automatic; article 12 says it is not overridable by convenience.
+7. **Nothing big is built unaligned.** Work too big for one passage is
+   charted first: the developer is grilled in rounds of questions with
+   recommended answers, the domain's words are written into a `CONTEXT.md`
+   glossary, and the work is cut into legs that each fit one passage. The
+   chart lives in `docs/chart/` in the project. Article 11 carries the rule
+   and the round format; article 5 carries the glossary.
 
 ---
 
@@ -39,12 +45,12 @@ to explain it.
 
 | Agent | Called for | Writes files | Memory | Model |
 |---|---|---|---|---|
-| **quartermaster** | Planning and architecture, before code exists | No | project | inherit |
+| **quartermaster** | Planning and architecture, before code exists; grilling and charting when the work is bigger than one passage | No | project | inherit |
 | **carpenter** | Complexity and duplication in code that exists | No | project | sonnet |
 | **gunner** | Tests — permissions, ownership, isolation | Tests only | — | inherit |
-| **surgeon** | Diagnosing a failure before anything is changed | No | — | inherit |
+| **surgeon** | Diagnosing a failure before anything is changed; builds the red loop first | No | — | inherit |
 | **bosun** | Templates, CSS, UI and UX | No | — | sonnet |
-| **lookout** | End-to-end QA as a real user, via the test client | No | — | inherit |
+| **lookout** | End-to-end QA as a real user, via the test client, and the build checked against the plan | No | — | inherit |
 | **master-at-arms** | Security, GDPR, sensitive data, deploy safety | No | project | inherit |
 | **purser** | Data loss — migrations, field changes, forms, deploys | No | project | inherit |
 
@@ -104,8 +110,19 @@ route cannot run the two main-session hooks on its own; the README gives the
 
 `/captain <task>` is the entry point. The Captain reads the project, reads what
 the project `CLAUDE.md` declares sensitive, classifies the task into one
-passage — **Build**, **Fix**, **Tidy**, **Look** or **Ship** — dispatches the
-crew that passage needs, and reports one outcome. The Captain speaks in
+passage — **Chart**, **Build**, **Fix**, **Tidy**, **Look** or **Ship** —
+dispatches the crew that passage needs, and reports one outcome.
+
+**Chart** is the passage for a new app or anything else that will not fit one
+Build. Its shape is borrowed from Matt Pocock's wayfinder and grilling skills
+(github.com/mattpocock/skills), cut down to fit a solo Django developer: no
+issue tracker, no labels, the map is a markdown file in the project. The
+Quartermaster sails twice on a chart, once in grilling mode to return the
+first round of questions and once to draw the chart, which is the only place
+the once-per-passage rule bends. Rounds are not councils: they come before
+the plan, and the single council still comes after it. Each leg of a chart is
+then an ordinary Build passage, and the Captain updates the chart when the
+leg makes port. The Captain speaks in
 nautical and piratical phrases by design; `commands/captain.md` carries the
 phrase book and the two rules that keep the colour from hiding the facts.
 
@@ -114,7 +131,10 @@ Efficiency rules the Captain holds to:
 - Independent reviewers dispatch in parallel, in one message.
 - Each agent is dispatched once per passage, with every question it needs up
   front. The Gauntlet's questions ride along in the passage's own dispatches;
-  it never re-runs an agent on the same files.
+  it never re-runs an agent on the same files. The Chart passage's second
+  Quartermaster dispatch is the one written exception.
+- Questions go to the user in rounds, in the article 11 format, never one at
+  a time. A round ends the turn.
 - Stages that do not apply are skipped, and the skip is named in the report.
 - One user checkpoint per passage — after the plan, not after every stage.
 - Agents get file paths and a specific question, never "review the changes".
@@ -129,7 +149,7 @@ Commands are typed. That is the whole distinction.
 
 | Skill | Loads when |
 |---|---|
-| **ships-articles** | Any Django work begins — the house rules, the crew rules, and precedence |
+| **ships-articles** | Any Django work begins — the house rules, the crew rules, the round format, the glossary rule, and precedence |
 | **gauntlet** | A change touches sensitive data, before it is called done — with a Purser stage when the change can lose it |
 
 A skill description is a trigger condition, not a summary. Write it as the
@@ -141,7 +161,7 @@ situation it fires in.
 
 | Command | Does |
 |---|---|
-| `/captain` | Takes a task, plans the passage, dispatches the crew |
+| `/captain` | Takes a task, plans the passage, dispatches the crew; charts work too big for one passage and sails it a leg at a time |
 | `/wheels-up` | Pre-deploy check for Django on Azure |
 | `/commit-message` | Draft a structured commit message |
 
@@ -149,6 +169,9 @@ All carry `disable-model-invocation: true` — they fire when typed, never on
 their own. Generic prompts (think harder, ask me questions, dry run, explain
 first, blast radius) were removed: plan mode, extended thinking and the
 Quartermaster's one-question rule already cover them, and they were not Django.
+The grilling that a Chart passage does is the exception that earned its
+place: it is the alignment step for a whole app, it runs inside the Captain,
+and it produces a glossary and a chart the rest of the crew reads.
 
 ---
 
