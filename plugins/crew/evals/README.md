@@ -117,6 +117,10 @@ indicator that the right agent was chosen. Read the two together:
 - Baseline delta near zero: plain Claude does as well. Either the defect is
   too easy or the agent adds nothing on it. Make the case harder before
   making the agent longer.
+- An `llm` grader passing while the matching `tool_used` grader fails: the
+  judge was persuaded by a description of something that never ran. Trust
+  the tool count, and drop or tighten the rubric. The Surgeon's
+  loop-was-red grader went this way on 2026-09-20.
 
 An `llm` grader's judge is Haiku by default. If a correct answer is failing on
 wording, re-run with `--judge-model sonnet` before touching the rubric. The
