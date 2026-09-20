@@ -1,5 +1,5 @@
 ---
 type: regex
-pattern: '\bChart\b'
+pattern: '\b[Cc]hart\b'
 target: last_message
 ---

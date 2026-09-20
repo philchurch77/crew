@@ -59,8 +59,12 @@ session id. Those are run output and are ignored by git; only
 `history.jsonl` is the fixture.
 
 Each case's `scaffold.sh` copies the fixture into the run's empty workspace and
-commits it. The Gunner case also needs Django importable; its scaffold builds a
-`.venv` if the system interpreter lacks it.
+commits it. The Gunner, Surgeon and Lookout cases also need Django importable;
+their scaffold uses `python3` or `python` if either already has it, and
+otherwise builds a `.venv`. On Windows those three need Claude Code's sandbox
+switched on (`/sandbox`), because the harness refuses to grant Bash it cannot
+confine; the other cases run without it. Run from Git Bash, since the
+scaffolds are shell scripts.
 
 ## Running
 
@@ -83,8 +87,13 @@ claude plugin eval . --scaffold --trust-plugin --allow-tools Bash Write Edit
 - `--ablation none` skips the no-plugin baseline. The default compares the
   crew against plain Claude and reports the delta, which is the number that
   says whether the crew earns its keep.
-- `--max-cost-usd` caps a run. The full suite with baseline is roughly
-  thirty agent runs.
+- `--max-cost-usd` caps a run. Measured on the Purser case at 2.13.0: a
+  crew-arm run is 5 to 8 minutes and, against an API key, 2 to 4 dollars; a
+  baseline run is about 90 seconds and 35 cents. The full suite at one run
+  per arm is about 40 dollars and 90 minutes on a key. Run it on a laptop
+  logged in to Claude Code instead, where it bills the subscription, and
+  run one case at a time. The GitHub Actions workflow (`evals.yml`) is the
+  paid route, started by hand from the Actions tab, never on its own.
 
 Results land in `evals/results/<timestamp>/` with an HTML report; that
 directory is ignored by git.

@@ -14,7 +14,16 @@ git init -q
 git add -A
 git -c user.name=fixture -c user.email=fixture@example.com commit -qm "Schoolapp fixture"
 
-if [ "${1:-}" = "--with-django" ] && ! python3 -c "import django" >/dev/null 2>&1; then
-  python3 -m venv .venv
-  .venv/bin/pip install -q --disable-pip-version-check --timeout 60 --retries 5 -r requirements.txt
+if [ "${1:-}" = "--with-django" ]; then
+  # Pick an interpreter that already has Django. On Windows the `python3`
+  # on Git Bash's PATH is often the Store stub, so try `python` too.
+  for PY in python3 python; do
+    if "$PY" -c "import django" >/dev/null 2>&1; then exit 0; fi
+  done
+  for PY in python3 python; do
+    if "$PY" -c "import sys" >/dev/null 2>&1; then break; fi
+  done
+  "$PY" -m venv .venv
+  if [ -x .venv/bin/pip ]; then PIP=.venv/bin/pip; else PIP=.venv/Scripts/pip.exe; fi
+  "$PIP" install -q --disable-pip-version-check --timeout 60 --retries 5 -r requirements.txt
 fi
