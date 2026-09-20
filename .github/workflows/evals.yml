@@ -48,6 +48,9 @@ jobs:
           node-version: "22"
       - if: steps.key.outputs.present == 'true'
         run: npm install -g @anthropic-ai/claude-code
+      - name: Sandbox backend the harness needs to confine Bash
+        if: steps.key.outputs.present == 'true'
+        run: sudo apt-get install -y -q bubblewrap socat
       - name: Run the suite
         if: steps.key.outputs.present == 'true'
         working-directory: plugins/crew
