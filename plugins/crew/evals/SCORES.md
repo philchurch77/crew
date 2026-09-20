@@ -20,4 +20,4 @@ each 0 to 1, over three runs.
 | Version | Date | Judge | MaA | Bos | Pur | Trg | Car | Gun | Sur | Lkt | CpH | CpW | CpC | Notes |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | 2.12.0 | 2026-09-20 | | | | | | | | | | | | | Scoreboard, budgets and the Surgeon and Lookout cases added. Not run. |
-| 2.13.0 | 2026-09-20 | | | | | | | | | | | | | /field-report command and the Captain's closing line; no agent changed. Not run. |
+| 2.13.0 | 2026-09-20 | sonnet | | | 1.00 / 0.67 | | | | | | | | | Purser case only, in Actions, 3 runs per arm, $10.03. Crew runs cost 1.55 to 3.76 each and 5 to 8 min; baseline 0.35 and 90 s. Rest of the suite not yet run. |

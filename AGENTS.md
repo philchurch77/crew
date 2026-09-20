@@ -273,7 +273,10 @@ every file with the budget in mind, not a reason to add.
 - Run the evals (section 6) after changing an agent, a skill or the Articles,
   and record the row in `evals/SCORES.md` with the version bump. A change
   that lowers a case score is not an improvement, whatever it reads like.
-  `.github/workflows/evals.yml` runs the suite on demand and when the
-  version changes; it needs an `ANTHROPIC_API_KEY` repository secret.
+  Run it on a laptop logged in to Claude Code, where it bills the
+  subscription. `.github/workflows/evals.yml` runs it from the Actions tab
+  by hand only, against an `ANTHROPIC_API_KEY` secret that bills per token:
+  about 2 to 4 dollars per crew-arm run, so one case at one run per arm,
+  not the suite, unless the money is deliberate.
 - Stay within budget (section 7). `python3 tools/budget.py` before a commit
   that touches an agent, a command or a skill.
