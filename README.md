@@ -184,7 +184,9 @@ plugins/crew/
   commands/                       one .md per slash command
   skills/<name>/SKILL.md          self-loading procedures — the rules live here
   hooks/                          hooks.json, the guards and checks, and their self-test
-  evals/                          the proving ground: a seeded fixture and one case per agent
+  evals/                          the proving ground: a seeded fixture, one case per agent, and SCORES.md
+tools/                            maintainer checks — word budgets and the fixture check; not shipped
+.github/                          CI: checks on every push, evals by hand; the field-report issue template
 ```
 
 In a project the crew works on, it reads and keeps `docs/chart/*.md` and a

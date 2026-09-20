@@ -83,8 +83,13 @@ claude plugin eval . --scaffold --trust-plugin --allow-tools Bash Write Edit
 - `--ablation none` skips the no-plugin baseline. The default compares the
   crew against plain Claude and reports the delta, which is the number that
   says whether the crew earns its keep.
-- `--max-cost-usd` caps a run. The full suite with baseline is roughly
-  thirty agent runs.
+- `--max-cost-usd` caps a run. Measured on the Purser case at 2.13.0: a
+  crew-arm run is 5 to 8 minutes and, against an API key, 2 to 4 dollars; a
+  baseline run is about 90 seconds and 35 cents. The full suite at one run
+  per arm is about 40 dollars and 90 minutes on a key. Run it on a laptop
+  logged in to Claude Code instead, where it bills the subscription, and
+  run one case at a time. The GitHub Actions workflow (`evals.yml`) is the
+  paid route, started by hand from the Actions tab, never on its own.
 
 Results land in `evals/results/<timestamp>/` with an HTML report; that
 directory is ignored by git.
