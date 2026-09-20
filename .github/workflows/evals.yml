@@ -3,9 +3,12 @@ name: evals
 # The eval suite costs real money: a crew-arm run is 5 to 8 minutes and 2 to
 # 4 dollars, a baseline run about 90 seconds and 35 cents (measured on the
 # Purser case, 2.13.0). The full suite at one run per arm is roughly 40
-# dollars and 90 minutes; at three runs per arm, triple that. So it runs on
-# demand and when the plugin version changes, never on every push, at one
-# run per arm unless asked. It needs an ANTHROPIC_API_KEY repository secret.
+# dollars and 90 minutes; at three runs per arm, triple that. So it runs
+# only when started by hand from the Actions tab, at one run per arm unless
+# asked. It needs an ANTHROPIC_API_KEY repository secret, and every run
+# bills that key per token. Running the same command on a laptop logged in
+# to Claude Code bills the subscription instead, which is the cheap route;
+# AGENTS.md section 6 has the command.
 
 on:
   workflow_dispatch:
@@ -19,10 +22,6 @@ on:
       runs:
         description: "Runs per arm (1 = smoke, 3 = the real score)"
         default: "1"
-  push:
-    branches: [main, master]
-    paths:
-      - plugins/crew/.claude-plugin/plugin.json
 
 jobs:
   evals:
