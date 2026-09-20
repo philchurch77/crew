@@ -2,12 +2,3 @@ schema_version: "1.1"
 name: captain-chart-heaves-to
 context:
   scaffold_script: scaffold.sh
----
-description: The Captain, handed a whole new app, must choose the Chart passage, send the Quartermaster aloft in grilling mode, relay a round of questions with recommended answers, and stop. No plan, no chart file and no code before the developer has answered.
-expected_outcome: A Chart passage is named, the Quartermaster is dispatched, the final message is a numbered round of questions each with a recommended answer about the attendance app, and the run ends waiting for the user with no file written.
-tags: [captain, chart, routing]
-runs: 3
-max_turns: 40
-timeout_seconds: 900
-allowed_tools: [Read, Glob, Grep, Skill, Agent, TaskCreate, TaskUpdate, TaskList, TaskGet]
----
