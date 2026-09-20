@@ -146,6 +146,10 @@ change helped.
    in the rendered form. Do not write a case for a defect you have not seen.
 2. Copy an existing case directory. Write the prompt the way you would type
    it, without naming the agent: the case tests routing as much as detection.
+   Start it with `/crew:captain` when that is how you would ask. A bare
+   request that the main session can answer by reading two files is answered
+   by the main session, whatever the agent's description says; the Surgeon
+   and Lookout cases were not dispatched until they went through the Captain.
 3. Give it one grader on the result and one `dispatched-<agent>` grader.
    Write `llm` rubrics as concrete PASS and FAIL conditions that name the
    file and the defect, so a small judge cannot pass a vague answer.
