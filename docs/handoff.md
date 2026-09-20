@@ -39,9 +39,33 @@ trigger case, and the two Build cases.
 2. Both prompts now start with `/crew:captain` (2.14.1), because the
    Captain's Fix passage starts with the Surgeon and its Look passage sends
    whole-workflow QA to the Lookout, and both Captain cases dispatched.
-   **Not yet run.** First job: run `surgeon*` and `lookout*` once each on
-   WSL2 and read the `dispatched-` line. If still zero, the Captain is not
-   routing that passage; that is a Captain finding.
+   **Run, and it worked:** both agents dispatched (Agent called 1x).
+   Surgeon 0.71 / 0.71, Lookout 0.83 / 0.67.
+
+## First job: an open question the last run raised
+
+With the agents dispatched, `Bash called 0x` in both crew arms. Yet the
+Lookout's report passed the `labelled-ran` judge, and the Surgeon's own
+rules say build a loop before naming a cause. Earlier in the day, when the
+main session did the walking itself, the Lookout case counted Bash 3x.
+Two readings, and the difference matters for every case with a
+`tool_used` grader:
+
+- The `tool_used` grader counts only the main session's calls, not a
+  subagent's. Then every Bash grader on a dispatched agent is blind, and
+  the Purser, Gunner and Chart scores need re-reading too (the Gunner's
+  `tests-were-run` may have counted the Captain's run, not the Gunner's).
+- The agents genuinely ran nothing. Then the Lookout labelled a read as
+  "ran", which breaks article 10, and the Surgeon skipped its loop. Both
+  are agent failures to fix under budget.
+
+The docs do not say (checked 2026-09-20 against
+code.claude.com/docs/en/plugin-evals). Settle it empirically: run
+`lookout*` with `--keep-temp --ablation none --runs 1`, open the kept
+directory's transcript and its `subagents/` folder, and look for Bash
+calls inside the Lookout's own transcript. If they are there, the grader
+is blind to subagents and the method graders need a `trace` target or a
+different design. If they are not, the agents are at fault.
 
 ## The work queued
 
