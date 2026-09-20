@@ -61,9 +61,11 @@ session id. Those are run output and are ignored by git; only
 Each case's `scaffold.sh` copies the fixture into the run's empty workspace and
 commits it. The Gunner, Surgeon and Lookout cases also need Django importable;
 their scaffold uses `python3` or `python` if either already has it, and
-otherwise builds a `.venv`. On Windows those three need Claude Code's sandbox
-switched on (`/sandbox`), because the harness refuses to grant Bash it cannot
-confine; the other cases run without it. Run from Git Bash, since the
+otherwise builds a `.venv`. The harness refuses to grant Bash it cannot
+confine, and Claude Code's sandbox does not exist on native Windows, so on
+a Windows laptop those three run only under WSL2 (with `bubblewrap` and
+`socat` installed) or through the Actions workflow, which runs on Linux.
+The other eight cases run on Windows as they are, from Git Bash, since the
 scaffolds are shell scripts.
 
 ## Running
