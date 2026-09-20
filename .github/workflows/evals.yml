@@ -1,9 +1,11 @@
 name: evals
 
-# The full eval suite costs real money (roughly thirty agent runs with the
-# baseline), so it runs on demand and when the plugin version changes, never
-# on every push. It needs an ANTHROPIC_API_KEY repository secret. Set
-# max_cost_usd to a number you are happy to spend on one run.
+# The eval suite costs real money: a crew-arm run is 5 to 8 minutes and 2 to
+# 4 dollars, a baseline run about 90 seconds and 35 cents (measured on the
+# Purser case, 2.13.0). The full suite at one run per arm is roughly 40
+# dollars and 90 minutes; at three runs per arm, triple that. So it runs on
+# demand and when the plugin version changes, never on every push, at one
+# run per arm unless asked. It needs an ANTHROPIC_API_KEY repository secret.
 
 on:
   workflow_dispatch:
@@ -13,7 +15,10 @@ on:
         default: ""
       max_cost_usd:
         description: "Cost cap for the run"
-        default: "15"
+        default: "50"
+      runs:
+        description: "Runs per arm (1 = smoke, 3 = the real score)"
+        default: "1"
   push:
     branches: [main, master]
     paths:
@@ -22,7 +27,7 @@ on:
 jobs:
   evals:
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    timeout-minutes: 360
     env:
       ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
     steps:
@@ -56,8 +61,9 @@ jobs:
         working-directory: plugins/crew
         run: |
           CASE="${{ github.event.inputs.case }}"
-          COST="${{ github.event.inputs.max_cost_usd || '15' }}"
-          ARGS=(. --scaffold --trust-plugin --allow-tools Bash Write Edit --judge-model sonnet --max-cost-usd "$COST")
+          COST="${{ github.event.inputs.max_cost_usd || '50' }}"
+          RUNS="${{ github.event.inputs.runs || '1' }}"
+          ARGS=(. --scaffold --trust-plugin --allow-tools Bash Write Edit --judge-model sonnet --max-cost-usd "$COST" --runs "$RUNS")
           if [ -n "$CASE" ]; then ARGS+=(--case "$CASE"); fi
           claude plugin eval "${ARGS[@]}"
       - name: Keep the report
