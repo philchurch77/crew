@@ -1,0 +1,1 @@
+The dashboard gives a 500 for our new deputy head but works fine for every other teacher. Her user account was created yesterday in the admin. Find out why before we change anything. Use the project's own virtualenv at .venv if one exists. Don't edit any code, I just want the diagnosis.

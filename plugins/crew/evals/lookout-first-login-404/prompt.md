@@ -1,0 +1,1 @@
+Before we ship this to the first school, walk the whole thing as a brand new teacher would: she gets the login page link in an email, logs in, records her first observation about a pupil, opens it, edits it, and looks at the dashboard. Tell me what's broken or confusing from her point of view. Use the project's own virtualenv at .venv if one exists. Don't fix anything.

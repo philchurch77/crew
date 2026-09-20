@@ -1,0 +1,16 @@
+{
+  "_": "Word budget per prompt file, relative to the repo root. Set at the size each file had when the budget was introduced (v2.12.0). Raising a number is a decision: it needs an eval case that fails without the extra words. See AGENTS.md section 7.",
+  "plugins/crew/agents/bosun.md": 781,
+  "plugins/crew/agents/carpenter.md": 763,
+  "plugins/crew/agents/gunner.md": 938,
+  "plugins/crew/agents/lookout.md": 1501,
+  "plugins/crew/agents/master-at-arms.md": 1029,
+  "plugins/crew/agents/purser.md": 1411,
+  "plugins/crew/agents/quartermaster.md": 1629,
+  "plugins/crew/agents/surgeon.md": 1034,
+  "plugins/crew/commands/field-report.md": 502,
+  "plugins/crew/commands/captain.md": 3576,
+  "plugins/crew/commands/wheels-up.md": 580,
+  "plugins/crew/skills/gauntlet/SKILL.md": 865,
+  "plugins/crew/skills/ships-articles/SKILL.md": 2470
+}

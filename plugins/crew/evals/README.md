@@ -19,12 +19,24 @@ seeded defects, each the target of one case:
 | Migration 0002 shrinks `Observation.body` from `TextField` to `CharField(200)`; `Observation.pupil` cascades | `tolerance/migrations/0002_shorten_body.py`, `tolerance/models.py` | `purser-destructive-migration`, `trigger-text-came-back-shorter` |
 | Four queries per pupil in a loop, plus scoring rules and email in the view | `tolerance/views.py` `dashboard` | `carpenter-oversized-dashboard` |
 | Empty `tolerance/tests.py` | | `gunner-cross-school-test` |
+| `_school_for` reads `user.membership` unguarded; a user with no Membership raises on every page | `tolerance/views.py` `_school_for` | `surgeon-deputy-head-500` |
+| No `LOGIN_REDIRECT_URL`; a login from the login page lands on a 404 at `/accounts/profile/` | `config/settings.py` | `lookout-first-login-404` |
 | A feature request: an "agreed action" field on Observation | the whole fixture | `captain-build-heaves-to`, `captain-build-weighs-anchor` |
 | A whole new app: attendance registers, too big for one passage | the whole fixture | `captain-chart-heaves-to` |
 
 Everything else in the fixture follows the Articles, so a finding outside this
 table is either a real gap in the fixture or noise from the agent. Both are
-worth knowing.
+worth knowing. `tools/fixture_check.py` at the repo root reproduces every
+row of this table against the fixture and fails if one has gone; CI runs it.
+
+The Surgeon and Lookout cases test method as much as detection. The Surgeon
+is handed "the dashboard 500s for one new user" and must build a red loop
+before naming a cause, name the missing Membership rather than the dashboard
+code, say the failure is not the dashboard's alone, and change nothing. The
+Lookout is asked to walk the app as a new teacher from the login page; the
+defect is one that `force_login` never meets, so a walkthrough that starts
+past the login page passes every view and misses it. Both need Django, so
+their scaffolds build the `.venv` like the Gunner's.
 
 The Captain cases test the passage rather than a finding. `captain-chart-heaves-to`
 hands the Captain a whole attendance app and expects the Chart passage: the
@@ -99,8 +111,17 @@ An `llm` grader's judge is Haiku by default. If a correct answer is failing on
 wording, re-run with `--judge-model sonnet` before touching the rubric. The
 Captain's log rubric is the known case: a log that says "tests written, not
 run, because the shell failed" is honest under article 10 and passes with
-Sonnet, but Haiku fails it three votes to none. Run the three Captain cases
-with `--judge-model sonnet`.
+Sonnet, but Haiku fails it three votes to none. Run the three Captain cases,
+the Surgeon case and the Lookout case with `--judge-model sonnet`.
+
+## Recording a result
+
+`SCORES.md` beside this file carries one row per plugin version that
+changed an agent, a skill, the Articles or the Captain: crew score and
+baseline score per case. Fill it from the HTML report when you bump the
+version. The results directory is ignored by git, so the scoreboard is the
+only place a score survives, and the only way to see whether the last
+change helped.
 
 ## Adding a case
 
@@ -113,4 +134,15 @@ with `--judge-model sonnet`.
 3. Give it one grader on the result and one `dispatched-<agent>` grader.
    Write `llm` rubrics as concrete PASS and FAIL conditions that name the
    file and the defect, so a small judge cannot pass a vague answer.
-4. Add the defect to the table above.
+4. Add the defect to the table above, and the reproduction to
+   `tools/fixture_check.py`.
+
+## When an agent misses something in a real project
+
+`/field-report` in that project files the miss as an issue labelled
+`field-report`; that label is the inbox. Do not edit the agent. Seed the miss here first, prove it by hand, write
+the case, watch it fail, and only then make the smallest change to the
+agent that turns it green. Then run the whole suite and record the row.
+The agents have word budgets (`tools/budgets.json`) for exactly this
+reason: a paragraph per miss is how a good agent turns into a long one.
+AGENTS.md section 7 has the full rule.

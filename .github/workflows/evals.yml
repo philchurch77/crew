@@ -1,0 +1,58 @@
+name: evals
+
+# The full eval suite costs real money (roughly thirty agent runs with the
+# baseline), so it runs on demand and when the plugin version changes, never
+# on every push. It needs an ANTHROPIC_API_KEY repository secret. Set
+# max_cost_usd to a number you are happy to spend on one run.
+
+on:
+  workflow_dispatch:
+    inputs:
+      case:
+        description: "Case glob, e.g. purser* (empty = whole suite)"
+        default: ""
+      max_cost_usd:
+        description: "Cost cap for the run"
+        default: "15"
+  push:
+    branches: [main, master]
+    paths:
+      - plugins/crew/.claude-plugin/plugin.json
+
+jobs:
+  evals:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Stop early without an API key
+        run: |
+          if [ -z "$ANTHROPIC_API_KEY" ]; then
+            echo "ANTHROPIC_API_KEY is not set as a repository secret; nothing to run." >&2
+            exit 1
+          fi
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -q -r plugins/crew/evals/_fixture/schoolapp/requirements.txt
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npm install -g @anthropic-ai/claude-code
+      - name: Run the suite
+        working-directory: plugins/crew
+        run: |
+          CASE="${{ github.event.inputs.case }}"
+          COST="${{ github.event.inputs.max_cost_usd || '15' }}"
+          ARGS=(. --scaffold --trust-plugin --allow-tools Bash Write Edit --judge-model sonnet --max-cost-usd "$COST")
+          if [ -n "$CASE" ]; then ARGS+=(--case "$CASE"); fi
+          claude plugin eval "${ARGS[@]}"
+      - name: Keep the report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eval-results-${{ github.run_number }}
+          path: plugins/crew/evals/results/
+          if-no-files-found: warn
