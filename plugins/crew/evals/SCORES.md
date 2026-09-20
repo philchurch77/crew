@@ -20,4 +20,4 @@ each 0 to 1, over three runs.
 | Version | Date | Judge | MaA | Bos | Pur | Trg | Car | Gun | Sur | Lkt | CpH | CpW | CpC | Notes |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | 2.12.0 | 2026-09-20 | | | | | | | | | | | | | Scoreboard, budgets and the Surgeon and Lookout cases added. Not run. |
-| 2.13.0 | 2026-09-20 | sonnet | | | 1.00 / 0.67 | | | | | | | | | Purser case only, in Actions, 3 runs per arm, $10.03. Crew runs cost 1.55 to 3.76 each and 5 to 8 min; baseline 0.35 and 90 s. Rest of the suite not yet run. |
+| 2.13.0 | 2026-09-20 | sonnet | | | 1.00 / 0.67 | | | | | | | | 0.86 / 0.14 | Purser: Actions, 3 runs per arm, $10.03; crew runs 1.55 to 3.76 and 5 to 8 min, baseline 0.35 and 90 s. Laptop, 1 run per arm: Purser 1.00 again; Chart 0.86 with the names-the-passage grader failing on case (fixed in 2.13.2), baseline wrote a plan file straight off. Surgeon and Lookout blocked on the Windows sandbox. |
