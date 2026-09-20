@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: lookout-first-login-404
+context:
+  scaffold_script: scaffold.sh
+---
+description: settings.py has no LOGIN_REDIRECT_URL, so a teacher who logs in from the login page is sent to /accounts/profile/ and gets a 404. Every view works; only the walk from the login page finds it. The Lookout must walk the flow with the test client, report the 404, and leave the tree untouched.
+expected_outcome: A walkthrough run through manage.py that POSTs the login form and follows the redirect; a finding that the post-login landing page is a 404 at /accounts/profile/, traced to the missing LOGIN_REDIRECT_URL; labelled ran, not read; no file changed.
+tags: [lookout, qa, end-to-end]
+runs: 3
+max_turns: 60
+timeout_seconds: 900
+allowed_tools: [Read, Glob, Grep, Skill, Agent, Bash, Write, Edit, TaskCreate, TaskUpdate, TaskList, TaskGet]

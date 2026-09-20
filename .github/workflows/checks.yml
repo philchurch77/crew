@@ -1,0 +1,26 @@
+name: checks
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  hooks-and-budgets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Django so the migration check in before_stop is covered
+        run: pip install -q -r plugins/crew/evals/_fixture/schoolapp/requirements.txt
+      - name: Hook selftest
+        run: python3 plugins/crew/hooks/selftest.py
+      - name: Word budgets
+        run: python3 tools/budget.py
+      - name: Fixture still migrates and its seeded defects still reproduce
+        working-directory: plugins/crew/evals/_fixture/schoolapp
+        run: |
+          python3 manage.py makemigrations --check --dry-run
+          python3 manage.py migrate -v0
+          python3 manage.py shell < ../../../../../tools/fixture_check.py

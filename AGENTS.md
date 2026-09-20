@@ -191,11 +191,63 @@ claude plugin eval . --scaffold --trust-plugin --allow-tools Bash Write Edit
 
 `evals/README.md` explains the fixture, the graders and how to add a case.
 The one rule: never write a case for a defect you have not reproduced by hand
-in the fixture first.
+in the fixture first. `tools/fixture_check.py` is that reproduction, kept:
+it runs every seeded defect against the fixture and fails if one has gone.
+
+Every version that changes an agent, a skill, the Articles or the Captain
+gets a row in `evals/SCORES.md`: crew score and baseline score per case.
+The results directory is not committed; the scoreboard is the only record
+of whether a change helped, and a rule that says "a change that lowers a
+score is not an improvement" is only a rule while the previous score exists.
 
 ---
 
-## 7. Maintaining this file
+## 7. How the crew improves
+
+The crew gets better in exactly one way: a miss becomes a case, and the case
+drives the fix. Nothing else is trusted, because nothing else is measured.
+
+**A field report.** When an agent misses something in a real project, or
+says something wrong, the fix is never an edit to the agent first. In order:
+
+1. Seed the miss in `evals/_fixture/schoolapp/` and reproduce it by hand.
+   Add the reproduction to `tools/fixture_check.py` so it is kept.
+2. Write the case and run it. It should fail. If it passes, the agent did
+   not miss it and the report was about routing or wording; fix that.
+3. Now change the agent, the smallest change that turns the case green.
+4. Run the whole suite, not just the new case, and record the row.
+
+This is the same discipline the fixture already demands of a new case,
+pointed at production misses. The agents' `memory: project` directories
+stay in the consuming project on purpose; a lesson that should reach every
+project comes home this way, as a case, not as memory.
+
+**Word budgets.** Every agent, command and skill has a word budget in
+`tools/budgets.json`, set at the size the file had when the budget was
+introduced. `python3 tools/budget.py` fails on any overrun, and CI runs it
+on every push. The budget exists because the natural fix for a miss is a
+paragraph telling the agent not to miss it again, and a file that grows a
+paragraph per miss becomes a list of past mistakes the model reads before
+every task, with the rule that matters diluted by the fifty that do not.
+So:
+
+- Adding words means cutting words. Reread the file for what is stale,
+  duplicated or already said by an Article, and remove that first.
+- A budget is raised only when a case fails without the extra words and no
+  shorter edit makes it pass. Note the case in the commit message.
+- Cutting a file and watching the score hold is a legitimate experiment.
+  Words the suite does not miss were not doing anything.
+
+**Baselines.** The delta against plain Claude is the number to watch, and
+it will shrink as the underlying model improves, because the model learns
+to do on its own what an agent once had to be told. That is not the crew
+getting worse. It is a signal to cut: an instruction the baseline already
+follows can go. A model upgrade is a reason to re-run the suite and reread
+every file with the budget in mind, not a reason to add.
+
+---
+
+## 8. Maintaining this file
 
 - An agent is worth having only if it has a job no other agent has. When two
   agents overlap, merge them.
@@ -208,8 +260,14 @@ in the fixture first.
 - Test a hook change before committing: `python3 plugins/crew/hooks/selftest.py`
   feeds every hook the inputs it must act on and the ones it must let through.
   Run it with an interpreter that has Django to cover the migration check.
+  CI (`.github/workflows/checks.yml`) runs it, the budget check and the
+  fixture check on every push.
 - Keep the roster small. Eight agents that are each obviously the right call
   beat fifteen that overlap.
-- Run the evals (section 6) after changing an agent, a skill or the Articles.
-  A change that lowers a case score is not an improvement, whatever it reads
-  like.
+- Run the evals (section 6) after changing an agent, a skill or the Articles,
+  and record the row in `evals/SCORES.md` with the version bump. A change
+  that lowers a case score is not an improvement, whatever it reads like.
+  `.github/workflows/evals.yml` runs the suite on demand and when the
+  version changes; it needs an `ANTHROPIC_API_KEY` repository secret.
+- Stay within budget (section 7). `python3 tools/budget.py` before a commit
+  that touches an agent, a command or a skill.
