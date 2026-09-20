@@ -164,6 +164,7 @@ situation it fires in.
 | `/captain` | Takes a task, plans the passage, dispatches the crew; charts work too big for one passage and sails it a leg at a time |
 | `/wheels-up` | Pre-deploy check for Django on Azure |
 | `/commit-message` | Draft a structured commit message |
+| `/field-report` | An agent missed something in a real project: write it up as a pattern, with nothing from the project in it, and file it as an issue for the evals |
 
 All carry `disable-model-invocation: true` — they fire when typed, never on
 their own. Generic prompts (think harder, ask me questions, dry run, explain
@@ -208,7 +209,12 @@ The crew gets better in exactly one way: a miss becomes a case, and the case
 drives the fix. Nothing else is trusted, because nothing else is measured.
 
 **A field report.** When an agent misses something in a real project, or
-says something wrong, the fix is never an edit to the agent first. In order:
+says something wrong, the developer types `/field-report` there, while it
+is fresh. The Captain's log ends with that reminder on every passage. The
+command writes the miss up as a pattern in fixture terms, never with
+anything from the project in it, and files it as an issue on this repo
+labelled `field-report`. Those issues are the inbox. Working one is never
+an edit to the agent first. In order:
 
 1. Seed the miss in `evals/_fixture/schoolapp/` and reproduce it by hand.
    Add the reproduction to `tools/fixture_check.py` so it is kept.

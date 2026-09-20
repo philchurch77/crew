@@ -146,6 +146,15 @@ Then it is one leg per passage:
 That is an ordinary Build passage with the chart in the Quartermaster's
 hands, and the chart is updated when the leg makes port. Commit both files.
 
+## When the crew gets it wrong
+
+The crew improves by being measured, not by being told. If an agent misses
+something or says something wrong, type `/field-report` in that project
+while it is fresh (the Captain's log reminds you). It writes the miss up as
+a pattern, with nothing from your project in it, and files it as an issue
+here. Each one becomes a seeded defect and a failing eval case before the
+agent is changed, so the fix is proven rather than hoped.
+
 ## What the crew remembers
 
 Quartermaster, Carpenter, Master-at-Arms and Purser keep notes on each

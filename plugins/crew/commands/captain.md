@@ -306,8 +306,7 @@ and record in the log that it was skipped at their instruction.
 
 ## 4. How to run the crew efficiently
 
-The point of the crew is to be faster than doing it alone, not slower. A good
-captain runs a tight ship, not a busy one. So:
+A good captain runs a tight ship, not a busy one. So:
 
 - **All hands at once.** Dispatch independent reviewers in parallel — multiple
   agent calls in one message. Carpenter, Bosun, Master-at-Arms and Purser do
@@ -336,8 +335,8 @@ captain runs a tight ship, not a busy one. So:
   specific question, and paste the `git diff` hunks for the change into the
   dispatch so the reviewer reads the whole file for context but knows which
   lines are new. "Review the changed files" wastes a whole context window on
-  rediscovery — a lookout with no bearing sees nothing — and a reviewer with
-  no diff spends its findings on code the task never touched.
+  rediscovery, and a reviewer with no diff spends its findings on code the
+  task never touched.
 - **Tell each agent what it already knows.** Quartermaster, Carpenter,
   Master-at-Arms and Purser keep a memory of this project. Say in the
   dispatch that they should read it first and record what they learn when
@@ -374,6 +373,9 @@ was fixed or left.
 **Purser** — ran, not applicable, or skipped at the developer's instruction.
 **Verdict** — made port, or what still needs attention. If anything is
 unresolved, say it plainly rather than burying it in the bilge.
+
+Then one last line, every time: *If any of the crew missed something or got
+it wrong, `/field-report` now, while it is fresh.*
 
 Anything the crew raised that is a matter for the Admiralty — a DPIA question,
 a destructive migration awaiting a backup, a design trade-off, a risk you are

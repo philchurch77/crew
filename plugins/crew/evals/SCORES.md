@@ -19,4 +19,5 @@ each 0 to 1, over three runs.
 
 | Version | Date | Judge | MaA | Bos | Pur | Trg | Car | Gun | Sur | Lkt | CpH | CpW | CpC | Notes |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 2.12.0 | 2026-09-20 | | | | | | | | | | | | | Scoreboard, budgets and the Surgeon and Lookout cases added. Not yet run; first full run to fill this row. |
+| 2.12.0 | 2026-09-20 | | | | | | | | | | | | | Scoreboard, budgets and the Surgeon and Lookout cases added. Not run. |
+| 2.13.0 | 2026-09-20 | | | | | | | | | | | | | /field-report command and the Captain's closing line; no agent changed. Not run. |

@@ -139,7 +139,8 @@ change helped.
 
 ## When an agent misses something in a real project
 
-Do not edit the agent. Seed the miss here first, prove it by hand, write
+`/field-report` in that project files the miss as an issue labelled
+`field-report`; that label is the inbox. Do not edit the agent. Seed the miss here first, prove it by hand, write
 the case, watch it fail, and only then make the smallest change to the
 agent that turns it green. Then run the whole suite and record the row.
 The agents have word budgets (`tools/budgets.json`) for exactly this
