@@ -58,10 +58,33 @@ dropped it. Read: the Lookout's own transcript labelled every finding and even
 listed what it could only read. The Captain's log turned twenty-one
 findings into one line per agent. Fixed in 2.15.1 in `captain.md`,
 section 5: on a Look passage, every finding with its severity and label.
-Confirm with `lookout*` at `--runs 3 --judge-model sonnet`; the run
-also shows whether four agents on a Look (Lookout, Master-at-Arms,
-Purser, Bosun, 5.84 a run) is the right reading of "what's broken or
-confusing from her point of view", or over-dispatch.
+Confirmed at 3 runs per arm: 1.00 / 0.89, labelled-ran green on every
+crew run. The Captain still sends four agents on that Look (Lookout,
+Master-at-Arms, Purser, Bosun) at 5 to 7 a run against 1 for the
+baseline. Whether "what's broken or confusing from her point of view"
+should dispatch more than the Lookout and Bosun is an open routing
+question with no case behind it. Do not touch it until a field report
+or a case says the extra agents found nothing the Lookout did not.
+
+## Where this leaves the loop, 21 September
+
+The improvement loop has now been run end to end once: a case failed
+(labelled-ran), the transcript said which file, the smallest edit went
+in under budget, and the re-run went green with the delta intact. The
+grader question is closed. The next misses should come from real
+projects through `/field-report`, not from harder fixture cases: two
+"make it harder" rounds in a row produced one measuring case (Surgeon)
+and one draw (Gunner). Work the `field-report` inbox in the section 7
+order.
+
+Still open, in order of value:
+
+- Issue #10's roster question on the Gunner (above).
+- The six cases with no number: Carpenter, Bosun, Master-at-Arms, the
+  trigger case, and the two Build cases. All run on Windows without
+  Bash except as noted in the README. One run per arm first.
+- A second fixture in another domain, against overfitting to the school
+  app. Only after the field-report inbox has produced a few cases.
 
 ## Done on 21 September: candidate 1 of #9 and #10, run at 3 per arm
 
