@@ -67,23 +67,30 @@ calls inside the Lookout's own transcript. If they are there, the grader
 is blind to subagents and the method graders need a `trace` target or a
 different design. If they are not, the agents are at fault.
 
-## Done on 21 September, not yet run
+## Done on 21 September: candidate 1 of #9 and #10, run, both draws
 
-Candidate 1 of issues #9 and #10 is seeded, reproduced by hand, in
-`tools/fixture_check.py`, and cased (2.15.0). Neither has a score yet:
-both need Bash, so both run on WSL2.
+Seeded, reproduced by hand, in `tools/fixture_check.py`, cased (2.15.0)
+and run on WSL2 at one run per arm. Both scored 1.00 / 1.00.
 
-- Issue #9: `surgeon-third-bad-day`. Run `surgeon-third*` on both arms.
-  Expected: baseline names a cause by reading and skips the loop; crew
-  builds one. If the crew arm also skips the loop, that is a Surgeon fix
-  under budget. Close the issue with the row.
-- Issue #10: `gunner-cross-school-test` now carries the `?pupil=` hole
-  and a weight-2 `filter-hole-tested` grader. Run `gunner*` on both arms.
-  If plain Claude finds the second hole too, that is the roster question
-  in the issue, not a longer Gunner. Close the issue with the row.
+- `surgeon-third-bad-day`: the Surgeon was dispatched and Bash ran 6x in
+  the crew arm. But the baseline also built a loop (Bash 2x), found the
+  boundary record, and ruled out an alternative on two votes of three.
+  A wrong-number symptom with data in the database was enough to make
+  plain Claude run it.
+- `gunner-cross-school-test` with the `?pupil=` hole: both arms wrote
+  the parameter test, ran it, and reported it failing. Plain Claude does
+  not stop at the detail view.
+- Read against AGENTS.md section 7 ("Baselines"): the model does the
+  method on its own. That is a signal to cut, and a roster question for
+  the Gunner (issue #10 says so). Before acting on one run per arm, run
+  each at `--runs 3` for a real score; a draw at three runs is a draw.
 - The fixture now has a `seed_demo` management command and `seed.sh` takes
   `--demo`. The Carpenter and Master-at-Arms may remark on the command;
   read those as noise unless the remark is right.
+- Bash 6x with the Surgeon dispatched is the first evidence that the
+  `tool_used` grader does see a subagent's calls, which would make
+  yesterday's 0x a real agent miss. The `--keep-temp` check below still
+  settles it, because the Captain may have run those commands itself.
 
 ## The work queued
 

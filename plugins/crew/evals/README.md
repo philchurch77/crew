@@ -78,6 +78,11 @@ a Windows laptop those three run only under WSL2 (with `bubblewrap` and
 The other eight cases run on Windows as they are, from Git Bash, since the
 scaffolds are shell scripts.
 
+Never leave a `.venv` inside `_fixture/schoolapp/`: a Linux venv holds a
+`lib64` symlink, and the harness refuses to run any case while a symlink
+exists under `evals/`. For the fixture check, build the venv outside the
+repo (`python3 -m venv ~/crew-venv`) and run `manage.py` with its Python.
+
 ## Running
 
 From the plugin root:
