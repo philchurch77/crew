@@ -9,8 +9,8 @@ review.
 
 `_fixture/schoolapp/` is a small Django project: a `schools` app (School,
 Membership, Pupil) and a `tolerance` app (Observation). Its `CLAUDE.md`
-declares `tolerance`, `Observation` and `Pupil` sensitive. It carries five
-seeded defects, each the target of one case:
+declares `tolerance`, `Observation` and `Pupil` sensitive. It carries the
+seeded defects below, each the target of one case:
 
 | Defect | Where | Case |
 |---|---|---|
@@ -18,9 +18,10 @@ seeded defects, each the target of one case:
 | A `{# #}` comment split across three lines, rendered as page text | `tolerance/templates/tolerance/observation_form.html` | `bosun-split-comment` |
 | Migration 0002 shrinks `Observation.body` from `TextField` to `CharField(200)`; `Observation.pupil` cascades | `tolerance/migrations/0002_shorten_body.py`, `tolerance/models.py` | `purser-destructive-migration`, `trigger-text-came-back-shorter` |
 | Four queries per pupil in a loop, plus scoring rules and email in the view | `tolerance/views.py` `dashboard` | `carpenter-oversized-dashboard` |
-| Empty `tolerance/tests.py` | | `gunner-cross-school-test` |
+| Empty `tolerance/tests.py`; and a `?pupil=` filter on the list whose branch drops the school clause | `tolerance/views.py` `observation_list` | `gunner-cross-school-test` |
 | `_school_for` reads `user.membership` unguarded; a user with no Membership raises on every page | `tolerance/views.py` `_school_for` | `surgeon-deputy-head-500` |
 | No `LOGIN_REDIRECT_URL`; a login from the login page lands on a 404 at `/accounts/profile/` | `config/settings.py` | `lookout-first-login-404` |
+| "Last four weeks" is `observed_on__gte=today - 4 weeks`, a 29-day window; a dysregulated observation exactly 28 days ago is counted as a third and the pupil is rated high | `tolerance/views.py` `dashboard`, data from `seed_demo` | `surgeon-third-bad-day` |
 | A feature request: an "agreed action" field on Observation | the whole fixture | `captain-build-heaves-to`, `captain-build-weighs-anchor` |
 | A whole new app: attendance registers, too big for one passage | the whole fixture | `captain-chart-heaves-to` |
 
@@ -33,6 +34,15 @@ The Surgeon and Lookout cases test method as much as detection. The Surgeon
 is handed "the dashboard 500s for one new user" and must build a red loop
 before naming a cause, name the missing Membership rather than the dashboard
 code, say the failure is not the dashboard's alone, and change nothing. The
+second Surgeon case is a wrong number, not a crash: the dashboard rates a
+pupil high on three dysregulated days her teacher says were two. Nothing in
+the view reads as wrong; only running it against the seeded data finds the
+third observation dated exactly 28 days ago, inside a "four week" window
+that is 29 days wide. Its scaffold passes `--demo` to `seed.sh`, which
+migrates and runs the fixture's `seed_demo` command so the data is there.
+The second Gunner hole is the list's `?pupil=` filter: the default list is
+filtered, the detail view is the obvious test, and a suite that stops there
+never sends the parameter. The
 Lookout is asked to walk the app as a new teacher from the login page; the
 defect is one that `force_login` never meets, so a walkthrough that starts
 past the login page passes every view and misses it. Both need Django, so

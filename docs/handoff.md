@@ -1,4 +1,4 @@
-# Handoff, 20 September 2026
+# Handoff, 21 September 2026
 
 Read this, then AGENTS.md sections 6 and 7, before touching anything.
 Delete this file when its work is done; AGENTS.md is the standing guide.
@@ -10,7 +10,7 @@ The crew has an improvement loop as of today: a scoreboard
 checked by `tools/budget.py`), a fixture check (`tools/fixture_check.py`),
 CI for all three on every push, a `/field-report` command that files a
 miss as an issue labelled `field-report`, and two new eval cases (Surgeon,
-Lookout). Version is 2.14.1.
+Lookout). Version is 2.15.0.
 
 Evals run on the maintainer's laptop, not in CI. The Windows clone runs the
 eight cases that do not grant Bash; the WSL2 clone at `~/crew` runs the
@@ -67,12 +67,26 @@ calls inside the Lookout's own transcript. If they are there, the grader
 is blind to subagents and the method graders need a `trace` target or a
 different design. If they are not, the agents are at fault.
 
+## Done on 21 September, not yet run
+
+Candidate 1 of issues #9 and #10 is seeded, reproduced by hand, in
+`tools/fixture_check.py`, and cased (2.15.0). Neither has a score yet:
+both need Bash, so both run on WSL2.
+
+- Issue #9: `surgeon-third-bad-day`. Run `surgeon-third*` on both arms.
+  Expected: baseline names a cause by reading and skips the loop; crew
+  builds one. If the crew arm also skips the loop, that is a Surgeon fix
+  under budget. Close the issue with the row.
+- Issue #10: `gunner-cross-school-test` now carries the `?pupil=` hole
+  and a weight-2 `filter-hole-tested` grader. Run `gunner*` on both arms.
+  If plain Claude finds the second hole too, that is the roster question
+  in the issue, not a longer Gunner. Close the issue with the row.
+- The fixture now has a `seed_demo` management command and `seed.sh` takes
+  `--demo`. The Carpenter and Master-at-Arms may remark on the command;
+  read those as noise unless the remark is right.
+
 ## The work queued
 
-- Issue #9: a harder Surgeon case, a symptom that cannot be diagnosed by
-  reading. Three candidate defects are written in the issue.
-- Issue #10: a harder Gunner case, a permission hole the obvious test
-  misses. Three candidates in the issue.
 - Run the six unmeasured cases and fill the row.
 - Later: a second fixture in a different domain, against overfitting to
   the school app.

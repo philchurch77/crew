@@ -75,6 +75,20 @@ try:
             raised = type(e).__name__ == "RelatedObjectDoesNotExist"
         check("a user with no Membership raises on the dashboard", raised)
 
+        # gunner-cross-school-test, the second hole: the list's pupil filter drops the school clause
+        c = Client()
+        c.force_login(t_vale)
+        check("list pupil filter is unfiltered by school", c.get(f"/?pupil={pupil.pk}").status_code == 200 and str(pupil) in c.get(f"/?pupil={pupil.pk}").content.decode())
+
+        # surgeon-third-bad-day: "last four weeks" is gte today - 4 weeks, which is 29 days
+        from datetime import date, timedelta
+        for days_ago in (2, 9, 28):
+            Observation.objects.create(pupil=pupil, author=t_hill, observed_on=date.today() - timedelta(days=days_ago), mood="dysregulated", body="x")
+        c = Client()
+        c.force_login(t_hill)
+        row = [r for r in c.get("/dashboard/").context["rows"] if r["pupil"] == pupil][0]
+        check("an observation 28 days ago counts as a third bad day", row["dysregulated"] == 3 and row["level"] == "high")
+
         # lookout-first-login-404
         c = Client()
         r = c.post("/login/", {"username": "t_hill", "password": "pw-fixture-1"})
