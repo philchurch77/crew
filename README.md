@@ -186,6 +186,7 @@ plugins/crew/
   hooks/                          hooks.json, the guards and checks, and their self-test
   evals/                          the proving ground: a seeded fixture, one case per agent, and SCORES.md
 tools/                            maintainer checks — word budgets and the fixture check; not shipped
+docs/field-reports/               field reports that could not be filed as issues; the same inbox
 .github/                          CI: checks on every push, evals by hand; the field-report issue template
 ```
 

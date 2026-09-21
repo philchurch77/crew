@@ -213,8 +213,10 @@ says something wrong, the developer types `/field-report` there, while it
 is fresh. The Captain's log ends with that reminder on every passage. The
 command writes the miss up as a pattern in fixture terms, never with
 anything from the project in it, and files it as an issue on this repo
-labelled `field-report`. Those issues are the inbox. Working one is never
-an edit to the agent first. In order:
+labelled `field-report`. Those issues are the inbox. When `gh` is not
+available in the project the report is printed instead; save it as the
+next numbered file in `docs/field-reports/` so it is not lost, and work it
+the same way. Working one is never an edit to the agent first. In order:
 
 1. Seed the miss in `evals/_fixture/schoolapp/` and reproduce it by hand.
    Add the reproduction to `tools/fixture_check.py` so it is kept.
