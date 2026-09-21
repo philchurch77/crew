@@ -3,6 +3,14 @@
 {% block content %}
 <h1>Observations</h1>
 <p><a href="{% url 'observation_create' %}">New observation</a> · <a href="{% url 'dashboard' %}">Dashboard</a></p>
+<form method="get">
+  <label for="pupil">Pupil</label>
+  <select name="pupil" id="pupil">
+    <option value="">All pupils</option>
+    {% for p in pupils %}<option value="{{ p.pk }}"{% if selected_pupil == p.pk|stringformat:"s" %} selected{% endif %}>{{ p }}</option>{% endfor %}
+  </select>
+  <button type="submit">Filter</button>
+</form>
 {% if observations %}
 <table>
   <thead><tr><th>Date</th><th>Pupil</th><th>Mood</th><th>Author</th></tr></thead>

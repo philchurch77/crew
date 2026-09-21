@@ -16,8 +16,18 @@ def _school_for(user):
 
 @login_required
 def observation_list(request):
-    observations = Observation.objects.filter(pupil__school=_school_for(request.user)).select_related("pupil", "author")
-    return render(request, "tolerance/observation_list.html", {"observations": observations})
+    school = _school_for(request.user)
+    pupils = Pupil.objects.filter(school=school)
+    observations = Observation.objects.filter(pupil__school=school)
+    pupil_id = request.GET.get("pupil")
+    if pupil_id:
+        observations = Observation.objects.filter(pupil_id=pupil_id)
+    observations = observations.select_related("pupil", "author")
+    return render(
+        request,
+        "tolerance/observation_list.html",
+        {"observations": observations, "pupils": pupils, "selected_pupil": pupil_id},
+    )
 
 
 @login_required
@@ -58,7 +68,7 @@ def observation_edit(request, pk):
 @login_required
 def dashboard(request):
     school = _school_for(request.user)
-    since = date.today() - timedelta(days=28)
+    since = date.today() - timedelta(weeks=4)
     rows = []
     alerts = []
     for pupil in Pupil.objects.filter(school=school):
@@ -97,7 +107,7 @@ def dashboard(request):
         names = ", ".join(str(p) for p in alerts)
         send_mail(
             "Pupils needing attention",
-            f"The following pupils have three or more dysregulated observations this month: {names}",
+            f"The following pupils have three or more dysregulated observations in the last four weeks: {names}",
             None,
             [request.user.email],
         )

@@ -2,7 +2,7 @@
 {% block title %}Dashboard{% endblock %}
 {% block content %}
 <h1>Dashboard</h1>
-<p>{{ total_pupils }} pupils, observations since {{ since }}.</p>
+<p>{{ total_pupils }} pupils, observations from the last four weeks.</p>
 {% if alerts %}
 <p><strong>Needs attention:</strong> {% for p in alerts %}{{ p }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
 {% endif %}

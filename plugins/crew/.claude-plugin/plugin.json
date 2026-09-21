@@ -1,6 +1,6 @@
 {
   "name": "crew",
-  "version": "2.14.1",
+  "version": "2.15.0",
   "description": "A Django crew and a Captain who dispatches them. Agents for planning, refactoring, tests, debugging, UI, QA, security and data loss; a /captain command that plans the passage and runs each agent once, and charts work too big for one passage into legs after grilling the developer in rounds; a /field-report command that turns a miss in a real project into an eval case; self-loading skills for Django house rules and sensitive-data review; hooks that stop the test-writer discarding your uncommitted work, keep the reviewers out of the database, hold the Gunner and Lookout to their own rules, and catch a leaked template comment or a missing migration before the turn ends.",
   "author": {
     "name": "Phil Church"

@@ -7,6 +7,9 @@
 #                          manage.py. Uses the system interpreter when it
 #                          already has Django; otherwise builds .venv, which
 #                          the fixture CLAUDE.md tells the crew to use.
+#   seed.sh --with-django --demo
+#                          Also migrate and run seed_demo, for cases whose
+#                          symptom lives in the data rather than the code.
 set -euo pipefail
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cp -R "$HERE/schoolapp/." .
@@ -17,13 +20,20 @@ git -c user.name=fixture -c user.email=fixture@example.com commit -qm "Schoolapp
 if [ "${1:-}" = "--with-django" ]; then
   # Pick an interpreter that already has Django. On Windows the `python3`
   # on Git Bash's PATH is often the Store stub, so try `python` too.
-  for PY in python3 python; do
-    if "$PY" -c "import django" >/dev/null 2>&1; then exit 0; fi
+  PY=""
+  for CAND in python3 python; do
+    if "$CAND" -c "import django" >/dev/null 2>&1; then PY="$CAND"; break; fi
   done
-  for PY in python3 python; do
-    if "$PY" -c "import sys" >/dev/null 2>&1; then break; fi
-  done
-  "$PY" -m venv .venv
-  if [ -x .venv/bin/pip ]; then PIP=.venv/bin/pip; else PIP=.venv/Scripts/pip.exe; fi
-  "$PIP" install -q --disable-pip-version-check --timeout 60 --retries 5 -r requirements.txt
+  if [ -z "$PY" ]; then
+    for CAND in python3 python; do
+      if "$CAND" -c "import sys" >/dev/null 2>&1; then PY="$CAND"; break; fi
+    done
+    "$PY" -m venv .venv
+    if [ -x .venv/bin/pip ]; then PIP=.venv/bin/pip; PY=.venv/bin/python; else PIP=.venv/Scripts/pip.exe; PY=.venv/Scripts/python.exe; fi
+    "$PIP" install -q --disable-pip-version-check --timeout 60 --retries 5 -r requirements.txt
+  fi
+  if [ "${2:-}" = "--demo" ]; then
+    "$PY" manage.py migrate -v0
+    "$PY" manage.py seed_demo
+  fi
 fi
