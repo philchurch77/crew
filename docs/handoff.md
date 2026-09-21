@@ -42,48 +42,41 @@ trigger case, and the two Build cases.
    **Run, and it worked:** both agents dispatched (Agent called 1x).
    Surgeon 0.71 / 0.71, Lookout 0.83 / 0.67.
 
-## First job: an open question the last run raised
+## The grader question, answered by the counts
 
-With the agents dispatched, `Bash called 0x` in both crew arms. Yet the
-Lookout's report passed the `labelled-ran` judge, and the Surgeon's own
-rules say build a loop before naming a cause. Earlier in the day, when the
-main session did the walking itself, the Lookout case counted Bash 3x.
-Two readings, and the difference matters for every case with a
-`tool_used` grader:
+Run 21 September, `lookout*` crew arm with `--keep-temp`: Lookout
+dispatched, Bash 10x. `surgeon-third*` at 3 runs: Surgeon dispatched,
+Bash 7, 7, 8. Yesterday's 0x with the same agents dispatched was not the
+grader going blind; the counts move with what the agents do. The kept
+directory is `/tmp/claude-eval-KC7BGK` on WSL2 (`chmod 700` it and its
+`sealed/` as the harness says). Its `subagents/` transcript settles the
+last doubt, whether the Bash calls were the Lookout's or the Captain's,
+and shows why `labelled-ran` failed: the Lookout walked the flow (10
+Bash calls, finding right) and the final report still carried no
+ran/read label. Either the Lookout did not label or the Captain's log
+dropped it. Read the transcript before deciding which file to fix; both
+are at budget.
 
-- The `tool_used` grader counts only the main session's calls, not a
-  subagent's. Then every Bash grader on a dispatched agent is blind, and
-  the Purser, Gunner and Chart scores need re-reading too (the Gunner's
-  `tests-were-run` may have counted the Captain's run, not the Gunner's).
-- The agents genuinely ran nothing. Then the Lookout labelled a read as
-  "ran", which breaks article 10, and the Surgeon skipped its loop. Both
-  are agent failures to fix under budget.
-
-The docs do not say (checked 2026-09-20 against
-code.claude.com/docs/en/plugin-evals). Settle it empirically: run
-`lookout*` with `--keep-temp --ablation none --runs 1`, open the kept
-directory's transcript and its `subagents/` folder, and look for Bash
-calls inside the Lookout's own transcript. If they are there, the grader
-is blind to subagents and the method graders need a `trace` target or a
-different design. If they are not, the agents are at fault.
-
-## Done on 21 September: candidate 1 of #9 and #10, run, both draws
+## Done on 21 September: candidate 1 of #9 and #10, run at 3 per arm
 
 Seeded, reproduced by hand, in `tools/fixture_check.py`, cased (2.15.0)
-and run on WSL2 at one run per arm. Both scored 1.00 / 1.00.
+and run on WSL2, first at one run per arm (both 1.00 / 1.00), then at
+three.
 
-- `surgeon-third-bad-day`: the Surgeon was dispatched and Bash ran 6x in
-  the crew arm. But the baseline also built a loop (Bash 2x), found the
-  boundary record, and ruled out an alternative on two votes of three.
-  A wrong-number symptom with data in the database was enough to make
-  plain Claude run it.
-- `gunner-cross-school-test` with the `?pupil=` hole: both arms wrote
-  the parameter test, ran it, and reported it failing. Plain Claude does
-  not stop at the detail view.
-- Read against AGENTS.md section 7 ("Baselines"): the model does the
-  method on its own. That is a signal to cut, and a roster question for
-  the Gunner (issue #10 says so). Before acting on one run per arm, run
-  each at `--runs 3` for a real score; a draw at three runs is a draw.
+- `surgeon-third-bad-day`: crew 1.00 / baseline 0.76. The baseline
+  skipped the loop on two runs of three and named the cause by reading
+  anyway; the third run built a loop but ruled nothing out. The case
+  now measures the Surgeon's method. Issue #9 can close with the row.
+- `gunner-cross-school-test` with the `?pupil=` hole: 1.00 on all six
+  runs. Crew run 2 never dispatched the Gunner and still scored 1.00 at
+  a quarter of the cost. Plain Claude sends the parameter, runs the
+  suite and reports the failure every time. Issue #10 said what this
+  means: a roster question for AGENTS.md section 8, not a longer Gunner.
+  The Gunner still owns two things the case does not measure: the
+  guard-git and guard_tree hooks, and the Gauntlet's test stage. Decide
+  whether those need an agent or a Captain step. A cheaper first move
+  is the section 7 experiment: cut `gunner.md` hard and watch the score
+  hold.
 - The fixture now has a `seed_demo` management command and `seed.sh` takes
   `--demo`. The Carpenter and Master-at-Arms may remark on the command;
   read those as noise unless the remark is right.
