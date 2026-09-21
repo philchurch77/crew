@@ -10,7 +10,7 @@ The crew has an improvement loop as of today: a scoreboard
 checked by `tools/budget.py`), a fixture check (`tools/fixture_check.py`),
 CI for all three on every push, a `/field-report` command that files a
 miss as an issue labelled `field-report`, and two new eval cases (Surgeon,
-Lookout). Version is 2.15.0.
+Lookout). Version is 2.15.1.
 
 Evals run on the maintainer's laptop, not in CI. The Windows clone runs the
 eight cases that do not grant Bash; the WSL2 clone at `~/crew` runs the
@@ -54,8 +54,14 @@ last doubt, whether the Bash calls were the Lookout's or the Captain's,
 and shows why `labelled-ran` failed: the Lookout walked the flow (10
 Bash calls, finding right) and the final report still carried no
 ran/read label. Either the Lookout did not label or the Captain's log
-dropped it. Read the transcript before deciding which file to fix; both
-are at budget.
+dropped it. Read: the Lookout's own transcript labelled every finding and even
+listed what it could only read. The Captain's log turned twenty-one
+findings into one line per agent. Fixed in 2.15.1 in `captain.md`,
+section 5: on a Look passage, every finding with its severity and label.
+Confirm with `lookout*` at `--runs 3 --judge-model sonnet`; the run
+also shows whether four agents on a Look (Lookout, Master-at-Arms,
+Purser, Bosun, 5.84 a run) is the right reading of "what's broken or
+confusing from her point of view", or over-dispatch.
 
 ## Done on 21 September: candidate 1 of #9 and #10, run at 3 per arm
 

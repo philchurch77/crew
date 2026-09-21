@@ -334,9 +334,7 @@ A good captain runs a tight ship, not a busy one. So:
 - **Give each agent the actual files, and the diff.** Name paths and the
   specific question, and paste the `git diff` hunks for the change into the
   dispatch so the reviewer reads the whole file for context but knows which
-  lines are new. "Review the changed files" wastes a whole context window on
-  rediscovery, and a reviewer with no diff spends its findings on code the
-  task never touched.
+  lines are new.
 - **Tell each agent what it already knows.** Quartermaster, Carpenter,
   Master-at-Arms and Purser keep a memory of this project. Say in the
   dispatch that they should read it first and record what they learn when
@@ -367,7 +365,8 @@ Finish with this, and nothing longer:
 or not applicable.
 **What changed** — the files, briefly.
 **What the crew found** — one line per agent dispatched, and whether the finding
-was fixed or left.
+was fixed or left. On a Look passage the findings are the cargo: carry every
+one, with its severity and its ran or read label, not a count.
 **Tests** — the real result of the real run.
 **Gauntlet** — ran, not applicable, or skipped at the developer's instruction.
 **Purser** — ran, not applicable, or skipped at the developer's instruction.
