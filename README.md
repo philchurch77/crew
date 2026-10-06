@@ -145,6 +145,9 @@ Then it is one leg per passage:
 
 That is an ordinary Build passage with the chart in the Quartermaster's
 hands, and the chart is updated when the leg makes port. Commit both files.
+The `charting` skill carries the chart's format and the leg-sailing
+procedure, and loads itself whenever you say "next leg" or "where are we on
+the chart", so a session on another surface keeps the chart the same way.
 
 ## When the crew gets it wrong
 

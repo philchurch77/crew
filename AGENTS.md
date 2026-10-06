@@ -151,6 +151,7 @@ Commands are typed. That is the whole distinction.
 |---|---|
 | **ships-articles** | Any Django work begins — the house rules, the crew rules, the round format, the glossary rule, and precedence |
 | **gauntlet** | A change touches sensitive data, before it is called done — with a Purser stage when the change can lose it |
+| **charting** | Work too big for one passage, or the developer says "next leg", "sail leg N" or "where are we on the chart" — the chart's format and how it is drawn, sailed and kept, so `/captain` and any session without it keep `docs/chart/` the same way |
 
 A skill description is a trigger condition, not a summary. Write it as the
 situation it fires in.
