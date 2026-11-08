@@ -1,7 +1,7 @@
 {
   "name": "crew",
-  "version": "3.0.0",
-  "description": "A Django crew for education projects and a Captain who runs the passage. Five read-only agents for planning and structure, diagnosis, end-to-end QA, security and GDPR, and data loss; a /captain command that reads what is live and what the crew already decided, shows one plan, builds and tests it, dispatches the reviewers, and logs what it did, what it changed from the plan, and what it may have missed; skills for the Django house rules, AI features grounded in educational documents, and the sensitive-data Gauntlet; hooks that keep every agent out of your files and your database, hold the Lookout to leaving the tree as it found it, and catch a leaked template comment or a missing migration before the turn ends.",
+  "version": "3.1.0",
+  "description": "A Django crew for education projects and a Captain who runs the passage. Five read-only agents for planning and structure, diagnosis, end-to-end QA, security and GDPR, and data loss; a /captain command that reads what is live and what the crew already decided, shows one plan, builds and tests it, dispatches the reviewers, and logs what it did, what it changed from the plan, and what it may have missed; skills for the Django house rules, the sensitive-data Gauntlet, and AI features grounded in educational documents with a reference Django app to copy from; hooks that keep every agent out of your files and your database, hold the Lookout to leaving the tree as it found it, and catch a leaked template comment or a missing migration before the turn ends.",
   "author": {
     "name": "Phil Church"
   },

@@ -45,7 +45,9 @@ def main():
 
     unbudgeted = []
     for sub in ("plugins/crew/agents", "plugins/crew/commands", "plugins/crew/skills"):
-        for dirpath, _, files in os.walk(os.path.join(ROOT, sub)):
+        for dirpath, dirs, files in os.walk(os.path.join(ROOT, sub)):
+            # a skill's reference/ directory is code and sample data, not prompt text
+            dirs[:] = [d for d in dirs if d != "reference"]
             for name in files:
                 if name.endswith(".md"):
                     rel = os.path.relpath(os.path.join(dirpath, name), ROOT)

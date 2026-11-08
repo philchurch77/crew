@@ -81,6 +81,18 @@ under **Admiralty**. The log also carries **Departures**, anything done
 differently from the plan you agreed, and **Probable misses**, any defect
 found in a file the crew had earlier passed as clean.
 
+## AI features
+
+The apps increasingly call a model over educational documents and pupil
+data. Article 13 sets the rules and the `ai-features` skill carries a
+reference Django app that meets them: a versioned corpus loaded from
+Markdown, a redacted payload the Master-at-Arms can read before it is sent,
+retrieval with citations, a versioned prompt in code, a log of every call,
+a JSON endpoint that answers a signed-out caller with 401, a human accept
+step before anything reaches a record, a monthly cap per school, and a
+question set tested like code. The Captain copies it rather than designing
+from scratch.
+
 ## Charting something big
 
 A single feature is a Build passage: `/crew:captain add an agreed-action

@@ -353,3 +353,6 @@ over pupil data. The rules that keep that safe:
 - **The model is a dependency.** A timeout, a refusal or a failed call leaves
   the user's work intact (article 6), is shown plainly, and never retries in
   a loop. Spend is capped per school.
+
+The `ai-features` skill carries a reference implementation of all six; a
+new feature is copied from it, not designed from scratch.
