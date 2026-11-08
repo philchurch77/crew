@@ -25,7 +25,11 @@ on:
 
 jobs:
   evals:
-    runs-on: ubuntu-latest
+    # Pinned: ubuntu-latest became Ubuntu 26 on 19 October 2026 and the
+    # harness's bubblewrap sandbox fails there (apply-seccomp: Permission
+    # denied), so every Bash call inside a case fails and the agents can
+    # only read. Run 5 on 8 November showed it.
+    runs-on: ubuntu-24.04
     timeout-minutes: 360
     env:
       ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}

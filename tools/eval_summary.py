@@ -22,14 +22,16 @@ def main():
         return 0
     agg = data.get("aggregates") or {}
     print("## Eval scores\n")
+    print(f"Cost {fmt(data.get('costUsd'))} USD, {data.get('durationSeconds', '?')} s, judge {(data.get('suite') or {}).get('judgeModel', '?')}.\n")
     print(f"Overall {agg.get('overallScore', '?')}, cases passed {agg.get('casesPassed', '?')} of {agg.get('casesTotal', '?')}, mean delta {agg.get('meanDelta', '?')}.\n")
-    print("| Case | Crew | Baseline | Delta | Passed |")
+    print("| Case | Crew | Baseline | Delta | Pass rate |")
     print("|---|---|---|---|---|")
     for case in data.get("cases") or []:
         a = case.get("aggregates") or {}
-        crew = a.get("score", a.get("withScore"))
-        base = a.get("baselineScore", a.get("withoutScore"))
-        print(f"| {case.get('name', '?')} | {fmt(crew)} | {fmt(base)} | {fmt(a.get('delta'))} | {a.get('passed', '')} |")
+        crew = a.get("score")
+        base = a.get("scoreWithout")
+        passed = a.get("passRate")
+        print(f"| {case.get('name', '?')} | {fmt(crew)} | {fmt(base)} | {fmt(a.get('delta'))} | {fmt(passed)} |")
     print("\nFill the SCORES.md row as crew / baseline per case; the judge model is in the workflow.")
     return 0
 
