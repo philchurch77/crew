@@ -1,15 +1,10 @@
 {
-  "description": "The crew's guards and checks. guard-git: the Gunner may not use git to discard the developer's uncommitted work. guard_db: the read-only agents may not write to the database. guard_edit: they may not edit files outside their memory directory. guard_tree: the Lookout leaves the tree as it found it and the Gunner changes only tests. template_leaks: a template construct split across lines is reported the moment it is written. before_stop: a model change has its migration and no changed template leaks, before the main session calls the turn done.",
+  "description": "The crew's guards and checks. guard_db: no agent writes to the database. guard_edit: no agent edits a file outside its memory directory. guard_tree: the Lookout leaves the tree as it found it. template_leaks: a template construct split across lines is reported the moment it is written. before_stop: a model change has its migration and no changed template leaks, before the main session calls the turn done.",
   "hooks": {
     "PreToolUse": [
       {
         "matcher": "Bash",
         "hooks": [
-          {
-            "type": "command",
-            "command": "sh \"${CLAUDE_PLUGIN_ROOT}/hooks/crew-hook.sh\" guard-git",
-            "timeout": 10
-          },
           {
             "type": "command",
             "command": "sh \"${CLAUDE_PLUGIN_ROOT}/hooks/crew-hook.sh\" guard_db",
@@ -30,7 +25,7 @@
     ],
     "SubagentStart": [
       {
-        "matcher": "^(crew:)?(gunner|lookout)$",
+        "matcher": "^(crew:)?lookout$",
         "hooks": [
           {
             "type": "command",
@@ -42,7 +37,7 @@
     ],
     "SubagentStop": [
       {
-        "matcher": "^(crew:)?(gunner|lookout)$",
+        "matcher": "^(crew:)?lookout$",
         "hooks": [
           {
             "type": "command",

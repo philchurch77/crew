@@ -7,87 +7,74 @@ disable-model-invocation: true
 # Wheels Up — Pre-Deploy
 
 The pre-deploy check before pushing to Azure. Work through each stage in order.
-Stop and surface any failure before continuing.
+Stop and surface any failure before continuing. Read `docs/crew-log.md` first
+for the Admiralty items still open; an open one blocks the deploy until the
+developer has decided it.
 
 ---
 
-## Stage 1 — Final tidy
+## Stage 1 — Security and the Purser's count
 
-Dispatch the **carpenter** agent on the files changed since the last commit. Ask
-for anything obviously messy — oversized views, duplicated logic, or code that
-will be painful to debug in production. Fix every Critical and High finding
-before moving on.
+Dispatch in one message:
 
-If the changes touch pupil data, permissions, auth, `settings.py` or an external
-API, dispatch **master-at-arms** in parallel with the Carpenter. Do not deploy
-past an unresolved Critical or High finding.
+- **master-at-arms** on the files changed since the last deploy, if any of
+  them touch pupil data, permissions, auth, `settings.py`, an external API or
+  a model call. Do not deploy past an unresolved Critical or High.
+- **purser** on every migration not yet applied in production, every model
+  field changed since the last deploy, every form or template handling stored
+  text that changed, and the startup command or pipeline that runs
+  `migrate`. Give it the file paths. Ask it to confirm, by number:
+  1. No migration removes, renames, retypes or shrinks a column without a
+     data migration that preserves the contents.
+  2. No `AddField` on a live table drops its database default.
+  3. No `RunPython` body slices, strips, re-encodes or defaults over existing
+     text.
+  4. Every edit form renders the full stored value and re-renders bound on
+     validation error.
+  5. No `flush`, `loaddata`, `--fake` or reset in the deploy path.
 
----
-
-## Stage 2 — Purser's count
-
-Nothing goes over the side. Dispatch the **purser** on every migration that has
-not yet been applied in production, every model field changed since the last
-deploy, every form or template handling stored text that changed, and the
-startup command or pipeline that runs `migrate`. Give it the file paths. Ask it
-to confirm, specifically:
-
-1. No migration removes, renames, retypes or shrinks a column without a data
-   migration that preserves the contents.
-2. No `RunPython` body slices, strips, re-encodes or defaults over existing
-   text.
-3. Every edit form renders the full stored value and re-renders bound on
-   validation error.
-4. No `flush`, `loaddata`, `--fake` or reset in the deploy path.
-
-If the Purser finds any migration destructive, the verdict below is **Fix
-before deploying** until a backup is confirmed and the Purser's pre-migrate
-checklist has been followed. A destructive migration with no backup does not
-deploy. That is not a judgement call.
-
-The Purser is independent of Stage 1. Dispatch all three in one message.
+If the Purser finds any migration destructive, the verdict is **Fix before
+deploying** until a backup is confirmed and its pre-migrate checklist has been
+followed. That is not a judgement call.
 
 ---
 
-## Stage 3 — Deployment checklist
+## Stage 2 — Deployment checklist
 
-Check each item and report a clear pass or fail. Do not infer a pass — read the
-file or run the command.
+Check each item and report a clear pass or fail. Read the file or run the
+command; never infer a pass.
 
-1. **requirements.txt** — no Windows-only packages (`pywin32`, `winreg` and
-   similar) that would break the Linux Azure build.
-2. **SECRET_KEY** — read from an environment variable in `settings.py`, not
-   hardcoded.
-3. **DEBUG** — defaults to `False` when no env var is set.
-4. **Migrations** — `python manage.py migrate --check` reports nothing
-   outstanding, and `python manage.py makemigrations --check --dry-run` reports
-   no unmade migrations. This proves the migrations exist and apply; it says
-   nothing about whether they lose data. That is Stage 2.
-5. **Backup** — if Stage 2 named a destructive migration, a production backup
-   taken after the last deploy exists and the developer has confirmed it. Not
-   inferred. Asked and answered.
-6. **Static files** — WhiteNoise present in both `INSTALLED_APPS` and
-   `MIDDLEWARE`.
-7. **ALLOWED_HOSTS** — not empty, not a wildcard, and handles the
-   `WEBSITE_HOSTNAME` environment variable.
-8. **Tests** — `python manage.py test` passes. Report the actual counts.
-9. **Open TODOs** — grep the project for `TODO`, `FIXME` and `HACK` and list
-   anything in the changed files.
-10. **Secrets** — no `.env`, key, token or password committed in this change.
+1. **requirements.txt**: no Windows-only packages.
+2. **SECRET_KEY**: from an environment variable, not hardcoded.
+3. **DEBUG**: defaults to `False` when no env var is set.
+4. **Migrations**: `migrate --check` reports nothing outstanding and
+   `makemigrations --check --dry-run` reports nothing unmade. This proves the
+   migrations exist and apply; whether they lose data is Stage 1.
+5. **Backup**: if Stage 1 named a destructive migration, a production backup
+   taken after the last deploy exists and the developer has confirmed it.
+   Asked and answered, not inferred.
+6. **Static files**: WhiteNoise in both `INSTALLED_APPS` and `MIDDLEWARE`.
+7. **ALLOWED_HOSTS**: not empty, not a wildcard, handles `WEBSITE_HOSTNAME`.
+8. **Tests**: `python manage.py test` passes. Report the actual counts.
+9. **Open TODOs**: grep the changed files for `TODO`, `FIXME` and `HACK`.
+10. **Secrets**: no `.env`, key, token or password committed in this change.
+11. **AI features** (article 13), where the app calls a model: the prompt
+    version string changed if the prompt did, the question set was re-run,
+    and the spend cap is set.
 
 ---
 
-## Stage 4 — Commit message
+## Stage 3 — Commit message
 
-When the checklist passes, confirm the user wants to commit, then draft a commit
-message in the project style: present tense, concise, focused on why rather than
-what.
+When the checklist passes, confirm the user wants to commit, then draft a
+commit message in the project style: present tense, concise, focused on why.
 
-Do not push. Pushing is the user decision.
+Do not push. Pushing is the user's decision and a matter for the Admiralty.
 
 ---
 
 ## Verdict
 
-**Ready to deploy** or **Fix before deploying**, with every failure listed. One
-line each. If a check could not be run, say so — an unrun check is not a pass.
+**Ready to deploy** or **Fix before deploying**, with every failure listed, one
+line each. If a check could not be run, say so: an unrun check is not a pass.
+Append a crew-log entry for the Ship passage.

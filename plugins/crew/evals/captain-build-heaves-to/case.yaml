@@ -1,4 +1,0 @@
-schema_version: "1.1"
-name: captain-build-heaves-to
-context:
-  scaffold_script: scaffold.sh
