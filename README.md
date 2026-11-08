@@ -8,18 +8,21 @@ Azure. It will work in any Django project once you tell it what is sensitive.
 
 ## Install
 
-Which route you use depends on whether you have the Claude Code CLI. The VS Code
-extension on its own does **not** ship the plugin manager — `/plugin` reports
-that it is not available in this environment.
+The crew is a Claude Code plugin. It installs the same way from the CLI,
+the VS Code extension and the desktop app, and it updates in place.
 
-### With the CLI — as a plugin
+**From the CLI**
 
 ```
 /plugin marketplace add philchurch77/crew
 /plugin install crew@crew
 ```
 
-To pin it to a specific project, add to that project `.claude/settings.json`:
+**From VS Code:** type `/plugins` in the chat panel, open the Marketplaces
+tab, add `philchurch77/crew`, then install `crew` for this project.
+
+**Pin it to a project**, so anyone who opens the repo is prompted to install
+it, by adding to the project's `.claude/settings.json`:
 
 ```json
 {
@@ -30,78 +33,28 @@ To pin it to a specific project, add to that project `.claude/settings.json`:
 }
 ```
 
-### Without the CLI — junctions (Windows)
+Cloud sessions do not see plugins installed on your laptop, so a project
+that wants the crew there needs those lines too.
 
-Clone the repo somewhere stable, outside any synced folder, then point the
-user-level Claude Code directories at it. Junctions do not need admin rights.
+**Update** with `/plugin marketplace update crew`, or turn on auto-update
+for the marketplace on the Marketplaces tab. A new version applies after
+`/reload-plugins` or a new session.
 
-> This replaces your user-level `agents`, `commands`, `skills` and `hooks`
-> directories. If any of them already exist with your own files, move those
-> files into the clone first, or the junction will fail to create.
+**Check the hooks are live.** In a project with a Django `manage.py`, type:
 
-```powershell
-git clone https://github.com/philchurch77/crew.git "$env:USERPROFILE\dev\crew"
-
-$src = "$env:USERPROFILE\dev\crew\plugins\crew"
-foreach ($d in @("agents","commands","skills","hooks")) {
-  New-Item -ItemType Junction -Path "$env:USERPROFILE\.claude\$d" -Target "$src\$d"
-}
+```
+Use the lookout agent to run `python manage.py loaddata nonexistent.json` and paste back exactly what it reports.
 ```
 
-Claude Code reads `~/.claude/agents`, `~/.claude/commands` and `~/.claude/skills`
-in every project, so the crew is then available everywhere. The `hooks` junction
-lets the agents' guards find their scripts. Restart Claude Code once after
-creating the junctions.
-
-If the `hooks` junction is missing, every Bash command the guarded agents run
-is refused before it starts, with a message naming this section. That is a
-guard failing loud rather than silently switching itself off; create the
-junction and restart.
-
-Two hooks run in the main session rather than inside an agent, and the
-junction route cannot wire those from an agent file. To get them, add to
-`~/.claude/settings.json`:
-
-```json
-{
-  "hooks": {
-    "PostToolUse": [
-      { "matcher": "Edit|Write|MultiEdit", "hooks": [
-        { "type": "command", "command": "sh \"$HOME/.claude/hooks/crew-hook.sh\" template_leaks" } ] }
-    ],
-    "Stop": [
-      { "hooks": [
-        { "type": "command", "command": "sh \"$HOME/.claude/hooks/crew-hook.sh\" before_stop", "timeout": 150 } ] }
-    ]
-  }
-}
-```
-
-Updating is just:
-
-```powershell
-git -C "$env:USERPROFILE\dev\crew" pull
-```
-
-The change is live in every project immediately — nothing to copy.
-
-On macOS or Linux use symlinks instead:
-
-```sh
-git clone https://github.com/philchurch77/crew.git ~/dev/crew
-for d in agents commands skills hooks; do
-  ln -s ~/dev/crew/plugins/crew/$d ~/.claude/$d
-done
-```
-
-Both routes serve the same files. The junction route ignores the plugin
-manifests and `hooks/hooks.json`; the agents' guards still run there through
-the `hooks` block in their own frontmatter.
+The Lookout should report a refusal naming `[crew hook: guard_db]` and no
+output. If it reports Django's "no fixture named" error instead, the command
+reached Django and the hooks are not loaded. The phrasing matters: a bare
+question gets answered by the main session, which has no guards.
 
 ## Tell it what is sensitive
 
 The crew treats every project as holding sensitive personal data. Declare which
-apps and models in the project `CLAUDE.md`:
+apps and models in the project `CLAUDE.md` (or `AGENTS.md`):
 
 ```
 Sensitive apps: tolerance, sdq, flashcards, evaluation
@@ -152,14 +105,15 @@ The crew improves by being measured, not by being told. If an agent misses
 something or says something wrong, type `/field-report` in that project
 while it is fresh (the Captain's log reminds you). It writes the miss up as
 a pattern, with nothing from your project in it, and files it as an issue
-here. Each one becomes a seeded defect and a failing eval case before the
-agent is changed, so the fix is proven rather than hoped.
+here. Reports are worked in clusters: a pattern several reports share becomes
+one seeded defect and one failing eval case before the agent is changed,
+so the fix is proven rather than hoped. `docs/field-reports/LEDGER.md`
+tracks every report from filed to fixed.
 
 ## What the crew remembers
 
 Quartermaster, Carpenter, Master-at-Arms and Purser keep notes on each
-project in `.claude/agent-memory/crew-<agent>/` inside that project (the
-junction route drops the `crew-` prefix): the app
+project in `.claude/agent-memory/crew-<agent>/` inside that project: the app
 boundaries, the decisions you have taken and why, which queryset does the
 permission filtering, which migrations have been read, which cascades you
 accepted with a stated retention rule. They read it before they start and
@@ -186,7 +140,7 @@ plugins/crew/
   hooks/                          hooks.json, the guards and checks, and their self-test
   evals/                          the proving ground: a seeded fixture, one case per agent, and SCORES.md
 tools/                            maintainer checks — word budgets and the fixture check; not shipped
-docs/field-reports/               field reports that could not be filed as issues; the same inbox
+docs/field-reports/               reports that could not be filed as issues, and LEDGER.md: one row per report
 .github/                          CI: checks on every push, evals by hand; the field-report issue template
 ```
 
@@ -224,6 +178,8 @@ The agents' rules are written in their definitions; the hooks make them so.
 ## Adding to it
 
 - **Agent** — a `.md` in `agents/` with `name` and `description` frontmatter.
+  Guards go in `hooks/hooks.json`; plugin agents ignore a `hooks` block in
+  their own frontmatter.
   The description is what Claude matches on: write it as trigger phrases and
   situations, not a job title, and keep them distinct from the other agents.
   Add `skills: [ships-articles]` if it reviews Django code. Only add one if it

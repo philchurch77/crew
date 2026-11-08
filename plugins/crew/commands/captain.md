@@ -74,7 +74,7 @@ are standing on.
   names a leg of a chart, read the chart before anything else: the
   destination, the decisions so far and the leg's blockers are your heading.
   If a glossary exists, use its terms from this line on.
-- What does the project `CLAUDE.md` declare as sensitive (article 0)? If the
+- What does the project `CLAUDE.md` or `AGENTS.md` declare sensitive (article 0)? If the
   task touches any of it, the Gauntlet applies and its questions ride along in
   the passage below.
 - Does the task add or alter a migration, change a model field, edit a form or

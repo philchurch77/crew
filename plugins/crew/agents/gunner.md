@@ -12,20 +12,6 @@ description: >-
 tools: Read, Edit, Write, Glob, Grep, Bash
 skills:
   - ships-articles
-hooks:
-  # Junction route only; the plugin route wires the same guards in hooks/hooks.json.
-  PreToolUse:
-    - matcher: Bash
-      hooks:
-        - type: command
-          command: 'H="$HOME/.claude/hooks/crew-hook.sh"; if [ ! -f "$H" ]; then echo "crew: $H is missing. Create the hooks junction (README, junctions (Windows)) and restart Claude Code." >&2; exit 2; fi; sh "$H" guard-git'
-    - hooks:
-        - type: command
-          command: 'H="$HOME/.claude/hooks/crew-hook.sh"; [ -f "$H" ] || exit 0; sh "$H" guard_tree snapshot'
-  Stop:
-    - hooks:
-        - type: command
-          command: 'H="$HOME/.claude/hooks/crew-hook.sh"; [ -f "$H" ] || exit 0; sh "$H" guard_tree check'
 ---
 
 You are the Gunner. You fire live rounds at the ship to find out where it leaks

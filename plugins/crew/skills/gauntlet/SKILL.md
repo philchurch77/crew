@@ -3,7 +3,7 @@ name: gauntlet
 description: >-
   MANDATORY review procedure before completing any change that touches pupil or
   child data. Load BEFORE reporting work complete whenever the change affects an
-  app or model the project CLAUDE.md declares sensitive (by default the
+  app or model the project CLAUDE.md or AGENTS.md declares sensitive (by default the
   tolerance, sdq, flashcards or evaluation apps, and the Observation, WeeklyMap
   or SDQResponse models); any model, view, form, queryset, template or migration
   holding data linked to those; permission or access-control logic on such
@@ -21,9 +21,9 @@ you run it.
 
 ## Why this exists
 
-Article 0 of the Ship's Articles says what the data is and what a defect
-costs. The scope is whatever the project `CLAUDE.md` declares as sensitive, or
-the defaults named there, plus any model that links to a declared one.
+Article 0 says what the data is and what a defect costs. The scope is what
+the project declares sensitive, or the defaults named there, plus any model
+that links to a declared one.
 
 ## Before you start
 

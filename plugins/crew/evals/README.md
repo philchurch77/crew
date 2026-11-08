@@ -174,9 +174,29 @@ change helped.
 ## When an agent misses something in a real project
 
 `/field-report` in that project files the miss as an issue labelled
-`field-report`; that label is the inbox. Do not edit the agent. Seed the miss here first, prove it by hand, write
-the case, watch it fail, and only then make the smallest change to the
-agent that turns it green. Then run the whole suite and record the row.
-The agents have word budgets (`tools/budgets.json`) for exactly this
-reason: a paragraph per miss is how a good agent turns into a long one.
-AGENTS.md section 7 has the full rule.
+`field-report`; that label is the inbox, and `docs/field-reports/LEDGER.md`
+tracks every report to its fix. Reports are worked in clusters: one seeded
+defect and one case per pattern, not per report. Do not edit the agent
+first. Seed the miss here, prove it in `tools/fixture_check.py`, write the
+case, watch it fail, then make the smallest change to the agent that turns
+it green, and run the whole suite before the version is merged. A report
+that is a missing fact rather than a judgment goes straight into the
+Articles as one line, paid for by a cut. AGENTS.md section 7 has the full
+rule and the `/work-the-inbox` skill runs it.
+
+## Things learned the hard way
+
+- `case.yaml` is one four-line object; the description, tags and run
+  settings live in `prompt.md` frontmatter.
+- An `llm` grader can pass on a described action that never happened.
+  When a `tool_used` grader and a judge disagree, trust the tool count.
+- A crew-arm run costs 2 to 4 dollars against an API key and 5 to 8
+  minutes; a baseline run 35 cents and 90 seconds. Judge cost is small.
+- Native Windows has no Claude Code sandbox, so the harness refuses to
+  grant Bash there. Actions, or WSL2 with `bubblewrap` and `socat`, is the
+  route for the three cases that need it.
+- The `field-report` label must exist on the repo for `gh issue create`
+  to work; the command falls back to printing if not.
+- The Captain compresses findings. When a grader fails on something an
+  agent plainly did, read the agent's own transcript in the kept
+  directory's `subagents/` folder before touching the agent.

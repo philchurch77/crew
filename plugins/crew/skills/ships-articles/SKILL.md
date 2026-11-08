@@ -28,7 +28,7 @@ category data about children in care: names, emotional states, observed
 behaviours, safeguarding context. A permissions defect here is a notifiable
 data breach and the end of the client relationship, not a bug report.
 
-The project `CLAUDE.md` declares what is sensitive with two lines:
+The project `CLAUDE.md` or `AGENTS.md` declares what is sensitive with two lines:
 
 ```
 Sensitive apps: tolerance, sdq, flashcards, evaluation
@@ -36,8 +36,7 @@ Sensitive models: Observation, WeeklyMap, SDQResponse
 ```
 
 If the project declares nothing, those values are the defaults. Any model that
-links to a declared model is in scope too. If you are not sure whether
-something is in scope, it is.
+links to a declared model is in scope too. If in doubt, it is in scope.
 
 ## 1. Permissions are filtered, not hidden
 

@@ -73,9 +73,8 @@ breaks that rule.
 
 The four agents that judge against history (Quartermaster, Carpenter,
 Master-at-Arms, Purser) carry `memory: project`: a directory under
-`.claude/agent-memory/crew-<agent>/` in the consuming project (bare
-`<agent>` on the junction route, where agents carry no plugin prefix), read before they
-start and written when they finish, so a settled decision is not re-raised
+`.claude/agent-memory/crew-<agent>/` in the consuming project, read before
+they start and written when they finish, so a settled decision is not re-raised
 and a checked pattern is not re-derived. Memory switches on Write and Edit
 for the agent, which is why `guard_edit` confines those tools to the memory
 directory. The Gunner, Lookout, Surgeon and Bosun stay stateless on purpose:
@@ -98,11 +97,10 @@ interpreter and runs it.
 Guards fail closed: no Python, no tool call. Checks fail open: nothing the
 hook cannot establish ever blocks the main session from stopping.
 
-They are wired twice because the two install routes differ: the plugin route
-reads `hooks/hooks.json`, and the junction route reads the `hooks` block in
-each agent's frontmatter (plugin installs ignore that block). The junction
-route cannot run the two main-session hooks on its own; the README gives the
-`settings.json` lines for them.
+All of them are wired in `hooks/hooks.json`. A plugin agent ignores a
+`hooks` block in its own frontmatter, so none carries one. The README's
+install section gives the one-line check that proves the guards are live
+in a project.
 
 ---
 
@@ -215,20 +213,47 @@ command writes the miss up as a pattern in fixture terms, never with
 anything from the project in it, and files it as an issue on this repo
 labelled `field-report`. Those issues are the inbox. When `gh` is not
 available in the project the report is printed instead; save it as the
-next numbered file in `docs/field-reports/` so it is not lost, and work it
-the same way. Working one is never an edit to the agent first. In order:
+next numbered file in `docs/field-reports/` so it is not lost.
 
-1. Seed the miss in `evals/_fixture/schoolapp/` and reproduce it by hand.
-   Add the reproduction to `tools/fixture_check.py` so it is kept.
-2. Write the case and run it. It should fail. If it passes, the agent did
-   not miss it and the report was about routing or wording; fix that.
-3. Now change the agent, the smallest change that turns the case green.
-4. Run the whole suite, not just the new case, and record the row.
+**The ledger.** `docs/field-reports/LEDGER.md` carries one row per report:
+agent, cluster, kind, fix, case, version, status. A report is closed on
+GitHub when its row says `fixed` with a version, and the closing comment
+is the row. The ledger is the only record of why an agent says what it
+says, so no report is worked without a row.
 
-This is the same discipline the fixture already demands of a new case,
-pointed at production misses. The agents' `memory: project` directories
-stay in the consuming project on purpose; a lesson that should reach every
-project comes home this way, as a case, not as memory.
+**Two kinds of miss.** A *judgment* miss is one where the agent had what
+it needed and chose wrong: read where it should have run, narrowed the
+dispatch, argued a risk away. It needs a case, because a wording change is
+unproven until a case fails without it and passes with it. A *fact* miss is
+a piece of Django knowledge or a hygiene rule the agent lacked. It goes
+into the Articles or the Captain as one line, paid for by a cut, and the
+ledger says `no case: fact`. That is the one place the rule below bends.
+
+**Work by cluster, not by report.** Reports that share a pattern are one
+cluster, one case, one version. Work the inbox when it holds three reports
+or once a month. The maintainer skill `/work-the-inbox` at the repo root
+(not shipped) runs the steps, in order:
+
+1. List the open reports, propose the clusters and the ledger rows, and
+   stop for a checkpoint.
+2. For the chosen cluster: seed the miss in `evals/_fixture/schoolapp/`,
+   add the reproduction to `tools/fixture_check.py`, write the case, run
+   it and show it failing. If it passes, the agent did not miss it and the
+   report was about routing or wording; fix that instead.
+3. Make the smallest edit that should turn the case green, under budget.
+4. Push the branch and run the evals workflow from the Actions tab on it,
+   one case at one run per arm. Read the job summary. Then run the whole
+   suite the same way before the version is merged.
+5. Bump the version, fill the SCORES row from the summary, close the
+   issues with their rows, in one commit.
+
+Evals run on Actions against an API key, a few dollars per case, or on a
+laptop logged in to Claude Code where they bill the subscription. Nothing
+in the loop needs the laptop.
+
+The agents' `memory: project` directories stay in the consuming project on
+purpose; a lesson that should reach every project comes home this way, as
+a case, not as memory.
 
 **Word budgets.** Every agent, command and skill has a word budget in
 `tools/budgets.json`, set at the size the file had when the budget was
@@ -263,8 +288,9 @@ every file with the budget in mind, not a reason to add.
   situations, not job titles, and keep each agent's phrases distinct from every
   other agent's.
 - Bump `version` in `plugins/crew/.claude-plugin/plugin.json` on any change,
-  then run `/plugin marketplace update crew` in consuming projects. That is the
-  only version number; the marketplace manifest does not carry one.
+  then run `/plugin marketplace update crew` in consuming projects, or turn
+  on marketplace auto-update. That is the only version number; the
+  marketplace manifest does not carry one.
 - Test a hook change before committing: `python3 plugins/crew/hooks/selftest.py`
   feeds every hook the inputs it must act on and the ones it must let through.
   Run it with an interpreter that has Django to cover the migration check.

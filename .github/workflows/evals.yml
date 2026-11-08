@@ -62,9 +62,13 @@ jobs:
           CASE="${{ github.event.inputs.case }}"
           COST="${{ github.event.inputs.max_cost_usd || '50' }}"
           RUNS="${{ github.event.inputs.runs || '1' }}"
-          ARGS=(. --scaffold --trust-plugin --allow-tools Bash Write Edit --judge-model sonnet --max-cost-usd "$COST" --runs "$RUNS")
+          ARGS=(. --scaffold --trust-plugin --allow-tools Bash Write Edit --judge-model sonnet --max-cost-usd "$COST" --runs "$RUNS" --json results.json)
           if [ -n "$CASE" ]; then ARGS+=(--case "$CASE"); fi
-          claude plugin eval "${ARGS[@]}"
+          claude plugin eval "${ARGS[@]}" || echo "eval exited $? (see summary)"
+      - name: Scores in the job summary
+        if: always() && steps.key.outputs.present == 'true'
+        working-directory: plugins/crew
+        run: python3 ../../tools/eval_summary.py results.json >> "$GITHUB_STEP_SUMMARY"
       - name: Keep the report
         if: always() && steps.key.outputs.present == 'true'
         uses: actions/upload-artifact@v4
