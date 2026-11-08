@@ -1,6 +1,3 @@
-<img width="3200" height="2484" alt="crew" src="https://github.com/user-attachments/assets/6027489e-8edb-41e3-852b-1f60391bd619" />
-
-
 A Django crew for Claude Code: eight specialist agents, a Captain who dispatches
 them, and the house rules they work to. It is built for this developer's
 education projects, where the data is about children and the deploy target is
