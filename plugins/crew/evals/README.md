@@ -22,6 +22,7 @@ seeded defects below, each the target of one case:
 | `_school_for` reads `user.membership` unguarded; a user with no Membership raises on every page | `tolerance/views.py` `_school_for` | `surgeon-deputy-head-500` |
 | No `LOGIN_REDIRECT_URL`; a login from the login page lands on a 404 at `/accounts/profile/` | `config/settings.py` | `lookout-first-login-404` |
 | "Last four weeks" is `observed_on__gte=today - 4 weeks`, a 29-day window; a dysregulated observation exactly 28 days ago is counted as a third and the pupil is rated high | `tolerance/views.py` `dashboard`, data from `seed_demo` | `surgeon-third-bad-day` |
+| The edit page's fetch autosave posts to a `@login_required` view; signed out, it gets a 302 to the login page, fetch follows it to a 200, and `autosave.js` shows Saved | `tolerance/views.py` `observation_autosave`, `tolerance/static/tolerance/autosave.js` | `master-at-arms-fetch-redirect` |
 | A feature request: an "agreed action" field on Observation | the whole fixture | `captain-build-heaves-to`, `captain-build-weighs-anchor` |
 | A whole new app: attendance registers, too big for one passage | the whole fixture | `captain-chart-heaves-to` |
 

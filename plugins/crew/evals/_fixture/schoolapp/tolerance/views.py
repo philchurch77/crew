@@ -1,8 +1,11 @@
 from datetime import date, timedelta
 
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.http import require_POST
 
 from schools.models import Pupil
 
@@ -63,6 +66,21 @@ def observation_edit(request, pk):
     else:
         form = ObservationForm(instance=observation, school=school)
     return render(request, "tolerance/observation_form.html", {"form": form, "observation": observation})
+
+
+@login_required
+@require_POST
+def observation_autosave(request, pk):
+    """Saves the body as the teacher types on the edit page. Called by tolerance/autosave.js."""
+    school = _school_for(request.user)
+    observation = get_object_or_404(Observation, pk=pk, pupil__school=school)
+    observation.body = request.POST.get("body", "")
+    try:
+        observation.full_clean()
+    except ValidationError as e:
+        return JsonResponse({"ok": False, "errors": e.message_dict}, status=400)
+    observation.save(update_fields=["body", "updated_at"])
+    return JsonResponse({"ok": True, "saved_at": observation.updated_at.isoformat()})
 
 
 @login_required

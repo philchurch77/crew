@@ -18,7 +18,7 @@ Clusters, in working order (`docs/plan-2026-11.md` has the detail):
 
 | Report | Agent | Cluster | Kind | Fix | Case | Version | Status |
 |---|---|---|---|---|---|---|---|
-| #17 | Master-at-Arms, Purser, Gunner | B, C | judgment | ran/read label on every finding; Stage 1 asks what an unauthenticated fetch receives | master-at-arms-fetch-redirect | | clustered |
+| #17 | Master-at-Arms, Purser, Gunner | B, C | judgment | ran/read label on every finding; Stage 1 asks what an unauthenticated fetch receives | master-at-arms-fetch-redirect | | cased |
 | #18 | Quartermaster | D | judgment | a named risk becomes a plan step or an acceptance, never an argument | quartermaster-gauntlet-scope | | clustered |
 | #19 | Quartermaster | D | fact | article 6: `AddField` with `preserve_default=False` leaves no database default on Postgres | no case: fact | | clustered |
 | #20 | Gunner | C | fact | invisible characters are written as escapes | no case: fact | | clustered |
@@ -31,7 +31,7 @@ Clusters, in working order (`docs/plan-2026-11.md` has the detail):
 | #27 | Captain | A | judgment | dispatch template: what the agent may run and may write, with no contradiction | captain-fix-whole-surface | | clustered |
 | #28 | Lookout | E | fact | article 11: run only what you wrote or were given; remove probe files | no case: fact | | clustered |
 | #29 | Captain | A | fact | "Departures from the plan" line in the log | no case: fact | | clustered |
-| #30 | Carpenter | B | judgment | ran/read label on every finding | master-at-arms-fetch-redirect | | clustered |
+| #30 | Carpenter | B | judgment | ran/read label on every finding | master-at-arms-fetch-redirect | | cased |
 | #31 | Gunner | C | judgment | a test asserts the behaviour the Articles require, never the behaviour observed | gunner-mutation-proof | | clustered |
 | 001 (file) | Captain, Surgeon | A | judgment | dispatch carries the symptom as reported with the whole surface in scope | captain-fix-whole-surface | | clustered |
 | #9, #10 | evals | | | harder Surgeon and Gunner cases | surgeon-third-bad-day, gunner-cross-school-test | 2.15.0 | fixed |
