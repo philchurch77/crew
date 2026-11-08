@@ -1,4 +1,0 @@
-schema_version: "1.1"
-name: gunner-cross-school-test
-context:
-  scaffold_script: scaffold.sh

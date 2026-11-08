@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """PreToolUse guard: the reviewers write to their memory and nowhere else.
 
-Every agent but the Gunner reports without editing. Giving an agent a
+Every agent reports without editing. Giving an agent a
 `memory` directory switches on Write and Edit for it, so this confines those
 tools: inside one of the read-only agents, a Write, Edit, MultiEdit or
 NotebookEdit is allowed only when the path is under an agent-memory
@@ -16,9 +16,7 @@ import sys
 
 READ_ONLY_AGENTS = {
     "quartermaster",
-    "carpenter",
     "surgeon",
-    "bosun",
     "lookout",
     "master-at-arms",
     "purser",

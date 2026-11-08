@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Working-tree guard for the Gunner and the Lookout.
+"""Working-tree guard for the Lookout.
 
     guard_tree.py snapshot   record what the tree looks like when the agent
                              starts (SubagentStart, or the first PreToolUse)
@@ -7,10 +7,8 @@
                              agent finish while the tree breaks its rules
 
 The Lookout leaves the project exactly as it found it: any file it changed,
-added or deleted is a finding against it. The Gunner writes tests only: it may
-change test files, but every other file must match the snapshot, and no .bak
-copies may be left behind. Both rules are in the agents' definitions; this is
-what enforces them.
+added or deleted is a finding against it. The rule is in its definition; this
+is what enforces it.
 
 The check blocks the stop at most twice per agent run, so an agent that
 cannot restore a file can still finish and say so. Anything the hook cannot
@@ -24,7 +22,7 @@ import subprocess
 import sys
 import tempfile
 
-GUARDED = {"gunner", "lookout"}
+GUARDED = {"lookout"}
 MAX_FILES = 20000
 MAX_BLOCKS = 2
 
@@ -32,8 +30,6 @@ IGNORED = re.compile(
     r"(^|/)(\.git|\.venv|venv|node_modules|__pycache__|\.pytest_cache|\.mypy_cache|\.ruff_cache|staticfiles)(/|$)"
     r"|\.pyc$|\.sqlite3(-journal|-wal|-shm)?$|(^|/)\.coverage$"
 )
-TEST_FILE = re.compile(r"(^|/)(tests?\.py|test_[^/]*\.py|[^/]*_tests?\.py|conftest\.py)$|(^|/)tests?/")
-BACKUP = re.compile(r"\.bak$")
 SKIP_DIRS = {".git", ".venv", "venv", "node_modules", "__pycache__", ".pytest_cache", ".mypy_cache", ".ruff_cache", "staticfiles"}
 
 
@@ -137,23 +133,12 @@ def do_check(data):
     added = sorted(p for p in now if p not in before)
     deleted = sorted(p for p in before if p not in now)
 
-    if agent == "gunner":
-        problems = [p for p in changed + added + deleted if not TEST_FILE.search(p) or BACKUP.search(p)]
-        leftovers = [p for p in added if BACKUP.search(p)]
-        problems = sorted(set(problems) | set(leftovers))
-        rule = "You write tests only (article 11). Every file that is not a test must be exactly as you found it."
-        fix = (
-            "Restore each one from the .bak copy you made before mutating it, then delete the .bak. "
-            "If you have no copy, do not rebuild it from memory: leave it, and say plainly in your report which file "
-            "you could not restore and what you changed."
-        )
-    else:
-        problems = sorted(set(changed + added + deleted))
-        rule = "You leave the project exactly as you found it: no scripts, no data, no changed files."
-        fix = (
-            "Delete anything you created and put back anything you changed. If a file changed because of something "
-            "you ran and you cannot restore it, say so plainly in your report."
-        )
+    problems = sorted(set(changed + added + deleted))
+    rule = "You leave the project exactly as you found it: no scripts, no data, no changed files."
+    fix = (
+        "Delete anything you created and put back anything you changed. If a file changed because of something "
+        "you ran and you cannot restore it, say so plainly in your report."
+    )
 
     if not problems:
         os.remove(path)

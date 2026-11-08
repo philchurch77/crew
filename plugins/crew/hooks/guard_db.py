@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """PreToolUse guard for the crew's read-only agents.
 
-Every agent but the Gunner audits and reports; none of them changes the
-developer's database. Their definitions say so, and this makes it so. Blocks
+Every agent audits and reports; none of them changes the developer's
+database. Their definitions say so, and this makes it so. Blocks
 management commands that write to the database when the hook fires inside one
 of those agents. showmigrations, sqlmigrate, makemigrations --check --dry-run,
 migrate --check and migrate --plan stay allowed: they read.
@@ -15,9 +15,7 @@ import sys
 
 READ_ONLY_AGENTS = {
     "quartermaster",
-    "carpenter",
     "surgeon",
-    "bosun",
     "lookout",
     "master-at-arms",
     "purser",
