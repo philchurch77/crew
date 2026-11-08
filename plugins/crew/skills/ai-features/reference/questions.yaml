@@ -1,0 +1,9 @@
+# The question set: re-run when the prompt, the model or the corpus changes.
+# must_cite is "document title / section"; must_contain are words the
+# answer must include. Replace with at least ten questions teachers ask.
+- question: How long does the local authority have to decide on an assessment request?
+  must_cite: "Sample guidance (replace with real documents) / Requesting an assessment"
+  must_contain: ["six weeks"]
+- question: Can I edit a concern I recorded yesterday?
+  must_cite: "Sample guidance (replace with real documents) / Recording a concern"
+  must_contain: ["new entry"]

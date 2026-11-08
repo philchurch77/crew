@@ -41,7 +41,9 @@ to explain it.
    that each fit one passage.
 9. **AI features are grounded and logged.** No identifying pupil data leaves
    the system, every answer cites a source, nothing a model writes reaches a
-   record without a person. Article 13.
+   record without a person. Article 13 is the rule; the `ai-features`
+   skill's reference app is the pattern, and its tests run against a
+   throwaway project before the skill changes.
 
 ---
 
@@ -131,6 +133,7 @@ Skills load themselves when the situation calls for them; commands are typed.
 |---|---|
 | **ships-articles** | Any Django work begins |
 | **gauntlet** | A change touches sensitive data, before it is called done |
+| **ai-features** | A task adds or changes anything that calls a model, grounds answers in documents or sends pupil text to a model; carries a reference Django app (`reference/`) that the Captain copies from |
 
 | Command | Does |
 |---|---|
