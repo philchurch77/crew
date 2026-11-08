@@ -64,17 +64,18 @@ status reported. Stages 1 and 2 are independent; dispatch them in parallel.
 ## Stage 3 — Proof, not opinion
 
 The Captain confirms there is a test that fails if the access control is
-removed, and proves it as article 8 says: break the control in a copy, run
-the test, see it red, restore, confirm byte-identical. If no such test
-exists, the Captain writes it first. A permission that is correct today with
-no test protecting it is a permission that will regress.
+removed, and proves it as article 8 says. If no such test exists, the
+Captain writes it first. A permission that is correct today with no test
+protecting it is a permission that will regress.
 
 ## Stage 4 — Purser, when the change can lose data
 
 Applies when the change adds or alters a migration, changes a field on a
 sensitive model, or edits a form or template that handles stored sensitive
-text. Dispatch the **purser** on those files, in parallel with Stages 1 and
-2, and ask it to confirm:
+text. (The Purser's standing trigger under article 6 is wider: any
+migration, field, text-handling form or deploy script, sensitive or not.)
+Dispatch the **purser** on those files, in parallel with Stages 1 and 2, and
+ask it to confirm:
 
 1. No migration removes, renames, retypes or shrinks a column without a data
    migration that preserves the contents, and no `RunPython` body shortens or

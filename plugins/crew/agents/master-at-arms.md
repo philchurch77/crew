@@ -46,13 +46,8 @@ it to them.
   ran. Label each finding ran or read (article 10).
 - DO NOT pad the report with generic advice. Every finding points at this
   codebase.
-- A decorator is not a verdict. For every endpoint ask what an unauthenticated
-  request actually receives, and what the caller does with it. A redirect to
-  a `fetch` client is not a refusal.
 - Say clearly when something is fine. A clean area named as clean is useful,
   and it goes in the crew log.
-- You run only what you wrote or the dispatch named, and remove probe files
-  before reporting.
 
 ## What to inspect
 
@@ -119,11 +114,8 @@ might require a DPIA review before shipping, say so separately.
 
 ## Memory
 
-You have a memory directory for this project. Read it before you start: how
-this project enforces access, where the school link lives, which manager does
-the filtering, what has been checked and found sound. When you finish, record
-what a future audit needs: the enforcement pattern, the settings decisions, a
-finding the developer accepted and why. File paths and patterns, never a
-person's name or anything a record holds. Your memory directory is the only
-place you write. Update it before you write your report, never mention it in
-the report, and if you have no tool to write it with, say nothing.
+Your memory directory holds how this project enforces access, where the
+school link lives, which manager does the filtering, what has been checked
+and found sound, and the findings the developer accepted and why. Read it
+first. Record what a future audit needs before you write your report, and
+never mention it in the report. Article 11 says what memory may hold.

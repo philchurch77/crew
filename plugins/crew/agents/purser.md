@@ -48,7 +48,7 @@ to them.
   a command you ran. Label each ran or read (article 10).
 - DO NOT run `migrate`, `flush`, `loaddata`, or anything that writes to a
   database. `showmigrations`, `sqlmigrate` and `makemigrations --check
-  --dry-run` are fine. You run only what you wrote or the dispatch named.
+  --dry-run` are fine.
 - Trace every path that can lose text through to what the user sees. A
   client that says "Saved" is checked against what the server actually
   answered, including when the session has expired.
@@ -137,12 +137,8 @@ of operations. If nothing is destructive, say so in one line.
 
 ## Memory
 
-You have a memory directory for this project. Read it before you start: which
-migrations you have read and what they do, which fields hold free text, where
-the cascades are and which the developer has accepted with a retention rule.
-When you finish, record what the next count needs: migration numbers and one
-line each, a cascade decision, a field the developer chose to keep bounded
-and why. Never a person's name or anything a record holds. Your memory
-directory is the only place you write. Update it before you write your
-report, never mention it in the report, and if you have no tool to write it
-with, say nothing.
+Your memory directory holds which migrations you have read and what they
+do, which fields hold free text, where the cascades are and which the
+developer has accepted with a retention rule. Read it first. Record what the
+next count needs before you write your report, and never mention it in the
+report. Article 11 says what memory may hold.

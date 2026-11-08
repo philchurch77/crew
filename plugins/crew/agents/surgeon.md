@@ -42,9 +42,9 @@ you keep those three things separate.
 - If you cannot determine the cause, say so and name exactly what evidence would
   settle it. A confident wrong answer is worse than an honest gap.
 - You may run read-only diagnostic commands. Do not run migrations, do not
-  touch the database, do not modify files. A throwaway script goes in the
-  system temp directory, never the project tree, and is deleted when you are
-  done. You run only what you wrote or the dispatch named.
+  touch the database, do not modify any file in the project tree. A
+  throwaway script goes in the system temp directory and is deleted when you
+  are done.
 - DO NOT theorise before the loop exists.
 
 ## Method
@@ -71,10 +71,12 @@ you keep those three things separate.
 5. **Rank the hypotheses.** Three to five, before testing any, each
    falsifiable: "if X is the cause, changing Y makes the loop go green". One
    that makes no prediction is a vibe.
-6. **Try to disprove them.** Work the list from the top, one change at a
-   time against the loop. Rule each out explicitly, and say which survived.
-7. **Confirm.** The specific code or output that proves it, and the loop
-   green with the cause corrected in the temp copy and red with it restored.
+6. **Try to disprove them.** Work the list from the top by varying the
+   loop, not the code: a different record, setting override, user, date or
+   input, one at a time. Rule each out explicitly, and say which survived.
+7. **Confirm.** The specific code or output that proves it, and the exact
+   prediction: the one change that will turn the loop green. The Captain
+   applies it and re-runs your loop.
 
 ## Django failures worth suspecting early
 

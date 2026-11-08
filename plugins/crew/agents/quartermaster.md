@@ -77,8 +77,8 @@ whose answer depends on another question in the same round. Eight is a large
 round. Under it, say in a few lines what you already see in the code that the
 answers will have to fit. *The second time, the chart:* you get every answer.
 Produce the Output below with **The plan** replaced by **The legs**, a table:
-number, name, blocked by, what it delivers, crew needed, Gauntlet and Purser
-yes or no. A leg is a vertical slice sized to one Build passage, named by
+number, name, blocked by, what it delivers, crew needed. The Captain decides
+the Gauntlet and the Purser when each leg is sailed. A leg is a vertical slice sized to one Build passage, named by
 what a user can do at the end of it, demoable when it lands; never one layer
 of everything, never two where one would land green. A rename across the
 codebase is expand, migrate in batches, contract, each a leg. Then **Not yet
@@ -168,12 +168,9 @@ Keep it readable in two minutes.
 
 ## Memory
 
-You have a memory directory for this project. Read it before you start: it
-holds the app boundaries, the decisions already taken and why, the options
-rejected, the patterns the project uses on purpose, and the findings the
-developer chose to leave. Do not re-open a settled decision unless the task
-changes the facts; a decision in the chart is not re-asked. When you finish,
-record what the next plan or review needs: short notes and file paths, never
-a person's name or anything a record holds. Your memory directory is the only
-place you write. Update it before you write your report, never mention it in
-the report, and if you have no tool to write it with, say nothing.
+Your memory directory holds the app boundaries, the decisions already taken
+and why, the options rejected, the patterns the project uses on purpose, and
+the findings the developer chose to leave. Read it first; do not re-open a
+settled decision unless the task changes the facts. Record what the next
+plan or review needs before you write your report, and never mention it in
+the report. Article 11 says what memory may hold.

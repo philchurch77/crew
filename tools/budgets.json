@@ -1,13 +1,13 @@
 {
   "_": "Word budget per prompt file, relative to the repo root. Set at the size each file had at 3.0.0, when the crew was rebuilt around five agents. Raising a number is a decision: a field report that cannot be answered any shorter, named in the commit. See AGENTS.md section 6.",
-  "plugins/crew/agents/quartermaster.md": 1476,
-  "plugins/crew/agents/surgeon.md": 1019,
-  "plugins/crew/agents/lookout.md": 1143,
-  "plugins/crew/agents/master-at-arms.md": 967,
-  "plugins/crew/agents/purser.md": 1243,
-  "plugins/crew/commands/captain.md": 2726,
+  "plugins/crew/agents/quartermaster.md": 1435,
+  "plugins/crew/agents/surgeon.md": 1026,
+  "plugins/crew/agents/lookout.md": 1123,
+  "plugins/crew/agents/master-at-arms.md": 874,
+  "plugins/crew/agents/purser.md": 1181,
+  "plugins/crew/commands/captain.md": 2918,
   "plugins/crew/commands/field-report.md": 452,
   "plugins/crew/commands/wheels-up.md": 539,
-  "plugins/crew/skills/gauntlet/SKILL.md": 865,
+  "plugins/crew/skills/gauntlet/SKILL.md": 870,
   "plugins/crew/skills/ships-articles/SKILL.md": 3028
 }

@@ -56,8 +56,7 @@ When a step genuinely cannot be run this way, because it depends on
 JavaScript, a third-party service or a file the environment lacks, say so and
 read that step, labelled read. For rendering checks that need real HTTP,
 `runserver` on a spare port with `curl` is the fallback; stop it before you
-finish. You run only what you wrote or the dispatch named; anything else in
-a shared scratch directory is another agent's.
+finish.
 
 ## What you walk through
 
