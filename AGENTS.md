@@ -221,35 +221,32 @@ GitHub when its row says `fixed` with a version, and the closing comment
 is the row. The ledger is the only record of why an agent says what it
 says, so no report is worked without a row.
 
-**Two kinds of miss.** A *judgment* miss is one where the agent had what
-it needed and chose wrong: read where it should have run, narrowed the
-dispatch, argued a risk away. It needs a case, because a wording change is
-unproven until a case fails without it and passes with it. A *fact* miss is
-a piece of Django knowledge or a hygiene rule the agent lacked. It goes
-into the Articles or the Captain as one line, paid for by a cut, and the
-ledger says `no case: fact`. That is the one place the rule below bends.
+**Two kinds of miss.** A *fact* miss is a piece of Django knowledge or a
+hygiene rule the agent lacked. It goes into the Articles or the Captain
+as one line the same day, paid for by a cut, with no case and no eval
+run; commit, bump the patch version, close the issue. A *judgment* miss
+is one where the agent had what it needed and chose wrong: read where it
+should have run, narrowed the dispatch, argued a risk away. It waits in
+the ledger as `clustered` until three share a pattern.
 
-**Work by cluster, not by report.** Reports that share a pattern are one
-cluster, one case, one version. Work the inbox when it holds three reports
-or once a month. The maintainer skill `/work-the-inbox` at the repo root
-(not shipped) runs the steps, in order:
+**One case per pattern, and an edit only when the numbers say so.** When
+three judgment reports share a pattern: seed it in the fixture, keep the
+reproduction in `tools/fixture_check.py`, write the case, and run it on
+Actions at one run per arm. Edit the agent only if the crew arm fails and
+the baseline does not. If both arms pass, the model already does the
+job: close the reports as found by the model, keep the case as a
+regression guard, and change nothing. If both fail, make the smallest
+edit under budget and run the case once more. The maintainer skill
+`/work-the-inbox` at the repo root (not shipped) runs these steps and
+stops at each checkpoint.
 
-1. List the open reports, propose the clusters and the ledger rows, and
-   stop for a checkpoint.
-2. For the chosen cluster: seed the miss in `evals/_fixture/schoolapp/`,
-   add the reproduction to `tools/fixture_check.py`, write the case, run
-   it and show it failing. If it passes, the agent did not miss it and the
-   report was about routing or wording; fix that instead.
-3. Make the smallest edit that should turn the case green, under budget.
-4. Push the branch and run the evals workflow from the Actions tab on it,
-   one case at one run per arm. Read the job summary. Then run the whole
-   suite the same way before the version is merged.
-5. Bump the version, fill the SCORES row from the summary, close the
-   issues with their rows, in one commit.
-
-Evals run on Actions against an API key, a few dollars per case, or on a
-laptop logged in to Claude Code where they bill the subscription. Nothing
-in the loop needs the laptop.
+**Evals are a smoke test, not a gate.** The suite runs when agent prose
+changes, one run per arm, on Actions against the `ANTHROPIC_API_KEY`
+secret (about two dollars a case) or on a laptop logged in to Claude
+Code. Three runs per arm is for settling a disputed result, never the
+default. Read the delta as a cut signal: a case the baseline passes is a
+reason to shorten that agent, not lengthen it, and the roster is
+expected to shrink as deltas close.
 
 The agents' `memory: project` directories stay in the consuming project on
 purpose; a lesson that should reach every project comes home this way, as
