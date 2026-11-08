@@ -95,6 +95,32 @@ try:
         landing = c.get(r["Location"]).status_code if r.status_code == 302 else r.status_code
         check("a bare login lands on a 404", r.status_code == 302 and r["Location"] == "/accounts/profile/" and landing == 404)
 
+        # master-at-arms-fetch-redirect: the autosave answers a signed-out fetch with a
+        # redirect to the login page, which fetch follows to a 200 the script reads as saved
+        import os
+        c = Client()
+        c.force_login(t_hill)
+        url = f"/observations/{obs.pk}/autosave/"
+        signed_in = c.post(url, {"body": "kept"})
+        check("autosave saves for its own school", signed_in.status_code == 200 and signed_in.json().get("ok") is True)
+        c = Client()
+        c.force_login(t_vale)
+        check("autosave is filtered by school", c.post(url, {"body": "x"}).status_code == 404)
+        c = Client()
+        r = c.post(url, {"body": "lost"})
+        followed = c.post(url, {"body": "lost"}, follow=True)
+        check(
+            "signed-out autosave redirects to a 200 HTML login page",
+            r.status_code == 302
+            and r["Location"].startswith("/login/")
+            and followed.status_code == 200
+            and followed["Content-Type"].startswith("text/html"),
+        )
+        js = open("tolerance/static/tolerance/autosave.js", encoding="utf-8").read() if os.path.exists("tolerance/static/tolerance/autosave.js") else ""
+        check("autosave.js trusts response.ok and never checks for a redirect", "r.ok" in js and "redirected" not in js)
+        obs.refresh_from_db()
+        check("the signed-out text never reached the record", obs.body == "kept")
+
         raise Rollback
 except Rollback:
     pass

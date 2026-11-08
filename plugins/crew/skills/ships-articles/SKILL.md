@@ -13,12 +13,8 @@ description: >-
 
 # The Ship's Articles
 
-Every crew signs the articles. These are the standards this developer holds
-Django work to. Follow them without being asked; say so when a task requires
-breaking one.
-
-The crew's agents carry these articles preloaded. A rule written here is the
-rule; the agents do not restate it.
+These are the standards this developer holds Django work to. Follow them
+without being asked; say so when a task requires breaking one.
 
 ## 0. What the data is
 
@@ -231,7 +227,9 @@ claims; label which one you made.
 - The Captain dispatches and the Captain implements. Agents plan, review,
   diagnose and test; the main session writes the code. The Gunner is the one
   agent that writes files, and it writes only tests.
-- Agents do not spawn agents.
+- An agent runs only what its dispatch names or it wrote; anything else in
+  shared scratch is another agent's, to read, not run. Remove your probe
+  files before reporting.
 - Each agent is dispatched once per set of files per passage. It gets the file
   paths and every question it needs in that one dispatch, including the
   Gauntlet's questions when the change is in scope under article 0. It is not
