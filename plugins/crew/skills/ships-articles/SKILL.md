@@ -71,6 +71,8 @@ views where they are clearer. Do not introduce a third-party package where the
 built-in is adequate, an abstraction before the third repetition, or
 enterprise architecture into a small app.
 
+Keep comments to a minimum, and each as brief as possible.
+
 ## 3. Logic has one home
 
 - Field validation → forms, or model `clean()`
@@ -329,9 +331,8 @@ decide, and record in the report that it was skipped at their instruction.
 
 ## 13. AI features
 
-These projects increasingly call a model over educational documents
-(statutory guidance, the SEND code of practice, a school's own policies) and
-over pupil data. The rules that keep that safe:
+These projects call a model over educational documents and pupil data. The
+rules that keep that safe:
 
 - **No identifying pupil data leaves the system.** A payload carries an
   opaque id or nothing: names, dates of birth and free text about a child are
