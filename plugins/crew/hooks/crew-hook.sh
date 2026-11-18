@@ -10,9 +10,17 @@
 HERE="$(cd "$(dirname "$0")" && pwd)"
 NAME="$1"
 shift
+INPUT="$(cat)"
+# Skip starting Python where the script would allow anyway.
+case "$NAME" in
+  guard_db|guard_edit)
+    case "$INPUT" in *'"agent_type"'*) ;; *) exit 0 ;; esac ;;
+  template_leaks)
+    case "$INPUT" in *.[Hh][Tt][Mm]*|*.[Dd][Jj][Hh][Tt][Mm][Ll]*) ;; *) exit 0 ;; esac ;;
+esac
 PY="$(command -v python3 2>/dev/null || command -v python 2>/dev/null)"
 if [ -z "$PY" ]; then
   echo "crew: no python on PATH, cannot run hook $NAME" >&2
   case "$NAME" in guard*) exit 2 ;; *) exit 0 ;; esac
 fi
-exec "$PY" "$HERE/$NAME.py" "$@"
+printf '%s' "$INPUT" | "$PY" "$HERE/$NAME.py" "$@"
