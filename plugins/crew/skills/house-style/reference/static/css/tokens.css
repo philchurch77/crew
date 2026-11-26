@@ -1,0 +1,99 @@
+/* The one stylesheet a project edits. The Brand block is the client's;
+   everything under it is the house style and stays as it is.
+   After changing a Brand value: python check_contrast.py <this file>. */
+:root {
+  /* ---------- Brand: set per client ---------- */
+  --brand-primary: #0f7489;         /* buttons, links, the logo tile */
+  --brand-primary-strong: #0f5f73;  /* hover and pressed */
+  --brand-ink: #0e2530;             /* body text and headings */
+  --brand-tint: #e3f1f4;            /* a chip's ground, a selected row */
+  --brand-tint-ink: #0b5566;        /* text on the tint */
+  --brand-bar: #0b2e3f;             /* the top bar and the sign-in panel */
+  --brand-bar-link: #b9cdd6;        /* resting links on the bar only */
+  --brand-bar-accent: #4cc6e0;      /* the current-page line on the bar */
+  --brand-ring: #2a8fa6;            /* focus: shows on white and on the bar */
+
+  /* ---------- House style: the same in every project ---------- */
+
+  /* surfaces, lines and text */
+  --color-page: #f5f7f8;
+  --color-surface: #ffffff;
+  --color-surface-2: #eef4f9;
+  --color-line: #e3e9ec;
+  --color-line-strong: #c9d5da;
+  --color-input-line: #7a8c94;      /* a field's edge must be 3:1 */
+  --color-ink: var(--brand-ink);
+  --color-ink-muted: #4a5e67;
+  --color-primary: var(--brand-primary);
+  --color-primary-strong: var(--brand-primary-strong);
+  --color-on-primary: #ffffff;
+  --color-on-bar: #ffffff;
+  --ring: var(--brand-ring);
+
+  /* status: always with a word or an icon, never colour alone */
+  --color-danger: #b91c1c;
+  --color-danger-ink: #7f1d1d;
+  --color-danger-bg: #fbf1f1;
+  --color-danger-line: #eec6c6;
+  --color-warn-ink: #5c3a12;
+  --color-warn-bg: #fff6ec;
+  --color-warn-line: #f3d9bc;
+  --color-good-ink: #1d5e33;
+  --color-good-bg: #e6f4ea;
+  --color-notice: #ffb703;          /* the bar's notice pill, ink on amber */
+
+  /* chart series, in this order; a legend and a table always accompany */
+  --series-0: #2a78d6;
+  --series-1: #eb6834;
+  --series-2: #1baf7a;
+  --series-3: #eda100;
+  --series-4: #e87ba4;
+
+  /* type */
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Space Grotesk", "Inter", system-ui, sans-serif;
+  --fs-title: 40px;
+  --fs-title-sm: 32px;
+  --fs-heading: 20px;
+  --fs-body: 16px;
+  --fs-ui: 14px;
+  --fs-small: 13px;
+  --fs-label: 12px;
+  --lh-body: 1.6;
+  --lh-tight: 1.15;
+
+  /* spacing: nothing between these steps */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 56px;
+
+  /* shape */
+  --radius-sm: 8px;
+  --radius-control: 12px;
+  --radius-card: 16px;
+  --radius-pill: 999px;
+
+  /* depth: soft, and never with a heavy border */
+  --shadow-xs: 0 1px 2px rgba(14, 37, 48, 0.06);
+  --shadow-sm: 0 2px 6px rgba(14, 37, 48, 0.08);
+  --shadow-raised: 0 8px 30px rgba(14, 37, 48, 0.08);
+  --shadow-lg: 0 14px 34px rgba(14, 37, 48, 0.14);
+  --scrim: rgba(14, 37, 48, 0.55);  /* behind an open drawer */
+
+  /* layout */
+  --bar-height: 60px;
+  --page-width: 1080px;
+  --page-narrow: 680px;
+  --hit: 44px;                      /* the smallest thing a finger presses */
+  --chat-column: 880px;             /* the conversation's reading width */
+  --chat-side: clamp(272px, 22vw, 300px);
+
+  /* motion */
+  --dur-fast: 160ms;
+  --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
+}

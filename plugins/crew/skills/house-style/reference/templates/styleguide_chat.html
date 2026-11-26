@@ -1,0 +1,106 @@
+{% extends 'chat.html' %}
+
+{% comment %}
+The assistant screen with invented content: every block of chat.html
+filled, a turn of each kind. Served only while DEBUG is on. With ?empty
+in the address the turns are left out, to show the empty chat.
+{% endcomment %}
+
+{% block title %}Style guide: chat{% endblock %}
+
+{% block chat_title %}Summarising the spring reports{% endblock %}
+
+{% block chat_history %}
+<div class="chat-group">
+    <h2 class="chat-group__heading">Today</h2>
+    <ul class="chat-group__list">
+        <li class="chat-row is-current">
+            <a class="chat-row__link" id="chat-title-1" href="#messages" aria-current="page">Summarising the spring reports</a>
+            <div class="chat-menu">
+                <button type="button" class="chat-row__menu" id="chat-menu-btn-1" aria-labelledby="chat-menu-btn-1 chat-title-1" aria-expanded="false" aria-controls="chat-menu-1"><span class="visually-hidden">Options for</span><span aria-hidden="true">&#8942;</span></button>
+                <div class="chat-menu__list" id="chat-menu-1">
+                    <button type="button" class="chat-menu__item">Rename</button>
+                    <a class="chat-menu__item" href="#messages">Export</a>
+                    <form method="get" action="#messages" data-confirm="Delete this chat?">
+                        <button class="chat-menu__item chat-menu__item--danger">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </li>
+        <li class="chat-row">
+            <a class="chat-row__link" id="chat-title-2" href="#messages">A long title that runs out of room and is cut short</a>
+            <div class="chat-menu">
+                <button type="button" class="chat-row__menu" id="chat-menu-btn-2" aria-labelledby="chat-menu-btn-2 chat-title-2" aria-expanded="false" aria-controls="chat-menu-2"><span class="visually-hidden">Options for</span><span aria-hidden="true">&#8942;</span></button>
+                <div class="chat-menu__list" id="chat-menu-2">
+                    <button type="button" class="chat-menu__item">Rename</button>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>
+<div class="chat-group">
+    <h2 class="chat-group__heading">Last 7 days</h2>
+    <ul class="chat-group__list">
+        <li class="chat-row"><a class="chat-row__link" href="#messages">Governors' briefing draft</a></li>
+        <li class="chat-row"><a class="chat-row__link" href="#messages">What the policy says about lateness</a></li>
+    </ul>
+</div>
+{% endblock %}
+
+{% block chat_about %}<p>The assistant reads the reports you can open and the published guidance. It cannot see anything else.</p>{% endblock %}
+
+{% block chat_greeting %}Good morning, Sam{% endblock %}
+
+{% block chat_starters %}
+<li><button type="button" class="card card--action" data-starter>Summarise this term's reports in five points.</button></li>
+<li><button type="button" class="card card--action" data-starter>Draft a governors' briefing from the spring summary.</button></li>
+<li><button type="button" class="card card--action" data-starter>What changed between the autumn and spring summaries?</button></li>
+<li><button type="button" class="card card--action" data-starter>What does the guidance say about lateness?</button></li>
+{% endblock %}
+
+{% block composer_placeholder %}e.g. What changed since last term?{% endblock %}
+
+{% block composer_foot %}<p class="chat-composer__foot">Chat messages older than 90 days are deleted.</p>{% endblock %}
+
+{% block chat_turns %}{% if "empty" not in request.GET %}<div class="message message--user"><span class="visually-hidden">You said: </span><div class="message__body"><p>What changed between the autumn and spring summaries?</p></div></div>
+<div class="message message--assistant">
+    <div class="message__head"><span class="assistant-mark" aria-hidden="true">A</span><span class="message__name">Assistant</span></div>
+    <div class="message__body">
+        <p>Three things changed, and one of them matters more than the others.</p>
+        <h3>What changed</h3>
+        <ul>
+            <li><strong>Length.</strong> The spring summary is three pages shorter.</li>
+            <li><strong>Status.</strong> It is still in review; the autumn one is complete.</li>
+        </ul>
+        <div class="table-scroll" tabindex="0" role="region" aria-label="The two summaries">
+            <table class="table">
+                <thead><tr><th scope="col">Report</th><th scope="col">Status</th><th scope="col" class="cell--right">Pages</th></tr></thead>
+                <tbody>
+                    <tr><th scope="row">Autumn summary</th><td><span class="pill pill--good">Complete</span></td><td class="cell--right">12</td></tr>
+                    <tr><th scope="row">Spring summary</th><td><span class="pill pill--brand">In review</span></td><td class="cell--right">9</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <blockquote><p>A quotation from a source sits behind a line in the client's colour.</p></blockquote>
+    </div>
+    <div class="message__actions"><button type="button" class="btn btn--small">Copy</button></div>
+</div>
+<div class="message message--user"><span class="visually-hidden">You said: </span><div class="message__body"><p>Draft a paragraph for governors.</p></div></div>
+<p class="notice notice--warn" role="alert">The assistant could not finish that reply. Your message is still in the box; press Send to try again.</p>
+<div class="message message--status"><span class="message__dots" aria-hidden="true"></span><span>Reading the spring summary…</span></div>{% endif %}{% endblock %}
+
+{% block chat_sources %}
+<h3 class="section-label">Documents</h3>
+<ul class="chat-sources__list">
+    <li class="chat-sources__item">
+        <p class="card__chips"><span class="pill pill--brand">Report</span></p>
+        <p class="chat-sources__title">Spring summary</p>
+        <p>Client name</p>
+    </li>
+    <li class="chat-sources__item">
+        <p class="card__chips"><span class="pill">Guidance</span></p>
+        <p class="chat-sources__title"><a href="#chat-sources">Published guidance on reporting<span class="visually-hidden"> (opens in a new tab)</span></a></p>
+        <p>Publisher</p>
+    </li>
+</ul>
+{% endblock %}

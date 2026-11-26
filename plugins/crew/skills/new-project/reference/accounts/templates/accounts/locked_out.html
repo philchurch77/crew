@@ -1,0 +1,25 @@
+{% extends 'layout.html' %}
+
+{# Never echoes the username: it would confirm which accounts exist. #}
+
+{% block title %}Sign-in paused{% endblock %}
+
+{% block topbar_signin %}{% endblock %}
+
+{% block content %}
+<div class="auth-split">
+    <div class="auth-split__brand">
+        <p class="auth-split__eyebrow">{{ client_name }}</p>
+        <h1>Sign-in paused</h1>
+        <p>There have been too many failed sign-in attempts from here.</p>
+    </div>
+    <div class="auth-split__panel">
+        <h2>Please try again shortly</h2>
+        <p>
+            For your account's safety, sign-in is paused for a short while.
+            If you need access sooner, ask the site administrator to unlock it.
+        </p>
+        <p class="auth-split__note"><a href="{% url 'login' %}">Back to sign in</a></p>
+    </div>
+</div>
+{% endblock %}

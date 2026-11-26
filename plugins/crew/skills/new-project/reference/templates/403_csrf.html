@@ -1,0 +1,17 @@
+{% extends 'layout.html' %}
+
+{# Django's CSRF view renders this (its own page is inline style). The reason is logged, never shown. #}
+
+{% block title %}Page out of date{% endblock %}
+
+{% block content %}
+<section class="page page--narrow message-page">
+    <h1>This page is out of date</h1>
+    <p>
+        Nothing was sent or changed. This can happen when a page has been open
+        a long time, or you signed in or out in another tab. Go back, reload the
+        page and try again.
+    </p>
+    <a class="btn btn--primary" href="{% url 'home' %}">Back to the home page</a>
+</section>
+{% endblock %}

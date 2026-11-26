@@ -1,0 +1,843 @@
+/* Every repeated piece of a page. A new page is built from these before
+   anything new is written; a new piece is added here, once, on the tokens. */
+
+/* ---------- Skip link and top bar (layout.html) ----------
+   Current page: aria-current. Open and closed: aria-expanded (site.js). */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: var(--space-4);
+  z-index: 1200;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-ink);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  top: var(--space-3);
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 1100;
+  padding: 0 var(--space-5);
+  background: var(--brand-bar);
+}
+
+.topbar__inner {
+  display: flex;
+  align-items: center;
+  /* Narrower near 768px, where the nav only just fits one row. */
+  gap: clamp(16px, 3vw, 32px);
+  min-height: var(--bar-height);
+}
+
+.topbar__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  text-decoration: none;
+}
+
+/* The product's initial on the client's colour. Decorative. */
+.topbar__logo {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-sm);
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.topbar__name {
+  display: flex;
+  flex-direction: column;
+  color: var(--color-on-bar);
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 600;
+  line-height: var(--lh-tight);
+  white-space: nowrap;
+}
+
+.topbar__org {
+  color: var(--brand-bar-link);
+  font-family: var(--font-body);
+  font-size: var(--fs-label);
+  font-weight: 500;
+}
+
+/* One short standing notice (a demo, a test site). */
+.topbar__notice {
+  padding: var(--space-1) 10px;
+  border-radius: var(--radius-pill);
+  background: var(--color-notice);
+  color: var(--color-ink);
+  font-size: var(--fs-label);
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+.topbar__nav {
+  display: flex;
+  flex: 1;
+  gap: var(--space-1);
+}
+
+.topbar__nav a,
+.topbar__link {
+  display: flex;
+  align-items: center;
+  min-height: var(--hit);
+  padding: var(--space-2) 14px;
+  border-radius: var(--radius-sm);
+  color: var(--brand-bar-link);
+  font-size: var(--fs-ui);
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.topbar__nav a:hover,
+.topbar__link:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--color-on-bar);
+}
+
+/* The pill alone is too faint on the bar: the underline carries it too. */
+.topbar__nav a[aria-current="page"] {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--color-on-bar);
+  box-shadow: inset 0 -2px 0 var(--brand-bar-accent);
+}
+
+.topbar__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.topbar__toggle,
+.topbar__avatar {
+  display: grid;
+  place-items: center;
+  width: var(--hit);
+  height: var(--hit);
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.topbar__toggle {
+  display: none;
+  border-radius: 10px;
+  background: none;
+  color: var(--brand-bar-link);
+}
+
+.topbar__toggle:hover,
+.topbar__toggle[aria-expanded="true"] {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--color-on-bar);
+}
+
+.topbar__account {
+  position: relative;
+}
+
+.topbar__avatar {
+  background: rgba(255, 255, 255, 0.14);
+  color: var(--color-on-bar);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.topbar__avatar:hover,
+.topbar__avatar[aria-expanded="true"] {
+  box-shadow: 0 0 0 2px var(--brand-bar-accent);
+}
+
+.topbar__menu {
+  display: none;
+  position: absolute;
+  top: calc(100% + var(--space-2));
+  right: 0;
+  min-width: 220px;
+  padding: var(--space-2);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-lg);
+}
+
+.topbar__avatar[aria-expanded="true"] + .topbar__menu {
+  display: block;
+}
+
+.topbar__menu-name {
+  margin-bottom: var(--space-1);
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--color-line);
+  font-size: var(--fs-ui);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.topbar__menu a,
+.topbar__menu-button {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: var(--hit);
+  padding: 0 var(--space-3);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--color-ink);
+  font-size: 15px;
+  font-weight: 500;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.topbar__menu a:hover,
+.topbar__menu-button:hover {
+  background: var(--color-surface-2);
+}
+
+.topbar__menu a[aria-current="page"] {
+  box-shadow: inset 3px 0 0 var(--color-primary);
+}
+
+/* 768px is also in site.js (closeAbove); keep the two in step. */
+@media (max-width: 767.98px) {
+  .topbar {
+    padding: 0 var(--space-4);
+  }
+
+  .topbar__inner {
+    gap: var(--space-2);
+  }
+
+  /* Source order, so focus order and screen agree. */
+  .topbar__toggle {
+    display: grid;
+    margin-left: auto;
+  }
+
+  .topbar__toggle ~ .topbar__actions {
+    margin-left: 0;
+  }
+
+  .topbar__nav {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    padding: var(--space-2) var(--space-4) var(--space-3);
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    background: var(--brand-bar);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .topbar__toggle[aria-expanded="true"] ~ .topbar__nav {
+    display: flex;
+  }
+
+  .topbar__nav a {
+    min-height: 48px;
+    border-left: 3px solid transparent;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  }
+
+  .topbar__nav a[aria-current="page"] {
+    border-left-color: var(--brand-bar-accent);
+    box-shadow: none;
+  }
+
+  .topbar__nav a:focus-visible {
+    outline-offset: -1px;
+  }
+}
+
+/* Too narrow for the wordmark: the tile stays, the name stays the label. */
+@media (max-width: 479.98px) {
+  .topbar__brand {
+    justify-content: center;
+    min-width: var(--hit);
+    min-height: var(--hit);
+  }
+
+  .topbar__name {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+}
+
+/* ---------- The page ----------
+   One column, centred, with the gutters on .page (the bar runs edge to
+   edge). --narrow for a form or a message; --wide for a full table. */
+.page {
+  width: 100%;
+  max-width: var(--page-width);
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-5) var(--space-7);
+}
+
+.page--narrow {
+  max-width: var(--page-narrow);
+}
+
+.page--wide {
+  max-width: none;
+}
+
+/* The title on the left, the page's one primary action on the right. */
+.page__header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-5);
+  margin-bottom: var(--space-6);
+}
+
+.page__lead {
+  margin-top: var(--space-2);
+  color: var(--color-ink-muted);
+}
+
+/* A section's name: small capitals over what it holds. */
+.section-label {
+  margin: var(--space-6) 0 var(--space-3);
+  color: var(--color-ink-muted);
+  font-family: var(--font-body);
+  font-size: var(--fs-small);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  line-height: var(--lh-body);
+  text-transform: uppercase;
+}
+
+.page__foot {
+  margin-top: var(--space-6);
+  color: var(--color-ink-muted);
+  font-size: var(--fs-small);
+}
+
+@media (max-width: 767.98px) {
+  .page {
+    padding: var(--space-6) var(--space-4) var(--space-7);
+  }
+
+  .page__header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* ---------- Buttons ----------
+   .btn--primary once per screen. A link that looks like a button takes
+   the same classes. */
+.btn {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--hit);
+  padding: 10px 20px;
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+  color: var(--color-ink);
+  font-size: var(--fs-body);
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease-out),
+              border-color var(--dur-fast) var(--ease-out),
+              color var(--dur-fast) var(--ease-out);
+}
+
+.btn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-ink);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn--primary {
+  border-color: transparent;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn--primary:hover {
+  border-color: transparent;
+  background: var(--color-primary-strong);
+  color: var(--color-on-primary);
+}
+
+/* Deletes and nothing else; its form carries data-confirm. */
+.btn--danger {
+  border-color: var(--color-danger-line);
+  color: var(--color-danger);
+}
+
+.btn--danger:hover {
+  border-color: var(--color-danger);
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+}
+
+/* A row's or a card's small action (Copy, Edit). */
+.btn--small {
+  min-height: 32px;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-pill);
+  color: var(--color-ink-muted);
+  font-size: var(--fs-ui);
+  font-weight: 500;
+}
+
+.btn[disabled],
+.btn[aria-disabled="true"] {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* ---------- Forms ----------
+   A label above every field, help under it, the error beside the field. */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+/* A form that is the page: on a card. */
+.form--card {
+  padding: var(--space-5);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-xs);
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.form-field label {
+  font-size: var(--fs-ui);
+  font-weight: 600;
+}
+
+.required-star {
+  margin-left: 2px;
+  color: var(--color-danger);
+}
+
+.form-help {
+  color: var(--color-ink-muted);
+  font-size: var(--fs-ui);
+}
+
+.form-field input:not([type="radio"]):not([type="checkbox"]),
+.form-field select,
+.form-field textarea {
+  width: 100%;
+  min-height: var(--hit);
+  padding: 10px 14px;
+  border: 1px solid var(--color-input-line);
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+  color: var(--color-ink);
+  transition: border-color var(--dur-fast) var(--ease-out),
+              box-shadow var(--dur-fast) var(--ease-out);
+}
+
+.form-field textarea {
+  min-height: 7.5rem;
+  resize: vertical;
+}
+
+.form-field :is(input, select, textarea):focus-visible {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--ring);
+}
+
+/* After :focus, so an errored field stays red; the message says what to do. */
+.form-field.has-error :is(input, select, textarea) {
+  border-color: var(--color-danger);
+}
+
+.field-error {
+  color: var(--color-danger);
+  font-size: var(--fs-ui);
+}
+
+.form-errors {
+  padding: 10px 14px;
+  border: 1px solid var(--color-danger-line);
+  border-radius: var(--radius-control);
+  background: var(--color-danger-bg);
+  color: var(--color-danger-ink);
+  font-size: var(--fs-ui);
+}
+
+/* The primary button first; Cancel is a plain .btn beside it. */
+.form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+/* ---------- Cards ---------- */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+  list-style: none;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+  padding: var(--space-5);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-xs);
+}
+
+.card__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.card__title {
+  flex: 1;
+  overflow-wrap: anywhere;
+}
+
+.card__title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.card__title a:hover {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+/* A linked card is one target; the ring is drawn on the card. */
+.card__title a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.card__title a:focus-visible {
+  outline: none;
+}
+
+.card:has(.card__title a:focus-visible) {
+  outline: 3px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.card:has(.card__title a:hover) {
+  border-color: var(--color-line-strong);
+}
+
+.card__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  color: var(--color-ink-muted);
+  font-size: var(--fs-ui);
+}
+
+/* A card that is a button (a suggestion, a shortcut). A resting border
+   and shadow: a touch screen has no hover. */
+.card--action {
+  width: 100%;
+  min-height: var(--hit);
+  padding: 14px var(--space-4);
+  border-radius: var(--radius-control);
+  box-shadow: var(--shadow-raised);
+  font-size: var(--fs-ui);
+  line-height: 1.45;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--dur-fast) var(--ease-out);
+}
+
+.card--action:hover {
+  border-color: var(--color-primary);
+}
+
+@media (max-width: 767.98px) {
+  .card-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ---------- Pills ----------
+   A status or a kind, in words on a soft ground: the word carries it,
+   not the colour. */
+.pill {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-2);
+  color: var(--color-ink-muted);
+  font-size: var(--fs-small);
+  font-weight: 500;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.pill--brand { background: var(--brand-tint); color: var(--brand-tint-ink); }
+.pill--good { background: var(--color-good-bg); color: var(--color-good-ink); }
+.pill--warn { background: var(--color-warn-bg); color: var(--color-warn-ink); }
+.pill--danger { background: var(--color-danger-bg); color: var(--color-danger-ink); }
+
+/* ---------- Notices ----------
+   What happened and what to do, in a sentence. */
+.notice {
+  padding: 10px 14px;
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+  font-size: var(--fs-ui);
+}
+
+.notice--warn {
+  border-color: var(--color-warn-line);
+  background: var(--color-warn-bg);
+  color: var(--color-warn-ink);
+}
+
+.notice--danger {
+  border-color: var(--color-danger-line);
+  background: var(--color-danger-bg);
+  color: var(--color-danger-ink);
+}
+
+.notice--good {
+  border-color: transparent;
+  background: var(--color-good-bg);
+  color: var(--color-good-ink);
+}
+
+/* ---------- Tables ----------
+   Hairline rows, a quiet header, figures right-aligned. Always inside
+   .table-scroll (tabindex="0", role="region", a label), so a wide table
+   scrolls in its frame and the page never does. */
+.table-scroll {
+  max-width: 100%;
+  overflow: auto;
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+}
+
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: var(--fs-ui);
+  font-variant-numeric: tabular-nums;
+}
+
+.table th,
+.table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--color-line);
+  text-align: left;
+  vertical-align: top;
+}
+
+.table tbody tr:last-child > * {
+  border-bottom: 0;
+}
+
+.table thead th {
+  position: sticky;
+  top: 0;
+  background: var(--color-page);
+  color: var(--color-ink-muted);
+  font-size: var(--fs-label);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* The row's name. */
+.table tbody th {
+  font-weight: 600;
+}
+
+/* A hover tint, not stripes. */
+.table tbody tr:hover > * {
+  background: color-mix(in srgb, var(--color-primary) 5%, var(--color-surface));
+}
+
+.table .cell--right {
+  text-align: right;
+}
+
+.table--compact th,
+.table--compact td {
+  padding: 6px 14px;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+  color: var(--color-ink-muted);
+  font-size: var(--fs-ui);
+}
+
+.pagination__links {
+  display: flex;
+  gap: var(--space-2);
+}
+
+/* ---------- Empty state ----------
+   Says what will be here and offers the way to put it there. */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-7) var(--space-5);
+  border: 1px dashed var(--color-line-strong);
+  border-radius: var(--radius-card);
+  color: var(--color-ink-muted);
+  text-align: center;
+}
+
+.empty-state h2 {
+  color: var(--color-ink);
+}
+
+/* ---------- Sign in: the split panel ----------
+   The client's colour on the left, the form on the right. */
+.auth-split {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  max-width: 880px;
+  margin: var(--space-7) auto;
+  overflow: hidden;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-lg);
+}
+
+.auth-split__brand {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-3);
+  padding: var(--space-7) var(--space-6);
+  background: linear-gradient(
+    160deg,
+    color-mix(in srgb, var(--brand-bar) 88%, #000) 0%,
+    var(--brand-bar) 55%,
+    color-mix(in srgb, var(--brand-bar) 78%, var(--brand-primary)) 100%
+  );
+  color: var(--brand-bar-link);
+}
+
+.auth-split__eyebrow {
+  color: var(--brand-bar-accent);
+  font-size: var(--fs-label);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.auth-split__brand h1 {
+  color: var(--color-on-bar);
+  font-size: var(--fs-title-sm);
+}
+
+.auth-split__panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-5);
+  padding: var(--space-7) var(--space-6);
+}
+
+.auth-split__panel .btn {
+  width: 100%;
+}
+
+.auth-split__note {
+  color: var(--color-ink-muted);
+  font-size: var(--fs-ui);
+}
+
+@media (max-width: 767.98px) {
+  .auth-split {
+    grid-template-columns: 1fr;
+    margin: var(--space-4);
+  }
+
+  .auth-split__brand,
+  .auth-split__panel {
+    padding: var(--space-6) var(--space-5);
+  }
+}
+
+/* ---------- A message page (404, 403, done) ---------- */
+.message-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  text-align: center;
+}

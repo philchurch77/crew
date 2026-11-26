@@ -1,0 +1,120 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% comment %}
+The assistant screen: history, conversation, sources. A project's chat page
+extends this and fills the blocks; styleguide_chat.html fills them with
+invented content. History comes first so New chat is the first Tab stop.
+assistant_name is the project's own name for it (a context processor).
+
+Never put what a person typed (a message, a chat's title) in an attribute,
+the page title or a URL: text content only. The box has no form and no
+name, so a typed message can never reach a URL.
+{% endcomment %}
+
+{% block styles %}<link rel="stylesheet" href="{% static 'css/chat.css' %}">{% endblock %}
+
+{# Past the history's Tab stops to the box. #}
+{% block skip_links %}<a class="skip-link" href="#messageInput">Skip to message box</a>{% endblock %}
+
+{% block content %}
+<div class="chat-shell">
+    <aside class="chat-sidebar" id="chat-history-panel" tabindex="-1" aria-label="Chat history">
+        <div class="chat-panel__top">
+            {# Its own GET form: nothing typed travels with it. #}
+            <form method="get" action="{% url 'chat' %}">
+                <button class="btn" name="new" value="1">
+                    <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+                    New chat
+                </button>
+            </form>
+            <button type="button" class="icon-btn" data-drawer-close aria-label="Close chat history">
+                <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+            </button>
+        </div>
+        <div class="chat-history" id="chat-history">
+            {# .chat-group per date band, each a list of .chat-row; else .chat-history__empty. #}
+            {% block chat_history %}<p class="chat-history__empty">No chats yet.</p>{% endblock %}
+        </div>
+        <div class="chat-sidebar__about">
+            <h2>What {{ assistant_name|default:"the assistant" }} reads</h2>
+            {% block chat_about %}<p>One or two sentences naming what it can and cannot see.</p>{% endblock %}
+        </div>
+    </aside>
+
+    <section class="chat-main">
+        {# A div: the page's one header is the top bar. Pieces stay direct children. #}
+        <div class="chat-header">
+            <button type="button" class="icon-btn" data-drawer aria-controls="chat-history-panel" aria-expanded="false">
+                <span class="visually-hidden">Open chat history</span>
+                <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/></svg>
+            </button>
+            <span class="assistant-mark" aria-hidden="true">{{ assistant_name|default:"Assistant"|slice:":1"|upper }}</span>
+            <h1 class="chat-header__title">{% block chat_title %}New chat{% endblock %}</h1>
+            <p class="chat-header__tag">{{ assistant_name|default:"Assistant" }} · An AI assistant</p>
+            <div class="chat-header__actions">
+                <button type="button" class="icon-btn" data-drawer data-drawer-wide="(min-width: 1101px)" aria-controls="chat-sources" aria-expanded="false" aria-label="Sources in this chat">
+                    <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>
+                    <span class="icon-btn__label">Sources</span>
+                </button>
+                {% block chat_actions %}{% endblock %}
+                <form class="chat-header__new" method="get" action="{% url 'chat' %}">
+                    <button class="icon-btn" name="new" value="1">
+                        <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+                        <span class="icon-btn__label">New chat</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        {# The live region: never display:none, and no whitespace inside (:empty shows the empty state). #}
+        <div class="messages" id="messages" aria-live="polite">{% block chat_turns %}{% endblock %}</div>
+        {# Must stay #messages' next sibling: chat.css hides it, and the header's pieces, by that. #}
+        <div class="chat-empty">
+            <div class="chat-empty__inner">
+                <span class="assistant-mark assistant-mark--large" aria-hidden="true">{{ assistant_name|default:"Assistant"|slice:":1"|upper }}</span>
+                <h1 class="chat-empty__greeting">{% block chat_greeting %}Hello{% endblock %}</h1>
+                <p class="chat-empty__lead">{% block chat_lead %}{{ assistant_name|default:"Assistant" }} is an AI assistant. One sentence on what to ask it.{% endblock %}</p>
+                {# Four at most, each a question it can answer. A card fills the box and never sends. #}
+                <ul class="starter-cards" aria-label="Example questions">
+                    {% block chat_starters %}{% endblock %}
+                </ul>
+            </div>
+        </div>
+
+        <div class="chat-composer">
+            <div class="composer">
+                {# What not to type: above the box and tied to it, so it is read first. #}
+                <p class="composer__note" id="composer-note">{% block composer_note %}<strong>Please don't include names or details that could identify a child.</strong>{% endblock %}</p>
+                <label for="messageInput" class="visually-hidden">Your message</label>
+                {# The placeholder stays: the starter cards hide on :placeholder-shown. #}
+                <textarea id="messageInput" rows="1" placeholder="{% block composer_placeholder %}e.g. an example question{% endblock %}" aria-describedby="composer-note"></textarea>
+                <button id="sendBtn" type="button" class="btn btn--primary">Send</button>
+            </div>
+            {% block composer_foot %}{% endblock %}
+        </div>
+    </section>
+
+    {# Replaced after each reply. Not a live region: #messages is the one. #}
+    <aside class="chat-sources" id="chat-sources" tabindex="-1" aria-labelledby="chat-sources-title">
+        <div class="chat-panel__top">
+            <h2 class="chat-panel__heading" id="chat-sources-title">Sources in this chat</h2>
+            <button type="button" class="icon-btn" data-drawer-close aria-label="Close sources">
+                <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+            </button>
+        </div>
+        <div class="chat-sources__body">
+            {# The project's script replaces this after each reply. #}
+            <div id="chat-sources-body">{% block chat_sources %}<p class="chat-sources__empty">What {{ assistant_name|default:"the assistant" }} looks up in this chat will be listed here.</p>{% endblock %}</div>
+        </div>
+    </aside>
+</div>
+
+<div class="chat-scrim" data-drawer-scrim aria-hidden="true"></div>
+{# The page's data for its script: data- attributes and json_script, never inline script. #}
+{% block chat_data %}{% endblock %}
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/chat.js' %}"></script>
+{% endblock %}

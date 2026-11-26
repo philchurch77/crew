@@ -1,0 +1,13 @@
+{% extends 'layout.html' %}
+
+{# One wording for every 403: anything specific tells the reader what exists. #}
+
+{% block title %}No access{% endblock %}
+
+{% block content %}
+<section class="page page--narrow message-page">
+    <h1>You don't have access to this page</h1>
+    <p>If you think you should, ask the site administrator.</p>
+    <a class="btn btn--primary" href="{% url 'home' %}">Back to the home page</a>
+</section>
+{% endblock %}

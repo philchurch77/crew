@@ -1,0 +1,76 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}{{ product_name|default:"Product" }}{% endblock %}</title>
+
+  {# A tile in the client's primary colour: set its fill with the brand. #}
+  <link rel="icon" type="image/svg+xml" href="{% static 'img/favicon.svg' %}">
+  <link rel="stylesheet" href="{% static 'css/tokens.css' %}">
+  <link rel="stylesheet" href="{% static 'css/base.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components.css' %}">
+  {% block styles %}{% endblock %}
+</head>
+
+<body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    {% block skip_links %}{% endblock %}
+    {# Display only: every view checks access itself. #}
+    {% with match=request.resolver_match %}
+    <header class="topbar">
+        <div class="topbar__inner">
+            {# product_name and client_name: a context processor (the starter's core.context_processors.names). #}
+            <a class="topbar__brand" href="{% url 'home' %}">
+                <span class="topbar__logo" aria-hidden="true">{{ product_name|default:"Product"|slice:":1"|upper }}</span>
+                <span class="topbar__name">{{ product_name|default:"Product" }} <span class="topbar__org">{{ client_name|default:"Client name" }}</span></span>
+            </a>
+            {% block topbar_notice %}{% endblock %}
+
+            {% if user.is_authenticated %}
+                <button class="topbar__toggle" type="button" aria-controls="primary-nav" aria-expanded="false" aria-label="Open menu">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+                </button>
+
+                {# One link per area, each with aria-current on its own pages. Five at most. #}
+                <nav id="primary-nav" class="topbar__nav" aria-label="Main">
+                    <a href="{% url 'home' %}"{% if match.url_name == 'home' %} aria-current="page"{% endif %}>Home</a>
+                </nav>
+
+                <div class="topbar__actions">
+                    {% if user.is_superuser %}
+                        <a class="topbar__link" href="{% url 'admin:index' %}">Admin</a>
+                    {% endif %}
+                    <div class="topbar__account">
+                        <button class="topbar__avatar" type="button" aria-controls="account-menu" aria-expanded="false" aria-label="Account menu for {{ user.get_full_name|default:user.get_username }}">{{ user.get_full_name|default:user.get_username|slice:":1"|upper }}</button>
+                        <div id="account-menu" class="topbar__menu">
+                            <p class="topbar__menu-name">{{ user.get_full_name|default:user.get_username }}</p>
+                            <a href="{% url 'password_change' %}"{% if match.url_name == 'password_change' %} aria-current="page"{% endif %}>Change password</a>
+                            <form action="{% url 'logout' %}" method="post">
+                                {% csrf_token %}
+                                <button class="topbar__menu-button">Sign out</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                {# The sign-in page empties this block. #}
+                {% block topbar_signin %}
+                <div class="topbar__actions">
+                    <a class="topbar__link" href="{% url 'login' %}">Sign in</a>
+                </div>
+                {% endblock %}
+            {% endif %}
+        </div>
+    </header>
+    {% endwith %}
+    <main id="main" tabindex="-1">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <script src="{% static 'js/site.js' %}"></script>
+    {% block scripts %}
+    {% endblock %}
+</body>
+</html>

@@ -1,0 +1,27 @@
+{% load static %}<!DOCTYPE html>
+{% comment %}
+Rendered with no context: never {% url %}, a user or the database.
+{% endcomment %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Something went wrong</title>
+  <link rel="icon" type="image/svg+xml" href="{% static 'img/favicon.svg' %}">
+  <link rel="stylesheet" href="{% static 'css/tokens.css' %}">
+  <link rel="stylesheet" href="{% static 'css/base.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components.css' %}">
+</head>
+<body>
+    <main id="main">
+        <section class="page page--narrow message-page">
+            <h1>Something went wrong</h1>
+            <p>
+                This is a fault on our side, not something you did. Try again in
+                a moment; if it keeps happening, tell the site administrator.
+            </p>
+            <a class="btn btn--primary" href="/">Go to the home page</a>
+        </section>
+    </main>
+</body>
+</html>
