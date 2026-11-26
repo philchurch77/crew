@@ -1,0 +1,144 @@
+{% extends 'layout.html' %}
+
+{% comment %}
+Every piece of the house style on one page, with invented content. Served
+only while DEBUG is on (reference/README.md). A new page is checked against
+this one; a new component is added here in the change that adds it.
+{% endcomment %}
+
+{% block title %}Style guide{% endblock %}
+
+{% block topbar_notice %}<p class="topbar__notice"><strong>Demo</strong></p>{% endblock %}
+
+{% block content %}
+<section class="page" aria-labelledby="guide-heading">
+    <div class="page__header">
+        <div>
+            <h1 id="guide-heading">Reports</h1>
+            <p class="page__lead">A page's title, one line saying what it holds, and its one primary action.</p>
+        </div>
+        <a class="btn btn--primary" href="#forms">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+            New report
+        </a>
+    </div>
+
+    <h2 class="section-label" id="cards">Cards</h2>
+    <ul class="card-grid" aria-labelledby="cards">
+        <li class="card">
+            <p class="card__chips"><span class="pill pill--brand">Policy</span><span class="pill pill--warn">Draft</span></p>
+            <h3 class="card__title"><a href="#cards">A card whose title is a link is one target</a></h3>
+            <p class="card__foot"><span>Updated 12 March</span><span>4 pages</span></p>
+        </li>
+        <li class="card">
+            <p class="card__chips"><span class="pill">Reference</span></p>
+            <h3 class="card__title">A card with no link is just a surface</h3>
+            <p class="card__foot"><span>Updated 3 March</span></p>
+        </li>
+        <li><button class="card card--action" type="button">A card that is a button: a suggestion or a shortcut</button></li>
+        <li><button class="card card--action" type="button">It rests with a border and a shadow, since touch has no hover</button></li>
+    </ul>
+
+    <h2 class="section-label" id="buttons">Buttons and pills</h2>
+    <p class="form__actions">
+        <button class="btn btn--primary" type="button">Save changes</button>
+        <button class="btn" type="button">Cancel</button>
+        <button class="btn btn--danger" type="button">Delete</button>
+        <button class="btn btn--small" type="button">Copy</button>
+        <button class="btn btn--primary" type="button" disabled>Saving…</button>
+    </p>
+    <p class="form__actions">
+        <span class="pill">Not started</span>
+        <span class="pill pill--brand">In review</span>
+        <span class="pill pill--good">Complete</span>
+        <span class="pill pill--warn">Due soon</span>
+        <span class="pill pill--danger">Overdue</span>
+    </p>
+
+    <h2 class="section-label" id="notices">Notices</h2>
+    <div class="form">
+        <p class="notice notice--good" role="status">Saved. Your changes are on the record.</p>
+        <p class="notice notice--warn">This report has not been shared yet. Share it from the menu when it is ready.</p>
+        <p class="notice notice--danger" role="alert">We could not save that. Check your connection and press Save again; what you typed is still here.</p>
+    </div>
+
+    <h2 class="section-label" id="table">A table</h2>
+    <div class="table-scroll" tabindex="0" role="region" aria-labelledby="table">
+        <table class="table">
+            <thead>
+                <tr><th scope="col">Report</th><th scope="col">Status</th><th scope="col" class="cell--right">Pages</th><th scope="col" class="cell--right">Updated</th></tr>
+            </thead>
+            <tbody>
+                <tr><th scope="row">Autumn summary</th><td><span class="pill pill--good">Complete</span></td><td class="cell--right">12</td><td class="cell--right">12 Mar</td></tr>
+                <tr><th scope="row">Spring summary</th><td><span class="pill pill--brand">In review</span></td><td class="cell--right">9</td><td class="cell--right">3 Mar</td></tr>
+                <tr><th scope="row">Governors' briefing</th><td><span class="pill pill--warn">Due soon</span></td><td class="cell--right">4</td><td class="cell--right">27 Feb</td></tr>
+            </tbody>
+        </table>
+    </div>
+    <nav class="pagination" aria-label="Pages">
+        <span>1 to 3 of 28</span>
+        <span class="pagination__links"><a class="btn btn--small" href="#table">Previous</a><a class="btn btn--small" href="#table">Next</a></span>
+    </nav>
+
+    <h2 class="section-label" id="forms">A form</h2>
+    <form class="form form--card" action="#forms" method="get">
+        <div class="form-errors" role="alert"><p>Check the title, then save again.</p></div>
+        <div class="form-field has-error">
+            <label for="guide-title">Title <span class="required-star" aria-hidden="true">*</span></label>
+            <input id="guide-title" name="title" type="text" required aria-describedby="guide-title-error">
+            <p class="field-error" id="guide-title-error">Give the report a title.</p>
+        </div>
+        <div class="form-field">
+            <label for="guide-kind">Kind</label>
+            <select id="guide-kind" name="kind"><option>Summary</option><option>Briefing</option></select>
+        </div>
+        <div class="form-field">
+            <label for="guide-notes">Notes</label>
+            <textarea id="guide-notes" name="notes" aria-describedby="guide-notes-help"></textarea>
+            <p class="form-help" id="guide-notes-help">Only you see these.</p>
+        </div>
+        <p class="form__actions">
+            <button class="btn btn--primary">Save report</button>
+            <a class="btn" href="#forms">Cancel</a>
+        </p>
+    </form>
+
+    <h2 class="section-label" id="empty">An empty state</h2>
+    <div class="empty-state">
+        <h2>No reports yet</h2>
+        <p>Reports you write appear here, newest first.</p>
+        <a class="btn btn--primary" href="#forms">Write the first report</a>
+    </div>
+
+    <h2 class="section-label" id="signin">Sign in</h2>
+</section>
+
+<div class="auth-split">
+    <div class="auth-split__brand">
+        <p class="auth-split__eyebrow">Client name</p>
+        <h1>Welcome back</h1>
+        <p>One sentence saying what signing in gets you.</p>
+    </div>
+    <div class="auth-split__panel">
+        <h2>Sign in</h2>
+        <form class="form" action="#signin" method="get">
+            <div class="form-field">
+                <label for="guide-user">Username</label>
+                <input id="guide-user" name="username" type="text" autocomplete="username">
+            </div>
+            <div class="form-field">
+                <label for="guide-pass">Password</label>
+                <input id="guide-pass" name="password" type="password" autocomplete="current-password">
+            </div>
+            <button class="btn btn--primary">Sign in</button>
+        </form>
+        <p class="auth-split__note">Accounts are created by an administrator.</p>
+    </div>
+</div>
+
+<section class="page page--narrow message-page">
+    <h1>Page not found</h1>
+    <p>This page doesn't exist, or isn't available to you.</p>
+    <a class="btn btn--primary" href="#guide-heading">Back to the home page</a>
+</section>
+{% endblock %}

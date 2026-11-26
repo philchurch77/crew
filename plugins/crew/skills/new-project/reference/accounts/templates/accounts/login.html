@@ -1,0 +1,30 @@
+{% extends 'layout.html' %}
+
+{% block title %}Sign in{% endblock %}
+
+{% block topbar_signin %}{% endblock %}
+
+{% block content %}
+<div class="auth-split">
+    <div class="auth-split__brand">
+        <p class="auth-split__eyebrow">{{ client_name }}</p>
+        <h1>Welcome back</h1>
+        <p>Sign in to {{ product_name }}.</p>
+    </div>
+    <div class="auth-split__panel">
+        <h2>Sign in</h2>
+        <form class="form" action="{% url 'login' %}" method="post">
+            {% csrf_token %}
+            {% if request.POST.next or request.GET.next %}
+                <input type="hidden" name="next" value="{% firstof request.POST.next request.GET.next %}">
+            {% endif %}
+            {% include "partials/form_errors.html" %}
+            {% for field in form %}
+                {% include "partials/form_field.html" %}
+            {% endfor %}
+            <button class="btn btn--primary">Sign in</button>
+        </form>
+        <p class="auth-split__note">Accounts are created by an administrator.</p>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,8 @@
+{# A form's non-field errors. Optional var: errors_id (to focus the block) #}
+{% if form.non_field_errors %}
+    <div class="form-errors" role="alert"{% if errors_id %} id="{{ errors_id }}" tabindex="-1"{% endif %}>
+        {% for error in form.non_field_errors %}
+            <p>{{ error }}</p>
+        {% endfor %}
+    </div>
+{% endif %}

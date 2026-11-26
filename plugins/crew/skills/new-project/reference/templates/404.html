@@ -1,0 +1,16 @@
+{% extends 'layout.html' %}
+
+{% comment %}
+A missing page and one that belongs to someone else read the same. Never
+shows the path or the exception's message.
+{% endcomment %}
+
+{% block title %}Page not found{% endblock %}
+
+{% block content %}
+<section class="page page--narrow message-page">
+    <h1>Page not found</h1>
+    <p>This page doesn't exist, or isn't available to you.</p>
+    <a class="btn btn--primary" href="{% url 'home' %}">Back to the home page</a>
+</section>
+{% endblock %}

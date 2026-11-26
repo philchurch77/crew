@@ -1,0 +1,29 @@
+{% comment %}
+The sidebar's chats. A title is what someone typed: text only, never in an
+attribute (the menu is named by aria-labelledby). Var: chat_history.
+{% endcomment %}
+{% if chat_history %}
+<div class="chat-group">
+    <h2 class="chat-group__heading">Recent</h2>
+    <ul class="chat-group__list">
+        {% for chat in chat_history %}
+        <li class="chat-row{% if chat.current %} is-current{% endif %}">
+            <a class="chat-row__link" id="chat-title-{{ chat.key }}" href="{% url 'chat' %}?session_id={{ chat.key }}"{% if chat.current %} aria-current="page"{% endif %}>{{ chat.label }}</a>
+            <div class="chat-menu">
+                <button type="button" class="chat-row__menu" id="chat-menu-btn-{{ chat.key }}" aria-labelledby="chat-menu-btn-{{ chat.key }} chat-title-{{ chat.key }}" aria-expanded="false" aria-controls="chat-menu-{{ chat.key }}"><span class="visually-hidden">Options for</span><span aria-hidden="true">&#8942;</span></button>
+                <div class="chat-menu__list" id="chat-menu-{{ chat.key }}">
+                    <button type="button" class="chat-menu__item" data-rename-url="{% url 'chat_rename' chat.key %}">Rename</button>
+                    <a class="chat-menu__item" href="{% url 'chat_export' chat.key %}" download>Export</a>
+                    <form method="post" action="{% url 'chat_delete' chat.key %}" data-confirm="Delete this chat?">
+                        {% csrf_token %}
+                        <button class="chat-menu__item chat-menu__item--danger">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% else %}
+<p class="chat-history__empty">No chats yet.</p>
+{% endif %}

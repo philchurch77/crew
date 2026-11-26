@@ -1,0 +1,20 @@
+{% extends 'layout.html' %}
+
+{% block title %}{{ product_name }}{% endblock %}
+
+{# The first page after sign-in. Replace the empty state with the project's first list. #}
+
+{% block content %}
+<section class="page" aria-labelledby="page-heading">
+    <div class="page__header">
+        <div>
+            <h1 id="page-heading">Home</h1>
+            <p class="page__lead">What this product is for, in a line.</p>
+        </div>
+    </div>
+    <div class="empty-state">
+        <h2>Nothing here yet</h2>
+        <p>The first thing this product lists will appear here.</p>
+    </div>
+</section>
+{% endblock %}

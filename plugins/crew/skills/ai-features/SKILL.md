@@ -7,8 +7,9 @@ description: >-
   Load when a task adds or changes anything that calls a model, grounds an
   answer in a document corpus, sends pupil text to a model, or shows a model's
   suggestion to a teacher; when the developer asks how to add AI, an
-  assistant, a summary, a draft, a chatbot or a search over guidance; and
-  when reviewing such a feature. Carries a reference implementation.
+  assistant, a chat with history or tools, a summary, a draft or a search
+  over guidance; and when reviewing such a feature. Carries two reference
+  implementations.
 ---
 
 # AI features
@@ -55,6 +56,27 @@ the Captain copies from rather than designs from scratch. Read
    set and against a stub otherwise. It re-runs when the prompt, the model
    or the corpus changes, and the Ship passage asks for it.
 
+## A chat is the second shape
+
+A suggestion is one question, one cited answer, one person's decision. A
+chat keeps a conversation and lets the model call tools;
+`chat-reference/` is that app as code, and its `README.md` says how it
+flows. What changes from the nine points:
+
+- **Grounding is tools, not passages.** Each tool is run for the signed-in
+  user, filters by them and names its source; the page lists the sources.
+- **The payload is this chat's text only.** `api_history()` returns it as
+  data for the Master-at-Arms, as `build_payload()` does.
+- **A reply is a turn, never a record.** A chat that should change a record
+  goes through a `Suggestion`.
+- **The log is `ModelCall` per reply**, with no content, so it outlives
+  the chat.
+- **Nothing typed is lost**: the turn is saved before the model is called.
+
+Its look is the `house-style` skill's assistant screen. Its Gauntlet adds:
+another person's chat by key is a 404 by every route; one chat's payload
+holds no other chat's text; a tool handed user A returns nothing of B's.
+
 ## What the Captain does with it
 
 - **Build.** Copy `reference/` into the app, rename, and keep the file
@@ -88,8 +110,6 @@ the repo (article 9). The `anthropic` package goes in `requirements.txt`.
 
 ## What this skill does not do
 
-It does not build a chat. A conversation that keeps history, tools or
-memory is a different design with its own risks; chart it. It does not
-embed: retrieval is Postgres full-text search with a SQLite fallback for
+It does not embed: retrieval is Postgres full-text search with a SQLite fallback for
 development, which is enough for a corpus of guidance documents, and a
 vector store is a dependency to justify, not a default (article 2).

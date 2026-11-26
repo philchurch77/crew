@@ -1,0 +1,11 @@
+{# Labels only: never what was asked of a tool or what it returned. Var: chat_sources. #}
+{% if chat_sources %}
+<h3 class="section-label">Looked up</h3>
+<ul class="chat-sources__list">
+    {% for source in chat_sources %}
+    <li class="chat-sources__item"><p class="chat-sources__title">{{ source }}</p></li>
+    {% endfor %}
+</ul>
+{% else %}
+<p class="chat-sources__empty">What {{ assistant_name }} looks up in this chat will be listed here.</p>
+{% endif %}

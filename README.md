@@ -93,6 +93,30 @@ step before anything reaches a record, a monthly cap per school, and a
 question set tested like code. The Captain copies it rather than designing
 from scratch.
 
+A second reference, `chat-reference/`, is an assistant people talk to:
+chats stored per person, a streamed reply through a tool loop with a call
+limit, a log of every reply with no content in it, and the page script
+that draws it.
+
+## One look, and one way to start
+
+The `house-style` skill carries the look every project shares as files:
+tokens with a nine-value brand block that is all a client changes,
+components, the base template, the assistant screen, and a style guide
+page. `check_contrast.py` fails a palette that is under WCAG AA where a
+colour is used, and `look.py` opens a page in a real browser at two
+widths and saves it beside the style guide, which is how the Lookout sees
+what a teacher sees.
+
+The `new-project` skill carries a project's first commit: settings from
+the environment, a Content Security Policy with nothing inline and nothing
+remote, sign-in with a login throttle, error pages, and standing tests
+that scan the whole project, so a new route is private unless it is listed
+on purpose.
+
+`tools/check_references.sh` assembles the three references into one
+project and runs its tests; CI runs it on every push.
+
 ## Charting something big
 
 A single feature is a Build passage: `/crew:captain add an agreed-action
@@ -143,7 +167,7 @@ plugins/crew/
   commands/                       one .md per slash command
   skills/<name>/SKILL.md          self-loading procedures — the rules live here
   hooks/                          hooks.json, the guards and checks, and their self-test
-tools/                            maintainer checks — the word budgets; not shipped
+tools/                            maintainer checks — the word budgets, the references; not shipped
 .github/                          CI: checks on every push; the field-report issue template
 ```
 

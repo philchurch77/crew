@@ -198,13 +198,13 @@ school leaders, SEND leads, safeguarding staff, trust and local authority
 staff. They have four minutes between lessons, a poor school network, and no
 tolerance for friction. Design for interruption.
 
-**What a page is held to:**
+**What a page is held to** (the `house-style` skill is this standard as
+files; load it before any template or stylesheet):
 
 - One obvious primary action per screen; the one thing that matters findable
   in two seconds.
-- A consistent spacing scale, restrained palette, strong type hierarchy, soft
-  depth over heavy borders. Calm and professional, never dated, boxy, noisy,
-  childish or a database table pasted onto a page.
+- Calm and professional, never dated, boxy, noisy, childish or a database
+  table pasted onto a page.
 - Tables scannable, aligned and paginated. Forms grouped, labelled, errors
   beside the field. Every data-changing action confirms; errors say what to
   do; anything slow shows a state.

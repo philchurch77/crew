@@ -1,0 +1,53 @@
+{% extends 'chat.html' %}
+{% load static %}
+
+{% comment %}
+The chat page: the house style's chat.html with this app's data. Turns are
+drawn by chat_stream.js from the JSON island (they are markdown), so
+#messages starts empty. The title is text only, and never in the page
+title: browser history keeps titles.
+{% endcomment %}
+
+{% block title %}{{ assistant_name }}{% endblock %}
+
+{% block chat_title %}{{ chat_title|default:"New chat" }}{% endblock %}
+
+{% block chat_history %}{% include "chat/partials/history.html" %}{% endblock %}
+
+{% block chat_about %}<p>{{ assistant_name }} reads only what its tools look up for you, and this chat. Replace this with what that is.</p>{% endblock %}
+
+{% block chat_greeting %}Hello{% if user.first_name %}, {{ user.first_name }}{% endif %}{% endblock %}
+
+{% block chat_lead %}{{ assistant_name }} is an AI assistant. Ask a question and it will answer from what it can look up.{% endblock %}
+
+{% block chat_starters %}
+<li><button type="button" class="card card--action" data-starter>What counts as persistent absence?</button></li>
+<li><button type="button" class="card card--action" data-starter>What is the difference between persistent and severe absence?</button></li>
+{% endblock %}
+
+{% block composer_placeholder %}e.g. What counts as persistent absence?{% endblock %}
+
+{% block chat_actions %}
+<a class="icon-btn" aria-label="Export chat" href="{% url 'chat_export' session_key %}" download data-chat-export{% if not chat_title %} hidden{% endif %}>
+    <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>
+    <span class="icon-btn__label">Export</span>
+</a>
+{% endblock %}
+
+{% block chat_sources %}{% include "chat/partials/sources.html" %}{% endblock %}
+
+{% block chat_data %}
+{# session_key: this tab's chat, sent with every message so another tab cannot take it. #}
+<div hidden data-chat
+     data-stream-url="{% url 'chat_stream' %}"
+     data-history-url="{% url 'chat_history' %}"
+     data-session-key="{{ session_key }}"
+     data-assistant-name="{{ assistant_name }}"></div>
+{{ chat_turns|json_script:"chat-turns" }}
+{% endblock %}
+
+{% block scripts %}
+{{ block.super }}
+<script src="{% static 'js/vendor/marked.min.js' %}"></script>
+<script src="{% static 'js/chat_stream.js' %}"></script>
+{% endblock %}

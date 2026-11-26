@@ -133,7 +133,9 @@ Skills load themselves when the situation calls for them; commands are typed.
 |---|---|
 | **ships-articles** | Any Django work begins |
 | **gauntlet** | A change touches sensitive data, before it is called done |
-| **ai-features** | A task adds or changes anything that calls a model, grounds answers in documents or sends pupil text to a model; carries a reference Django app (`reference/`) that the Captain copies from |
+| **ai-features** | A task adds or changes anything that calls a model, grounds answers in documents or sends pupil text to a model; carries two reference Django apps the Captain copies from: a grounded suggestion (`reference/`) and a chat with tools (`chat-reference/`) |
+| **house-style** | Any template, stylesheet or page is written or changed; carries the look as files (`reference/`): tokens with a per-client brand block, components, the base template, the assistant screen, a contrast checker and `look.py`, which screenshots a page beside the style guide. The Lookout preloads it |
+| **new-project** | A project is started from nothing; carries a runnable first commit (`reference/`): settings, the Content Security Policy, sign-in with a throttle, error pages and the standing tests |
 
 | Command | Does |
 |---|---|

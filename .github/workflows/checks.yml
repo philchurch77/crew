@@ -18,3 +18,7 @@ jobs:
         run: python3 plugins/crew/hooks/selftest.py
       - name: Word budgets
         run: python3 tools/budget.py
+      - name: Install what the reference projects need
+        run: pip install -q -r plugins/crew/skills/new-project/reference/requirements.txt anthropic PyYAML
+      - name: The references run
+        run: bash tools/check_references.sh

@@ -1,0 +1,893 @@
+/* The assistant screen (chat.html): history, conversation, sources.
+   Loaded only by that page, after components.css. History and Sources each
+   scroll inside themselves; the page never grows. Its three widths are
+   its own: Sources is a column from 1101px, History from 901px, and at
+   640px and below Send takes its own row. */
+
+.chat-shell {
+  display: grid;
+  grid-template-columns: var(--chat-side) minmax(0, 1fr);
+  height: calc(100dvh - var(--bar-height));
+  min-height: 0;
+}
+
+/* ---------- The two side panels ---------- */
+.chat-sidebar,
+.chat-sources {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+  min-height: 0;
+  padding: var(--space-5) var(--space-4) var(--space-4);
+  background: var(--color-surface);
+}
+
+.chat-sidebar { border-right: 1px solid var(--color-line); }
+.chat-sources { display: none; border-left: 1px solid var(--color-line); }
+
+.chat-sidebar:focus,
+.chat-sources:focus {
+  outline: none;
+}
+
+.chat-panel__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.chat-panel__top form {
+  flex: 1;
+}
+
+.chat-panel__top .btn {
+  width: 100%;
+  font-size: var(--fs-ui);
+  font-weight: 500;
+}
+
+.chat-panel__heading {
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  letter-spacing: 0;
+}
+
+/* A square button holding one icon: a drawer's open and close, the
+   header's actions on a phone. */
+.icon-btn {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: var(--hit);
+  height: var(--hit);
+  padding: 0 10px;
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-ink);
+  font-size: var(--fs-ui);
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.icon-btn:hover {
+  background: var(--color-surface-2);
+  color: var(--color-ink);
+}
+
+.icon-btn[hidden] {
+  display: none;
+}
+
+/* New chat stays at the top, the About note at the bottom. */
+.chat-history {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-height: 0;
+  overflow-y: auto;
+  padding-bottom: var(--space-1);
+}
+
+.chat-group__heading {
+  padding: 0 10px 6px;
+  color: var(--color-ink-muted);
+  font-family: var(--font-body);
+  font-size: var(--fs-label);
+  letter-spacing: 0.04em;
+  line-height: var(--lh-body);
+  text-transform: uppercase;
+}
+
+.chat-group__list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  list-style: none;
+}
+
+.chat-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  border-radius: var(--radius-sm);
+}
+
+.chat-row:hover {
+  background: var(--color-surface-2);
+}
+
+.chat-row.is-current {
+  background: var(--brand-tint);
+}
+
+.chat-row__link {
+  flex: 1;
+  min-width: 0;
+  padding: 10px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  color: var(--color-ink);
+  font-size: var(--fs-ui);
+  font-weight: 500;
+  text-decoration: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chat-row.is-current .chat-row__link {
+  font-weight: 600;
+}
+
+/* Inside the scrolling list the ring would be clipped at its edges. */
+.chat-row__link:focus-visible,
+.chat-row__menu:focus-visible {
+  outline-offset: -3px;
+}
+
+.chat-history__empty {
+  padding: 0 10px;
+  color: var(--color-ink-muted);
+  font-size: var(--fs-ui);
+}
+
+/* A row's menu: open while its button says aria-expanded (chat.js).
+   Delete last, in the danger colour, its form carrying data-confirm. */
+.chat-menu {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.chat-row__menu {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  margin-right: 2px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--color-ink-muted);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.chat-row__menu:hover,
+.chat-row__menu[aria-expanded="true"] {
+  background: var(--color-line);
+  color: var(--color-ink);
+}
+
+.chat-menu__list {
+  display: none;
+  position: absolute;
+  top: calc(100% + var(--space-1));
+  right: 0;
+  z-index: 100;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 160px;
+  padding: 6px;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-lg);
+}
+
+.chat-row__menu[aria-expanded="true"] + .chat-menu__list {
+  display: flex;
+}
+
+/* Set by chat.js when there is no room below the row. */
+.chat-menu__list--up {
+  top: auto;
+  bottom: calc(100% + var(--space-1));
+}
+
+.chat-menu__item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 40px;
+  padding: 0 var(--space-3);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--color-ink);
+  font-size: var(--fs-ui);
+  font-weight: 500;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.chat-menu__item:hover {
+  background: var(--color-surface-2);
+}
+
+.chat-menu__item--danger {
+  color: var(--color-danger);
+}
+
+.chat-menu__item--danger:hover {
+  background: var(--color-danger-bg);
+}
+
+/* What the assistant can read, always in sight. */
+.chat-sidebar__about {
+  padding: 14px;
+  border-radius: var(--radius-control);
+  background: var(--color-page);
+  color: var(--color-ink-muted);
+  font-size: var(--fs-small);
+  line-height: 1.5;
+}
+
+.chat-sidebar__about h2 {
+  margin-bottom: var(--space-1);
+  font-family: var(--font-body);
+  font-size: var(--fs-small);
+  letter-spacing: 0;
+}
+
+.chat-sources__body {
+  position: relative; /* as .messages */
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.chat-sources__body .section-label {
+  margin: var(--space-4) 0 var(--space-2);
+  font-size: var(--fs-label);
+}
+
+.chat-sources__body .section-label:first-child {
+  margin-top: var(--space-1);
+}
+
+.chat-sources__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  list-style: none;
+}
+
+.chat-sources__item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: var(--space-3);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-control);
+  font-size: var(--fs-small);
+  color: var(--color-ink-muted);
+}
+
+.chat-sources__title {
+  color: var(--color-ink);
+  font-size: var(--fs-ui);
+  font-weight: 600;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.chat-sources__empty {
+  color: var(--color-ink-muted);
+  font-size: var(--fs-small);
+}
+
+/* ---------- The conversation ----------
+   The column carries the gutters; header, turns and composer share one
+   reading width. */
+.chat-main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  padding: var(--space-4) var(--space-6) var(--space-5);
+}
+
+/* Pieces are direct children, placed by grid area. */
+.chat-header {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    "mark title actions"
+    "mark tag   actions";
+  column-gap: 10px;
+  align-items: center;
+  width: 100%;
+  max-width: var(--chat-column);
+  min-height: var(--hit);
+  margin: 0 auto var(--space-2);
+}
+
+/* The assistant's mark: its initial on the client's colour. Decorative. */
+.assistant-mark {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  font-family: var(--font-display);
+  font-size: var(--fs-body);
+  font-weight: 600;
+  line-height: 1;
+}
+
+.assistant-mark--large {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-card);
+  font-size: var(--fs-heading);
+}
+
+.chat-header > .assistant-mark { grid-area: mark; }
+.chat-header > [data-drawer] { display: none; grid-area: drawer; }
+
+.chat-header__title {
+  grid-area: title;
+  align-self: end;
+  min-width: 0;
+  font-size: var(--fs-heading);
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+/* Says, on every chat, that this is an AI. */
+.chat-header__tag {
+  grid-area: tag;
+  align-self: start;
+  color: var(--color-ink-muted);
+  font-size: var(--fs-ui);
+  line-height: 1.4;
+}
+
+.chat-header__actions {
+  grid-area: actions;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.chat-header__new {
+  display: none;
+}
+
+.messages {
+  position: relative; /* contains its .visually-hidden spans */
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  /* Room below the last reply, so its actions clear the composer. */
+  padding: var(--space-2) max(var(--space-2), calc((100% - var(--chat-column)) / 2)) var(--space-5);
+}
+
+/* ---------- The empty chat ----------
+   #messages (the live region) collapses but stays; the empty state, its
+   next sibling, takes the room until the first turn lands. One condition
+   drives greeting and header, so exactly one h1 is exposed. */
+.messages:empty {
+  flex: 0 0 auto;
+  padding: 0;
+}
+
+.messages:not(:empty) + .chat-empty {
+  display: none;
+}
+
+.chat-main:has(> .messages:empty + .chat-empty) > .chat-header > :is(.assistant-mark, .chat-header__title, .chat-header__tag),
+.chat-main:has(> .messages:empty + .chat-empty) .chat-header__new,
+.chat-main:has(> .messages:empty + .chat-empty) [aria-controls="chat-sources"] {
+  display: none;
+}
+
+/* Centred with margin: auto, not justify-content, so a short screen
+   scrolls instead of cutting off the greeting. */
+.chat-empty {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--space-5) 0;
+}
+
+.chat-empty__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  min-width: 0;
+  max-width: 640px;
+  margin: auto;
+  text-align: center;
+}
+
+.chat-empty__greeting {
+  font-size: var(--fs-title-sm);
+  overflow-wrap: anywhere;
+}
+
+/* The AI disclosure while the header is hidden. */
+.chat-empty__lead {
+  max-width: 560px;
+  color: var(--color-ink-muted);
+  line-height: 1.5;
+}
+
+.starter-cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+  width: 100%;
+  margin-top: var(--space-3);
+  list-style: none;
+}
+
+.starter-cards .card--action {
+  height: 100%;
+}
+
+/* Cards hide while the box holds text, so one never replaces a draft.
+   :placeholder-shown needs the box to keep a placeholder. */
+.chat-main:has(.composer textarea:not(:placeholder-shown)) .starter-cards {
+  display: none;
+}
+
+/* ---------- The turns ----------
+   The assistant's reply sits on the page under its name; yours is a
+   bubble on the right. A turn built by script has this same markup. */
+.message {
+  margin-bottom: var(--space-5);
+}
+
+.message--user {
+  width: fit-content;
+  max-width: min(85%, 640px);
+  margin-left: auto;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-card) var(--radius-card) var(--space-1) var(--radius-card);
+  background: var(--brand-tint);
+  overflow-wrap: anywhere;
+}
+
+.message__head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: var(--space-2);
+}
+
+.message__name {
+  font-family: var(--font-display);
+  font-size: var(--fs-ui);
+  font-weight: 600;
+}
+
+/* The reply's words line up under the name: the mark and its gap. */
+.message--assistant .message__body,
+.message__actions,
+.message--status {
+  padding-left: 42px;
+}
+
+.message__body {
+  overflow-wrap: break-word;
+}
+
+.message__body > :last-child {
+  margin-bottom: 0;
+}
+
+/* :where, so the last child's zero margin above still wins. */
+.message__body :where(p, ul, ol, blockquote, pre, .table-scroll) {
+  margin-bottom: var(--space-3);
+}
+
+.message__body :is(ul, ol) {
+  padding-left: 1.4rem;
+}
+
+.message__body li {
+  margin-bottom: var(--space-1);
+}
+
+/* A reply's headings start at h3, on the turn's scale. */
+.message__body :is(h3, h4, h5, h6) {
+  margin: var(--space-5) 0 var(--space-2);
+  font-family: var(--font-display);
+  font-size: var(--fs-body);
+  line-height: 1.35;
+  letter-spacing: 0;
+}
+
+.message__body h3 {
+  font-size: var(--fs-heading);
+}
+
+.message__body strong {
+  font-weight: 600;
+}
+
+.message__body blockquote {
+  padding: var(--space-2) 14px;
+  border-left: 3px solid var(--color-primary);
+}
+
+.message__body code {
+  padding: 1px var(--space-1);
+  border-radius: var(--space-1);
+  background: var(--color-surface);
+  font-size: 0.9em;
+}
+
+/* A long line scrolls inside the turn, never widening the pane. */
+.message__body pre {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+/* Copy and the like, under a finished reply. */
+.message__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: var(--space-2);
+}
+
+/* Something went wrong: a .notice, never under the assistant's name. */
+.messages > .notice {
+  max-width: 640px;
+  margin-bottom: var(--space-5);
+}
+
+/* Working: three dots and what it is doing, in words. */
+.message--status {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-ink-muted);
+  font-style: italic;
+}
+
+.message__dots {
+  width: 8px;
+  height: 8px;
+  margin: 0 22px 0 6px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  box-shadow: 12px 0 0 0 color-mix(in srgb, var(--color-primary) 45%, transparent),
+              24px 0 0 0 color-mix(in srgb, var(--color-primary) 20%, transparent);
+  animation: message-dots 1.1s infinite var(--ease-out);
+}
+
+@keyframes message-dots {
+  50% {
+    background: color-mix(in srgb, var(--color-primary) 20%, transparent);
+    box-shadow: 12px 0 0 0 color-mix(in srgb, var(--color-primary) 45%, transparent),
+                24px 0 0 0 var(--color-primary);
+  }
+}
+
+/* ---------- The composer ----------
+   One card: a standing note, the box, Send. :focus-within is the ring. */
+.chat-composer {
+  width: 100%;
+  max-width: var(--chat-column);
+  margin: var(--space-2) auto 0;
+}
+
+.composer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "note note"
+    "text send";
+  align-items: end;
+  overflow: hidden;
+  border: 1px solid var(--color-input-line);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-raised);
+  transition: border-color var(--dur-fast) var(--ease-out),
+              box-shadow var(--dur-fast) var(--ease-out);
+}
+
+.composer:focus-within {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--ring), var(--shadow-raised);
+}
+
+/* What not to type, read before anything is typed (aria-describedby on
+   the box). A control, not a caption: never smaller or paler than this. */
+.composer__note {
+  grid-area: note;
+  padding: 10px var(--space-4);
+  border-bottom: 1px solid var(--color-warn-line);
+  background: var(--color-warn-bg);
+  color: var(--color-warn-ink);
+  font-size: var(--fs-ui);
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+/* About two lines empty; then it scrolls instead of pushing the page. */
+.composer textarea {
+  grid-area: text;
+  width: 100%;
+  min-height: 4.5em;
+  max-height: 12em;
+  padding: 14px var(--space-4);
+  border: 0;
+  background: transparent;
+  line-height: 1.45;
+  resize: none;
+}
+
+.composer textarea:focus {
+  outline: none;
+}
+
+.composer .btn {
+  grid-area: send;
+  margin: 0 var(--space-3) var(--space-3) 0;
+  font-size: var(--fs-ui);
+}
+
+/* While a reply streams: a press does nothing. */
+.composer .btn[aria-disabled="true"] {
+  cursor: progress;
+}
+
+/* Under the card: how long chats are kept. */
+.chat-composer__foot {
+  margin-top: var(--space-2);
+  padding: 0 var(--space-1);
+  color: var(--color-ink-muted);
+  font-size: var(--fs-small);
+}
+
+/* ---------- Drawers ----------
+   Below its width a side panel is a drawer over a scrim (chat.js makes
+   the rest of the page inert). */
+.chat-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 1350;
+  background: var(--scrim);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-fast) var(--ease-out);
+}
+
+.chat-scrim.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+body.drawer-open {
+  overflow: hidden;
+}
+
+[data-drawer-close] {
+  display: none;
+}
+
+@media (min-width: 1101px) {
+  .chat-shell {
+    grid-template-columns: var(--chat-side) minmax(0, 1fr) var(--chat-side);
+  }
+
+  .chat-sources {
+    display: flex;
+  }
+
+  [aria-controls="chat-sources"] {
+    display: none;
+  }
+}
+
+@media (min-width: 901px) {
+  /* An empty chat needs no header: the greeting is the page's h1. */
+  .chat-main:has(> .messages:empty + .chat-empty) > .chat-header {
+    display: none;
+  }
+}
+
+/* A drawer's shape, at the width its panel becomes one. .98: a zoomed
+   1100.5px viewport is a drawer, not neither. */
+@media (max-width: 1100.98px) {
+  .chat-sources {
+    position: fixed;
+    top: calc(var(--bar-height) + var(--space-2));
+    bottom: max(var(--space-2), env(safe-area-inset-bottom));
+    z-index: 1400;
+    width: min(85vw, 320px);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-lg);
+  }
+}
+
+@media (max-width: 900px) {
+  .chat-sidebar {
+    position: fixed;
+    top: calc(var(--bar-height) + var(--space-2));
+    bottom: max(var(--space-2), env(safe-area-inset-bottom));
+    z-index: 1400;
+    width: min(85vw, 320px);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-lg);
+  }
+}
+
+@media (max-width: 1100.98px) {
+  .chat-sources {
+    right: max(var(--space-2), env(safe-area-inset-right));
+  }
+
+  .chat-sources.is-open {
+    display: flex;
+  }
+
+  .chat-sources [data-drawer-close] {
+    display: inline-flex;
+  }
+}
+
+@media (max-width: 900px) {
+  .chat-shell {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .chat-main {
+    padding: var(--space-3) var(--space-4) var(--space-4);
+  }
+
+  .chat-sidebar {
+    display: none;
+    left: max(var(--space-2), env(safe-area-inset-left));
+  }
+
+  .chat-sidebar.is-open {
+    display: flex;
+  }
+
+  .chat-sidebar [data-drawer-close],
+  .chat-header > [data-drawer] {
+    display: inline-flex;
+  }
+
+  /* Only here: an empty track would still take a gap. */
+  .chat-header {
+    grid-template-columns: auto auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      "drawer mark title actions"
+      "drawer mark tag   actions";
+  }
+
+  .chat-header__new {
+    display: block;
+  }
+}
+
+/* A phone: icons only in the header, the cards scroll sideways, and Send
+   takes a row of its own. */
+@media (max-width: 640px) {
+  .chat-header__title {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    font-size: var(--fs-body);
+  }
+
+  .icon-btn__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+
+  .chat-empty {
+    padding: var(--space-2) 0;
+  }
+
+  .chat-empty .assistant-mark--large {
+    display: none;
+  }
+
+  .chat-empty__greeting {
+    font-size: var(--fs-heading);
+  }
+
+  .starter-cards {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: 80%;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 6px;
+  }
+
+  .starter-cards > li {
+    scroll-snap-align: start;
+  }
+
+  /* The scroller would clip a raised shadow into a band. */
+  .starter-cards .card--action {
+    box-shadow: var(--shadow-xs);
+  }
+
+  .message--assistant .message__body,
+  .message__actions,
+  .message--status {
+    padding-left: 0;
+  }
+
+  .composer {
+    grid-template-areas:
+      "note note"
+      "text text"
+      "send send";
+  }
+
+  .composer textarea {
+    min-height: 3.5em;
+  }
+
+  .composer .btn {
+    margin: 0 var(--space-3) var(--space-3);
+  }
+}
+
+@media print {
+  .chat-sidebar,
+  .chat-sources,
+  .chat-composer,
+  .chat-header__actions,
+  .message__actions {
+    display: none;
+  }
+
+  .chat-shell,
+  .messages {
+    display: block;
+    height: auto;
+    overflow: visible;
+  }
+}
